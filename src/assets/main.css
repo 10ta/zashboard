@@ -3,6 +3,7 @@
 @config '../../tailwind.config.ts';
 @plugin "daisyui" {
   themes: all;
+  exclude: rootscrollgutter;
 }
 
 @theme {
@@ -63,6 +64,10 @@
     @apply border-0;
   }
   @apply border-separate border-spacing-0;
+}
+
+@utility modal {
+  @apply max-md:bg-transparent!;
 }
 
 .select.select-sm,
@@ -132,7 +137,8 @@
     .sidebar,
     .ctrls-bar,
     .nav-bar,
-    .modal-box {
+    .modal-box,
+    .table thead {
       /* prettier-ignore */
       backdrop-filter: blur($(i)px);
     }

@@ -6,7 +6,7 @@
   >
     <form
       method="dialog"
-      class="modal-backdrop w-screen"
+      class="modal-backdrop w-screen transition-[backdrop-filter]"
       :class="isOpen ? 'backdrop-blur-sm' : 'backdrop-blur-none'"
     >
       <button class="!outline-none">close</button>
