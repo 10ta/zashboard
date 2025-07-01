@@ -28,10 +28,10 @@ const isDefault = themeOld.value === 'default'
 
 export const defaultTheme = useStorage<string>(
   'config/default-theme',
-  isDefault ? 'light' : themeOld.value,
+  isDefault ? 'dark' : themeOld.value,
 )
 export const darkTheme = useStorage<string>('config/dark-theme', 'dark')
-export const autoTheme = useStorage<boolean>('config/auto-theme', isDefault)
+export const autoTheme = useStorage<boolean>('config/auto-theme', false)
 
 const replaceLegacyTheme = (theme: string) => {
   if (theme === 'light-daisyui-v5') {
@@ -76,9 +76,12 @@ export const isSidebarCollapsed = computed({
     isSidebarCollapsedConfig.value = value
   },
 })
-export const font = useStorage<FONTS>('config/font', FONTS.MI_SANS)
-export const customBackgroundURL = useStorage('config/custom-background-image', '')
-export const dashboardTransparent = useStorage('config/dashboard-transparent', 90)
+export const font = useStorage<FONTS>('config/font', FONTS.PING_FANG)
+export const customBackgroundURL = useStorage(
+  'config/custom-background-image',
+  'https://h.f22a.net/get-image/zash.jpg',
+)
+export const dashboardTransparent = useStorage('config/dashboard-transparent', 75)
 export const autoUpgrade = useStorage('config/auto-upgrade', false)
 export const checkUpgradeCore = useStorage('config/check-upgrade-core', true)
 export const autoUpgradeCore = useStorage('config/auto-upgrade-core', false)
@@ -86,14 +89,14 @@ export const swipeInPages = useStorage('config/swipe-in-pages', true)
 export const swipeInTabs = useStorage('config/swipe-in-tabs', false)
 export const disablePullToRefresh = useStorage('config/disable-pull-to-refresh', true)
 export const displayAllFeatures = useStorage('config/display-all-features', false)
-export const blurIntensity = useStorage('config/blur-intensity', 10)
+export const blurIntensity = useStorage('config/blur-intensity', 20)
 export const scrollAnimationEffect = useStorage('config/scroll-animation-effect', true)
 export const IPInfoAPI = useStorage('config/geoip-info-api', IP_INFO_API.IPSB)
 export const autoDisconnectIdleUDP = useStorage('config/auto-disconnect-idle-udp', false)
 export const autoDisconnectIdleUDPTime = useStorage('config/auto-disconnect-idle-udp-time', 300)
 
 // overview
-export const splitOverviewPage = useStorage('config/split-overview-page', false)
+export const splitOverviewPage = useStorage('config/split-overview-page', true)
 export const showIPAndConnectionInfo = useStorage('config/show-ip-and-connection-info', true)
 export const autoIPCheck = useStorage('config/auto-ip-check', true)
 export const autoConnectionCheck = useStorage('config/auto-connection-check', true)
@@ -103,13 +106,13 @@ export const showStatisticsWhenSidebarCollapsed = useStorage(
 )
 export const numberOfChartsInSidebar = useStorage<1 | 2 | 3>(
   'config/number-of-charts-in-sidebar',
-  2,
+  3,
 )
 export const displayProxiesRelationship = useStorage('config/display-proxies-relationship', true)
 
 // proxies
 export const collapseGroupMap = useStorage<Record<string, boolean>>('config/collapse-group-map', {})
-export const twoColumnProxyGroup = useStorage('config/two-columns', true)
+export const twoColumnProxyGroup = useStorage('config/two-columns', false)
 export const speedtestUrl = useStorage<string>('config/speedtest-url', TEST_URL)
 export const independentLatencyTest = useStorage('config/independent-latency-test', false)
 export const speedtestTimeout = useStorage<number>('config/speedtest-timeout', 5000)
@@ -119,7 +122,7 @@ export const proxySortType = useStorage<PROXY_SORT_TYPE>(
 )
 export const automaticDisconnection = useStorage('config/automatic-disconnection', true)
 export const truncateProxyName = useStorage('config/truncate-proxy-name', true)
-export const proxyPreviewType = useStorage('config/proxy-preview-type', PROXY_PREVIEW_TYPE.AUTO)
+export const proxyPreviewType = useStorage('config/proxy-preview-type', PROXY_PREVIEW_TYPE.DOTS)
 export const hideUnavailableProxies = useStorage('config/hide-unavailable-proxies', false)
 export const lowLatency = useStorage('config/low-latency', 400)
 export const mediumLatency = useStorage('config/medium-latency', 800)
