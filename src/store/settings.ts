@@ -79,7 +79,7 @@ export const isSidebarCollapsed = computed({
 export const font = useStorage<FONTS>('config/font', FONTS.PING_FANG)
 export const customBackgroundURL = useStorage(
   'config/custom-background-image',
-  'https://h.f22a.net/get-image/zash.jpg',
+  'https://a.f22a.net/get-image/zash.jpg',
 )
 export const dashboardTransparent = useStorage('config/dashboard-transparent', 75)
 export const autoUpgrade = useStorage('config/auto-upgrade', false)
