@@ -155,7 +155,7 @@ import Draggable from 'vuedraggable'
 
 const form = reactive({
   protocol: 'http',
-  host: '127.0.0.1',
+  host: '10.17.0.5',
   port: '9011',
   secondaryPath: '',
   password: '',
@@ -202,7 +202,7 @@ const handleSubmit = async (form: Omit<Backend, 'uuid'>, quiet = false) => {
   if (
     window.location.protocol === 'https:' &&
     protocol === 'http' &&
-    !['::1', '0.0.0.0', '127.0.0.1', 'localhost'].includes(host) &&
+    !['::1', '0.0.0.0', '127.0.0.1', '10.17.0.5', 'localhost'].includes(host) &&
     !quiet
   ) {
     showNotification({
