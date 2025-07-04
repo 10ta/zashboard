@@ -13,20 +13,27 @@
 </template>
 
 <script setup lang="ts">
-import { iconMarginRight, iconSize } from '@/store/settings'
 import DOMPurify from 'dompurify'
 import { computed } from 'vue'
 
-const props = defineProps<{
-  icon: string
-  fill?: string
-  size?: string
-}>()
+const props = withDefaults(
+  defineProps<{
+    icon: string
+    fill?: string
+    size?: number
+    margin?: number
+  }>(),
+  {
+    size: 16,
+    margin: 4,
+  },
+)
 
 const style = computed(() => {
   return {
-    width: (props.size === 'small' ? iconSize.value : iconSize.value + 4) + 'px',
-    marginRight: iconMarginRight.value - 4 + 'px',
+    width: `${props.size}px`,
+    height: `${props.size}px`,
+    marginRight: `${props.margin}px`,
   }
 })
 const DOM_STARTS_WITH = 'data:image/svg+xml,'

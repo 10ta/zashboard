@@ -34,8 +34,9 @@
           <ProxyIcon
             v-if="proxyGroup?.icon"
             :icon="proxyGroup.icon"
-            size="small"
-            class="h-10 w-10! shrink-0"
+            :size="40"
+            :margin="0"
+            class="shrink-0"
           />
         </div>
 

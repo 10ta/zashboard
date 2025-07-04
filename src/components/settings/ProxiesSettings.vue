@@ -152,19 +152,19 @@
           />
         </div>
         <div class="flex items-center gap-2">
-          {{ $t('iconSize') }}
+          {{ $t('proxyGroupIconSize') }}
           <input
             type="number"
             class="input input-sm w-20"
-            v-model="iconSize"
+            v-model="proxyGroupIconSize"
           />
         </div>
         <div class="flex items-center gap-2">
-          {{ $t('iconMarginRight') }}
+          {{ $t('proxyGroupIconMargin') }}
           <input
             type="number"
             class="input input-sm w-20"
-            v-model="iconMarginRight"
+            v-model="proxyGroupIconMargin"
           />
         </div>
       </div>
@@ -183,8 +183,6 @@ import { proxyMap } from '@/store/proxies'
 import {
   customGlobalNode,
   displayGlobalByMode,
-  iconMarginRight,
-  iconSize,
   independentLatencyTest,
   IPv6test,
   lowLatency,
@@ -192,6 +190,8 @@ import {
   minProxyCardWidth,
   proxyCardSize,
   proxyCountMode,
+  proxyGroupIconMargin,
+  proxyGroupIconSize,
   proxyPreviewType,
   speedtestTimeout,
   speedtestUrl,

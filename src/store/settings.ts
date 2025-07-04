@@ -139,8 +139,8 @@ export const manageHiddenGroup = useStorage('config/manage-hidden-group-mode', f
 
 export const displayGlobalByMode = useStorage('config/display-global-by-mode', false)
 export const customGlobalNode = useStorage('config/custom-global-node-name', GLOBAL)
-export const iconSize = useStorage('config/icon-size', 14)
-export const iconMarginRight = useStorage('config/icon-margin-right', 6)
+export const proxyGroupIconSize = useStorage('config/proxy-group-icon-size', 18)
+export const proxyGroupIconMargin = useStorage('config/proxy-group-icon-margin', 6)
 export const proxyCountMode = useStorage('config/proxies-count-mode', PROXY_COUNT_MODE.ALIVE_TOTAL)
 export const iconReflectList = useStorage<
   {

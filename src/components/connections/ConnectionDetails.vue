@@ -13,7 +13,8 @@
             <span>
               "<ProxyIcon
                 :icon="proxyMap[node.content].icon"
-                class="mr-2 inline-block"
+                class="inline-block"
+                :margin="0"
               />
               {{ node.content }}"
             </span>
