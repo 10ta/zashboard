@@ -218,6 +218,13 @@ const en = {
   saveFailed: 'Save failed',
   checking: 'Checking...',
   copySuccess: 'Copy Success',
+  importFromBackend: 'Import From Backend',
+  importFromBackendTip:
+    'The default ./zashboard-settings.json will import settings from the backend ui folder, please make sure the zashboard-settings.json file exists in the ui folder, otherwise the import will fail',
+  importFailed: 'Import failed, please check the url {url}',
+  autoImportFromUrl: 'Auto Import',
+  autoImportFromUrlTip:
+    'When enabled, the settings will be automatically imported from the url when opening the zashboard. If the hash is different from the last imported hash, the settings will be re-imported and the page will be refreshed.',
 }
 
 export type LANG_MESSAGE = typeof en

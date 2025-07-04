@@ -25,7 +25,7 @@
       </div>
     </div>
     <div class="card-body gap-4">
-      <BackendSwitch class="w-80" />
+      <BackendSwitch />
 
       <template v-if="(!isSingBox || displayAllFeatures) && configs">
         <div class="divider"></div>

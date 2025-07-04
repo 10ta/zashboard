@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { XCircleIcon } from '@heroicons/vue/24/outline'
+import { XMarkIcon } from '@heroicons/vue/24/outline'
 import { computed, onMounted, ref, watch } from 'vue'
 import { RouterView } from 'vue-router'
 import { useNotification } from './composables/notification'
 import { FONTS } from './constant'
+import { autoImportSettings, importSettingsFromUrl } from './helper/autoImportSettings'
 import { backgroundImage } from './helper/indexeddb'
 import { isPreferredDark } from './helper/utils'
 import {
@@ -52,6 +53,9 @@ watch(
 )
 
 onMounted(() => {
+  if (autoImportSettings.value) {
+    importSettingsFromUrl()
+  }
   watch(
     theme,
     () => {
@@ -88,25 +92,19 @@ const blurClass = computed(() => {
   >
     <RouterView />
     <div
-      class="toast-sm toast toast-end toast-top z-50 max-w-64 text-sm md:translate-y-8"
+      class="toast-sm toast toast-end toast-top z-9999 max-w-64 text-sm md:translate-y-8"
       v-if="tipShowModel"
     >
       <div
-        class="breaks-all alert flex p-2 whitespace-normal"
+        class="breaks-all alert flex p-2 pr-5 whitespace-normal"
         :class="tipType"
       >
-        <a
-          href="https://github.com/Zephyruso/zashboard/blob/main/README.md"
-          target="_blank"
-          class="flex-1"
-        >
-          {{ tipContent }}
-        </a>
+        {{ tipContent }}
         <button
-          class="btn btn-circle btn-ghost btn-xs"
+          class="btn btn-circle btn-ghost btn-xs absolute top-0 right-0"
           @click="tipShowModel = false"
         >
-          <XCircleIcon class="w-4 cursor-pointer" />
+          <XMarkIcon class="size-3 cursor-pointer" />
         </button>
       </div>
     </div>
