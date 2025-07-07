@@ -33,7 +33,7 @@ const chartsData = computed(() => {
 
 const labelFormatter = (value: number) => {
   return `${prettyBytesHelper(value, {
-    maximumFractionDigits: 1,
+    maximumFractionDigits: 0,
     binary: false,
   })}/s`
 }
