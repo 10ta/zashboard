@@ -2,6 +2,7 @@
 import { XMarkIcon } from '@heroicons/vue/24/outline'
 import { computed, onMounted, ref, watch } from 'vue'
 import { RouterView } from 'vue-router'
+import { useKeyboard } from './composables/keyboard'
 import { useNotification } from './composables/notification'
 import { FONTS } from './constant'
 import { autoImportSettings, importSettingsFromUrl } from './helper/autoImportSettings'
@@ -75,6 +76,8 @@ const blurClass = computed(() => {
 
   return `blur-intensity-${blurIntensity.value}`
 })
+
+useKeyboard()
 </script>
 
 <template>
