@@ -42,14 +42,6 @@ export function useRenderProxies(proxies: ComputedRef<string[]>, proxyGroup?: st
 
 const getRenderProxies = (proxies: string[], groupName?: string) => {
   const latencyMap = new Map<string, number>()
-  const getLatencyForSort = (name: string) => {
-    if (isProxyGroup(name)) {
-      return -1
-    }
-    const latency = latencyMap.get(name)!
-
-    return latency === 0 ? Infinity : latency
-  }
 
   proxies = [...proxies]
   proxies.forEach((name) => {
@@ -58,7 +50,7 @@ const getRenderProxies = (proxies: string[], groupName?: string) => {
 
   if (hideUnavailableProxies.value) {
     proxies = proxies.filter((name) => {
-      return isProxyGroup(name) || latencyMap.get(name)! > 0
+      return isProxyGroup(name) || latencyMap.get(name)! > NOT_CONNECTED
     })
   }
 
@@ -82,16 +74,34 @@ const getRenderProxies = (proxies: string[], groupName?: string) => {
     })
   }
 
-  switch (proxySortType.value) {
-    case PROXY_SORT_TYPE.DEFAULT:
-      return proxies
-    case PROXY_SORT_TYPE.NAME_ASC:
-      return proxies.sort((prev, next) => prev.localeCompare(next))
-    case PROXY_SORT_TYPE.NAME_DESC:
-      return proxies.sort((prev, next) => next.localeCompare(prev))
-    case PROXY_SORT_TYPE.LATENCY_ASC:
-      return proxies.sort((prev, next) => getLatencyForSort(prev) - getLatencyForSort(next))
-    case PROXY_SORT_TYPE.LATENCY_DESC:
-      return proxies.sort((prev, next) => getLatencyForSort(next) - getLatencyForSort(prev))
+  if (proxySortType.value === PROXY_SORT_TYPE.DEFAULT) {
+    return proxies
   }
+
+  const proxyGroups: string[] = []
+  const proxyNodes: string[] = []
+
+  proxies.forEach((proxy) => {
+    if (isProxyGroup(proxy)) {
+      proxyGroups.push(proxy)
+    } else {
+      proxyNodes.push(proxy)
+    }
+  })
+
+  const getLatencyForSort = (name: string) => {
+    const latency = latencyMap.get(name)!
+    return latency === 0 ? Infinity : latency
+  }
+  const sortFuncMap = {
+    [PROXY_SORT_TYPE.NAME_ASC]: (prev: string, next: string) => prev.localeCompare(next),
+    [PROXY_SORT_TYPE.NAME_DESC]: (prev: string, next: string) => next.localeCompare(prev),
+    [PROXY_SORT_TYPE.LATENCY_ASC]: (prev: string, next: string) =>
+      getLatencyForSort(prev) - getLatencyForSort(next),
+    [PROXY_SORT_TYPE.LATENCY_DESC]: (prev: string, next: string) =>
+      getLatencyForSort(next) - getLatencyForSort(prev),
+  }
+  const sortFunc = sortFuncMap[proxySortType.value]
+
+  return proxyGroups.concat(proxyNodes.sort(sortFunc))
 }
