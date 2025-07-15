@@ -16,38 +16,39 @@
         <ArrowUpCircleIcon class="h-4 w-4" />
       </button>
     </div>
-    <div class="my-4 flex items-center gap-2">
+    <div class="my-4 flex items-center gap-2 max-sm:flex-col max-sm:items-start">
       {{ $t('importFromUrl') }}
-      <div class="join">
-        <TextInput
-          v-model="importSettingsUrl"
-          class="w-60 max-sm:w-36"
+      <div class="flex items-center gap-2">
+        <div class="join">
+          <TextInput
+            v-model="importSettingsUrl"
+            class="max-w-60"
+          />
+          <button
+            class="btn btn-sm join-item"
+            @click="importSettingsFromUrlHandler()"
+          >
+            <ArrowDownTrayIcon class="h-4 w-4" />
+          </button>
+        </div>
+        <QuestionMarkCircleIcon
+          v-if="importSettingsUrl === DEFAULT_SETTINGS_URL"
+          class="h-4 w-4"
+          @mouseenter="
+            showTip($event, $t('importFromBackendTip'), {
+              appendTo: 'parent',
+              placement: 'left',
+            })
+          "
         />
         <button
-          class="btn btn-sm join-item"
-          @click="importSettingsFromUrlHandler()"
+          v-else
+          class="btn btn-sm"
+          @click="importSettingsUrl = DEFAULT_SETTINGS_URL"
         >
-          <ArrowDownTrayIcon class="h-4 w-4" />
+          {{ $t('reset') }} URL
         </button>
       </div>
-
-      <QuestionMarkCircleIcon
-        v-if="importSettingsUrl === DEFAULT_SETTINGS_URL"
-        class="h-4 w-4"
-        @mouseenter="
-          showTip($event, $t('importFromBackendTip'), {
-            appendTo: 'parent',
-            placement: 'left',
-          })
-        "
-      />
-      <button
-        v-else
-        class="btn btn-sm"
-        @click="importSettingsUrl = DEFAULT_SETTINGS_URL"
-      >
-        {{ $t('reset') }} URL
-      </button>
     </div>
     <div class="my-4 flex items-center gap-2">
       <label class="flex cursor-pointer items-center gap-2">
