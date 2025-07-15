@@ -90,7 +90,8 @@
       @apply bg-base-100/$(i);
     }
 
-    option {
+    option,
+    optgroup {
       @apply bg-base-100;
     }
 
