@@ -111,7 +111,22 @@ export const fetchProxies = async () => {
   }
   proxyGroupList.value = Object.values(proxyData.proxies)
     .filter((proxy) => proxy.all?.length && proxy.name !== GLOBAL)
-    .sort((prev, next) => sortIndex.indexOf(prev.name) - sortIndex.indexOf(next.name))
+    .sort((prev, next) => {
+      const prevIndex = sortIndex.indexOf(prev.name)
+      const nextIndex = sortIndex.indexOf(next.name)
+
+      if (prevIndex === -1 && nextIndex === -1) {
+        return 0
+      }
+      if (prevIndex === -1) {
+        return 1
+      }
+      if (nextIndex === -1) {
+        return -1
+      }
+      // 都在 sortIndex 中，按索引排序
+      return prevIndex - nextIndex
+    })
     .map((proxy) => proxy.name)
 
   proxyProviederList.value = providers
