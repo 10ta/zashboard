@@ -21,6 +21,7 @@ const ru: LANG_MESSAGE = {
   version: 'Версия',
   noContent: 'Нет содержимого',
   flushFakeIP: 'Очистить Fake IP',
+  flushDNSCache: 'Очистить DNS кэш',
   chains: 'Цепочки',
   outbound: 'Исходящий',
   sortBy: 'Сортировать по',

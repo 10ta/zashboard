@@ -164,6 +164,10 @@ export const flushFakeIPAPI = () => {
   return axios.post('/cache/fakeip/flush')
 }
 
+export const flushDNSCacheAPI = () => {
+  return axios.post('/cache/dns/flush')
+}
+
 export const reloadConfigsAPI = () => {
   return axios.put('/configs?reload=true', { path: '', payload: '' })
 }

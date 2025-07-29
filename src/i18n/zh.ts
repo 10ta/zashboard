@@ -21,6 +21,7 @@ const zh: LANG_MESSAGE = {
   version: '版本',
   noContent: '无内容',
   flushFakeIP: '清空Fake IP',
+  flushDNSCache: '清空DNS缓存',
   chains: '代理链',
   outbound: '出站节点',
   sortBy: '排序方式',

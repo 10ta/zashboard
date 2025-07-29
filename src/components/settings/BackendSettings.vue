@@ -123,6 +123,12 @@
           >
             {{ $t('updateGeoDatabase') }}
           </button>
+          <button
+            class="btn btn-sm"
+            @click="flushDNSCacheAPI"
+          >
+            {{ $t('flushDNSCache') }}
+          </button>
         </template>
         <button
           class="btn btn-sm"
@@ -146,6 +152,7 @@
 
 <script setup lang="ts">
 import {
+  flushDNSCacheAPI,
   flushFakeIPAPI,
   flushSmartGroupWeightsAPI,
   isCoreUpdateAvailable,

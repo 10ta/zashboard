@@ -19,6 +19,7 @@ const en = {
   version: 'Version',
   noContent: 'No Content',
   flushFakeIP: 'Flush Fake IP',
+  flushDNSCache: 'Flush DNS Cache',
   chains: 'Chains',
   outbound: 'Outbound',
   sortBy: 'Sort By',
