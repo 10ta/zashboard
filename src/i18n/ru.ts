@@ -74,6 +74,8 @@ const ru: LANG_MESSAGE = {
   backend: 'Бэкенд',
   tunMode: 'Режим Tun',
   upgradeCore: 'Обновить ядро',
+  upgradeToRelease: 'Обновить до Release',
+  upgradeToAlpha: 'Обновить до Alpha',
   updateGeoDatabase: 'Обновить GEO',
   truncateProxyName: 'Усечение имени прокси',
   sourceIPLabels: 'Метки исходного IP',

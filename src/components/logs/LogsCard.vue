@@ -1,13 +1,21 @@
 <template>
   <div class="card hover:bg-base-200 mb-1 block p-2 text-sm break-all">
-    <span class="inline-block min-w-5 text-center">{{ log.seq }}</span>
-    <span class="text-main mx-2">
+    <span
+      class="inline-block text-left"
+      :style="{ minWidth: `${(seqWithPadding.length + 1) * 0.62}em` }"
+    >
+      {{ seqWithPadding }}.
+    </span>
+    <span class="badge badge-sm bg-base-200/70 text-main ml-2 inline-block min-w-14">
       {{ log.time }}
     </span>
-    <span :class="textColorMapForType[log.type as keyof typeof textColorMapForType]">
+    <span
+      class="badge badge-sm bg-base-200/70 ml-2 inline-block min-w-17 text-center"
+      :class="textColorMapForType[log.type as keyof typeof textColorMapForType]"
+    >
       {{ log.type }}
     </span>
-    <span class="ml-2">{{ log.payload }}</span>
+    <span class="max-md:mt-2 max-md:block md:ml-2">{{ log.payload }}</span>
   </div>
 </template>
 
@@ -15,10 +23,15 @@
 import { useBounceOnVisible } from '@/composables/bouncein'
 import { LOG_LEVEL } from '@/constant'
 import type { LogWithSeq } from '@/types'
+import { computed } from 'vue'
 
-defineProps<{
+const props = defineProps<{
   log: LogWithSeq
 }>()
+
+const seqWithPadding = computed(() => {
+  return props.log.seq.toString().padStart(2, '0')
+})
 
 const textColorMapForType = {
   [LOG_LEVEL.Trace]: 'text-success',

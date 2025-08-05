@@ -19,7 +19,7 @@
           v-for="row in virtualRows"
           :key="row.key.toString()"
           :data-index="row.index"
-          :ref="measureElement"
+          :ref="(ref) => measureElement(ref as Element | null)"
         >
           <slot
             :item="data[row.index]"
@@ -61,7 +61,7 @@ const rowVirtualizer = useVirtualizer(virutalOptions)
 const virtualRows = computed(() => rowVirtualizer.value.getVirtualItems())
 const totalSize = computed(() => rowVirtualizer.value.getTotalSize())
 
-const measureElement = (el: Element) => {
+const measureElement = (el: Element | null) => {
   if (!el) {
     return
   }

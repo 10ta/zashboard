@@ -67,7 +67,7 @@ watch(
       isCoreUpdateAvailable.value = await fetchBackendUpdateAvailableAPI()
 
       if (isCoreUpdateAvailable.value && autoUpgradeCore.value) {
-        upgradeCoreAPI()
+        upgradeCoreAPI('auto')
       }
     }
   },
@@ -180,8 +180,10 @@ export const updateGeoDataAPI = () => {
   return axios.post('/configs/geo')
 }
 
-export const upgradeCoreAPI = () => {
-  return axios.post('/upgrade')
+export const upgradeCoreAPI = (type: 'release' | 'alpha' | 'auto') => {
+  const url = type === 'auto' ? '/upgrade' : `/upgrade?channel=${type}`
+
+  return axios.post(url)
 }
 
 export const restartCoreAPI = () => {
@@ -315,17 +317,14 @@ export const fetchIsUIUpdateAvailable = async () => {
 }
 
 const check = async (url: string, versionNumber: string) => {
-  const { assets } = await fetchWithLocalCache<{ assets: { name: string }[] }>(
-    `https://api.github.com/repos/MetaCubeX/mihomo${url}`,
-    versionNumber,
-  )
+  const { assets } = await fetchWithLocalCache<{ assets: { name: string }[] }>(url, versionNumber)
   const alreadyLatest = assets.some(({ name }) => name.includes(versionNumber))
 
   return !alreadyLatest
 }
 
 export const fetchBackendUpdateAvailableAPI = async () => {
-  const match = /(alpha|beta|meta)-?(\w+)/.exec(version.value)
+  const match = /(alpha-smart|alpha|beta|meta)-?(\w+)/.exec(version.value)
 
   if (!match) {
     const { tag_name } = await fetchWithLocalCache<{ tag_name: string }>(
@@ -339,8 +338,21 @@ export const fetchBackendUpdateAvailableAPI = async () => {
   const channel = match[1],
     versionNumber = match[2]
 
-  if (channel === 'meta') return await check('/releases/latest', versionNumber)
-  if (channel === 'alpha') return await check('/releases/tags/Prerelease-Alpha', versionNumber)
+  if (channel === 'meta')
+    return await check(
+      'https://api.github.com/repos/MetaCubeX/mihomo/releases/latest',
+      versionNumber,
+    )
+  if (channel === 'alpha')
+    return await check(
+      'https://api.github.com/repos/MetaCubeX/mihomo/releases/tags/Prerelease-Alpha',
+      versionNumber,
+    )
+  if (channel === 'alpha-smart')
+    return await check(
+      'https://api.github.com/repos/vernesong/mihomo/releases/tags/Prerelease-Alpha',
+      versionNumber,
+    )
 
   return false
 }

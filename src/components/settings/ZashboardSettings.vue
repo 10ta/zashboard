@@ -135,10 +135,7 @@
             />
           </div>
         </template>
-        <div
-          class="flex items-center gap-2"
-          v-if="!isSingBox || displayAllFeatures"
-        >
+        <div class="flex items-center gap-2">
           {{ $t('autoUpgrade') }}
           <input
             class="toggle"
@@ -148,15 +145,13 @@
         </div>
       </div>
       <div class="grid max-w-3xl grid-cols-2 gap-2 sm:grid-cols-4">
-        <template v-if="!isSingBox || displayAllFeatures">
-          <button
-            :class="twMerge('btn btn-primary btn-sm', isUIUpgrading ? 'animate-pulse' : '')"
-            @click="handlerClickUpgradeUI"
-          >
-            {{ $t('upgradeUI') }}
-          </button>
-          <div class="sm:hidden"></div>
-        </template>
+        <button
+          :class="twMerge('btn btn-primary btn-sm', isUIUpgrading ? 'animate-pulse' : '')"
+          @click="handlerClickUpgradeUI"
+        >
+          {{ $t('upgradeUI') }}
+        </button>
+        <div class="sm:hidden"></div>
 
         <button
           class="btn btn-sm"
@@ -171,7 +166,7 @@
 </template>
 
 <script setup lang="ts">
-import { isSingBox, upgradeUIAPI, zashboardVersion } from '@/api'
+import { upgradeUIAPI, zashboardVersion } from '@/api'
 import LanguageSelect from '@/components/settings/LanguageSelect.vue'
 import { useSettings } from '@/composables/settings'
 import { FONTS } from '@/constant'
@@ -186,7 +181,6 @@ import {
   darkTheme,
   dashboardTransparent,
   defaultTheme,
-  displayAllFeatures,
   font,
 } from '@/store/settings'
 import {

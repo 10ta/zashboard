@@ -240,14 +240,26 @@ const testLatencyOneByOneWithTip = async (nodes: string[], url = speedtestUrl.va
   let testDone = 0
   let testFailed = 0
 
-  return await Promise.all(
+  return await Promise.allSettled(
     nodes.map(async (name) => {
-      const res = await proxyLatencyTestDebounced(name, url, Math.min(3000, speedtestTimeout.value))
-      testDone++
-      if (res.status !== 200) {
+      try {
+        const res = await proxyLatencyTestDebounced(
+          name,
+          url,
+          Math.min(3000, speedtestTimeout.value),
+        )
+        testDone++
+        if (res.status !== 200) {
+          testFailed++
+        }
+        latencyTip(testDone, nodes.length, testFailed)
+        return res
+      } catch (error) {
+        testDone++
         testFailed++
+        latencyTip(testDone, nodes.length, testFailed)
+        throw error
       }
-      latencyTip(testDone, nodes.length, testFailed)
     }),
   )
 }

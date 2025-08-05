@@ -73,6 +73,8 @@ const zh: LANG_MESSAGE = {
   automaticDisconnection: '切换节点时自动断开连接',
   backend: '后端',
   upgradeCore: '更新核心',
+  upgradeToRelease: '更新到 Release',
+  upgradeToAlpha: '更新到 Alpha',
   updateGeoDatabase: '更新GEO',
   tunMode: 'Tun 模式',
   truncateProxyName: '截断节点名称',
