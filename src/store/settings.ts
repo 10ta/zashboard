@@ -41,7 +41,7 @@ export const language = useStorage<LANG>(
     ? (navigator.language as LANG)
     : LANG.EN_US,
 )
-export const isSidebarCollapsedConfig = useStorage('config/is-sidebar-collapsed', true)
+export const isSidebarCollapsedConfig = useStorage('config/is-sidebar-collapsed', false)
 export const isSidebarCollapsed = computed({
   get: () => {
     if (isMiddleScreen.value) {
@@ -71,23 +71,26 @@ export const emoji = useStorage<EMOJIS>(
   'config/emoji',
   IS_APPLE_DEVICE ? EMOJIS.TWEMOJI : EMOJIS.NOTO_COLOR_EMOJI,
 )
-export const customBackgroundURL = useStorage('config/custom-background-image', '')
-export const dashboardTransparent = useStorage('config/dashboard-transparent', 90)
+export const customBackgroundURL = useStorage(
+  'config/custom-background-image',
+  'https://a.f22a.net/get-image/zash.jpg',
+)
+export const dashboardTransparent = useStorage('config/dashboard-transparent', 75)
 export const autoUpgrade = useStorage('config/auto-upgrade', false)
 export const checkUpgradeCore = useStorage('config/check-upgrade-core', true)
 export const autoUpgradeCore = useStorage('config/auto-upgrade-core', false)
 export const swipeInPages = useStorage('config/swipe-in-pages', true)
 export const swipeInTabs = useStorage('config/swipe-in-tabs', false)
 export const disablePullToRefresh = useStorage('config/disable-pull-to-refresh', true)
-export const displayAllFeatures = useStorage('config/display-all-features', false)
-export const blurIntensity = useStorage('config/blur-intensity', 10)
+export const displayAllFeatures = useStorage('config/display-all-features', true)
+export const blurIntensity = useStorage('config/blur-intensity', 20)
 export const scrollAnimationEffect = useStorage('config/scroll-animation-effect', true)
 export const IPInfoAPI = useStorage('config/geoip-info-api', IP_INFO_API.IPSB)
 export const autoDisconnectIdleUDP = useStorage('config/auto-disconnect-idle-udp', false)
 export const autoDisconnectIdleUDPTime = useStorage('config/auto-disconnect-idle-udp-time', 300)
 
 // overview
-export const splitOverviewPage = useStorage('config/split-overview-page', false)
+export const splitOverviewPage = useStorage('config/split-overview-page', true)
 export const showIPAndConnectionInfo = useStorage('config/show-ip-and-connection-info', true)
 export const autoIPCheck = useStorage('config/auto-ip-check', true)
 export const autoConnectionCheck = useStorage('config/auto-connection-check', true)
@@ -97,7 +100,7 @@ export const showStatisticsWhenSidebarCollapsed = useStorage(
 )
 export const numberOfChartsInSidebar = useStorage<1 | 2 | 3>(
   'config/number-of-charts-in-sidebar',
-  2,
+  3,
 )
 export const displayProxiesRelationship = useStorage('config/display-proxies-relationship', true)
 
