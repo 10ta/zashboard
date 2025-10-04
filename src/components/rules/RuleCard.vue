@@ -1,55 +1,92 @@
 <template>
-  <div class="card hover:bg-base-200 gap-2 p-2 text-sm">
-    <div class="min-h-6 leading-6">
-      <span>{{ index }}.</span>
-      <span class="ml-2">{{ rule.type }}</span>
-      <span
-        class="text-main ml-2"
-        v-if="rule.payload"
-      >
-        {{ rule.payload }}
-      </span>
-      <span
-        v-if="typeof size === 'number' && size !== -1"
-        class="text-base-content/80 ml-1 text-xs"
-      >
-        ({{ size }})
-        <QuestionMarkCircleIcon
-          v-if="size === 0"
-          class="ml-1 h-4 w-4"
-          @mouseenter="showMMDBSizeTip"
-        />
-      </span>
-      <button
-        v-if="isUpdateableRuleSet"
-        :class="
-          twMerge('btn btn-circle btn-ghost btn-xs -mt-1 ml-1', isUpdating ? 'animate-spin' : '')
-        "
-        @click="updateRuleProviderClickHandler"
-      >
-        <ArrowPathIcon class="h-4 w-4" />
-      </button>
-    </div>
-    <div class="flex items-center gap-2">
-      <ProxyName
-        :name="rule.proxy"
-        class="badge badge-sm gap-0"
-      />
-      <template v-if="proxyNode?.now && displayNowNodeInRule">
-        <ArrowRightCircleIcon class="h-4 w-4" />
+  <div class="card">
+    <div
+      class="flex flex-col gap-2 overflow-hidden p-2 text-sm"
+      :class="{
+        'cursor-pointer': isSelectable,
+      }"
+      @click="isSelectable && ((isCollapsed = !isCollapsed), (selected = rule.proxy))"
+    >
+      <div class="min-h-6 leading-6">
+        <span>{{ index }}.</span>
+        <span class="ml-2">{{ rule.type }}</span>
+        <span
+          class="text-main ml-2"
+          v-if="rule.payload"
+        >
+          {{ rule.payload }}
+        </span>
+        <span
+          v-if="typeof size === 'number' && size !== -1"
+          class="text-base-content/80 ml-1 text-xs"
+        >
+          ({{ size }})
+          <QuestionMarkCircleIcon
+            v-if="size === 0"
+            class="ml-1 h-4 w-4"
+            @mouseenter="showMMDBSizeTip"
+          />
+        </span>
+        <button
+          v-if="isUpdateableRuleSet"
+          :class="
+            twMerge('btn btn-circle btn-ghost btn-xs -mt-1 ml-1', isUpdating ? 'animate-spin' : '')
+          "
+          @click="updateRuleProviderClickHandler"
+        >
+          <ArrowPathIcon class="h-4 w-4" />
+        </button>
+      </div>
+      <div class="flex min-h-6 flex-wrap items-center gap-2">
         <ProxyName
-          :name="getNowProxyNodeName(rule.proxy)"
-          class="badge badge-sm gap-0"
+          v-if="isCollapsed"
+          :name="rule.proxy"
+          class="badge gap-0 text-xs"
         />
-      </template>
-      <span
-        v-if="latency !== NOT_CONNECTED && displayLatencyInRule"
-        :class="latencyColor"
-        class="ml-1 text-xs"
-      >
-        {{ latency }}
-      </span>
+        <template v-if="!isCollapsed">
+          <template
+            v-for="(chain, index) in proxyChains"
+            :key="chain"
+          >
+            <ArrowRightCircleIcon
+              class="h-4 w-4"
+              v-if="index > 0"
+            />
+            <ProxyName
+              :name="chain"
+              class="badge gap-0 text-xs"
+              :class="{
+                'bg-neutral text-neutral-content': selected === chain,
+              }"
+              @click.stop="selected = chain"
+            />
+          </template>
+        </template>
+        <template v-if="proxyNode?.now && displayNowNodeInRule">
+          <ArrowRightCircleIcon class="h-4 w-4" />
+          <ProxyName
+            :name="getNowProxyNodeName(rule.proxy)"
+            class="badge cursor-not-allowed gap-0 text-xs"
+            @click.stop
+          />
+        </template>
+        <span
+          v-if="latency !== NOT_CONNECTED && displayLatencyInRule"
+          :class="latencyColor"
+          class="ml-1 text-xs"
+        >
+          {{ latency }}
+        </span>
+      </div>
     </div>
+
+    <template v-if="isSelectable && !isCollapsed">
+      <div class="border-base-content/15 border-b"></div>
+      <ProxyGroup
+        :name="selected"
+        class="transparent-collapse"
+      />
+    </template>
   </div>
 </template>
 
@@ -59,7 +96,13 @@ import { useBounceOnVisible } from '@/composables/bouncein'
 import { NOT_CONNECTED } from '@/constant'
 import { getColorForLatency } from '@/helper'
 import { useTooltip } from '@/helper/tooltip'
-import { getLatencyByName, getNowProxyNodeName, proxyMap } from '@/store/proxies'
+import {
+  getLatencyByName,
+  getNowProxyNodeName,
+  getProxyGroupChains,
+  proxyGroupList,
+  proxyMap,
+} from '@/store/proxies'
 import { fetchRules, ruleProviderList } from '@/store/rules'
 import { displayLatencyInRule, displayNowNodeInRule } from '@/store/settings'
 import type { Rule } from '@/types'
@@ -71,12 +114,18 @@ import {
 import { twMerge } from 'tailwind-merge'
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
+import ProxyGroup from '../proxies/ProxyGroup.vue'
 import ProxyName from '../proxies/ProxyName.vue'
 
 const props = defineProps<{
   rule: Rule
   index: number
 }>()
+
+const isCollapsed = ref(true)
+const isSelectable = computed(() => proxyGroupList.value.includes(props.rule.proxy))
+const selected = ref('')
+const proxyChains = computed(() => getProxyGroupChains(props.rule.proxy))
 
 const { t } = useI18n()
 const { showTip } = useTooltip()

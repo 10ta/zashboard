@@ -40,7 +40,7 @@ axios.interceptors.response.use(
 
       showNotification({
         key: errorMessage,
-        content: errorMessage,
+        content: `${error.config?.url} \n${errorMessage}`,
         type: 'alert-error',
       })
       return Promise.reject(error)
@@ -153,6 +153,10 @@ export const fetchRuleProvidersAPI = () => {
 
 export const updateRuleProviderAPI = (name: string) => {
   return axios.put(`/providers/rules/${encodeURIComponent(name)}`)
+}
+
+export const blockconnectByIdAPI = (id: string) => {
+  return axios.delete(`/connections/smart/${id}`)
 }
 
 export const disconnectByIdAPI = (id: string) => {

@@ -147,9 +147,10 @@ const en = {
   mostUploadProxy: 'Most Uploaded Proxy',
   manual: 'Manual',
   tableWidthMode: 'Table Width Mode',
-  testFinishedTip: '{number} Test(s) Finished',
-  testFinishedResultTip: 'Test Finished: {success} Success, {failed} Timeout',
-  testFailedTip: 'Latency Test Timeout',
+  testFailed: 'Test Failed',
+  testFinishedTip: "{name}\n{'@'}{url} \n{number}/{total} Test Finished",
+  testFinishedResultTip: "{name}\n{'@'}{url} \nTest Finished: {success} Success, {failed} Timeout",
+  testFailedTip: "{name}\n{'@'}{url} \nTest Failed",
   updateFinishedTip: '{number} Update(s) Finished',
   independentLatencyTest: 'Independent Latency Test',
   independentLatencyTestTip:
@@ -180,7 +181,7 @@ const en = {
   displaySelectedNode: 'Show Selected Node',
   displayLatencyNumber: 'Show Latency Numbers',
   tipForFixed:
-    'The current policy group is locked to the current node. Run a speed test to restore urltest/fallback behavior.',
+    'The current policy group is locked to the current node. Run a speed test to restore {type} behavior.',
   remoteAddress: 'Remote Address',
   themeName: 'Theme Name',
   save: 'Save',
@@ -235,6 +236,10 @@ const en = {
   getting: 'Getting...',
   mmdbSizeTip: 'If you are using mmdb format geo files, the number will be 0',
   displayFinalOutbound: 'Show Final Outbound Node',
+  groupTestUrls: 'Group Test URLs',
+  groupTestUrlsTip:
+    'For manual tests triggered from the panel, set test URLs here > URLs in configuration > Global test URLs, but for groups with UrlTest/Fallback, etc., the URLs in the configuration still need to be modified, So this is only recommended for Selector scenes',
+  groupName: 'Group Name',
 }
 
 export type LANG_MESSAGE = typeof en

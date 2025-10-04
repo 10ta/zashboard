@@ -2,6 +2,56 @@
 
 # Changelog
 
+## [1.106.1](https://github.com/Zephyruso/zashboard/compare/v1.106.0...v1.106.1) (2025-10-01)
+
+
+### Bug Fixes
+
+* unexpected dual column for proxies provider ([ace7864](https://github.com/Zephyruso/zashboard/commit/ace78646489a9ebf5c28abb6616e29acd64028c1))
+
+## [1.106.0](https://github.com/Zephyruso/zashboard/compare/v1.105.0...v1.106.0) (2025-09-28)
+
+
+### Features
+
+* add manual block(degrade) btn for conn which belongs to smart group ([#502](https://github.com/Zephyruso/zashboard/issues/502)) ([1a9c12b](https://github.com/Zephyruso/zashboard/commit/1a9c12b9b40979f480707d227ea588f58a484552))
+* select proxy node in connections and rules ([acd1cd2](https://github.com/Zephyruso/zashboard/commit/acd1cd286d71c9bf67f34c91fb70069e9901a422))
+
+
+### Bug Fixes
+
+* connection card style ([717108f](https://github.com/Zephyruso/zashboard/commit/717108fdd48e9bbe563614c2d1e474a1bd1b2bc3))
+* notification style ([9da9272](https://github.com/Zephyruso/zashboard/commit/9da927232cd0a73f260d52794fddf2a82179c618))
+* proxies page dual column style ([edda6f3](https://github.com/Zephyruso/zashboard/commit/edda6f37b7f6a073452ffc8ea49542d351dc4829))
+
+## [1.105.0](https://github.com/Zephyruso/zashboard/compare/v1.104.0...v1.105.0) (2025-09-22)
+
+
+### Features
+
+* auto switch to url backend if exist ([1315204](https://github.com/Zephyruso/zashboard/commit/1315204385835c3367415f55db0d636b6a940415))
+* interrupt connection when switching clash_mode ([3921572](https://github.com/Zephyruso/zashboard/commit/3921572103aa1c6918cff94e59fbed8dbc4916a4))
+
+
+### Bug Fixes
+
+* grouped connection table style ([3f4e082](https://github.com/Zephyruso/zashboard/commit/3f4e0828ef68fe8b4369c43175224b712d7d8f87))
+* notification style ([9ceeca4](https://github.com/Zephyruso/zashboard/commit/9ceeca42c7fd1c7ea8dae68b9d2e908ff87362d7))
+* total is 0 in subscription ([b45e17a](https://github.com/Zephyruso/zashboard/commit/b45e17a30fad0a4afa8d72cdf028a0489fcb8115))
+
+## [1.104.0](https://github.com/Zephyruso/zashboard/compare/v1.103.1...v1.104.0) (2025-09-16)
+
+
+### Features
+
+* allow setting separate test URLs for each group ([a7ef57a](https://github.com/Zephyruso/zashboard/commit/a7ef57a0ff5e466ab4f4177948dc2f57f5b93c58))
+* display URL in latency test result ([789bfed](https://github.com/Zephyruso/zashboard/commit/789bfed4814f56ae74ef75f55aaa424c120349c4))
+
+
+### Bug Fixes
+
+* add p-limiter for latency test ([7c656e8](https://github.com/Zephyruso/zashboard/commit/7c656e8bc0e5e21011ca40c97a297d536640e142))
+
 ## [1.103.1](https://github.com/Zephyruso/zashboard/compare/v1.103.0...v1.103.1) (2025-09-08)
 
 

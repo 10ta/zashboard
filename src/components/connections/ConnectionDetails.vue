@@ -2,61 +2,70 @@
   <DialogWrapper
     v-model="connectionDetailModalShow"
     :no-padding="true"
+    :box-class="proxyChainStart ? `max-w-256` : `max-w-128`"
   >
-    <div class="flex h-full max-h-[69dvh] flex-col overflow-hidden py-4 md:max-h-[89dvh]">
-      <VueJsonPretty
-        :data="infoConn"
-        class="overflow-y-auto px-4"
-      >
-        <template #renderNodeValue="{ node, defaultValue }">
-          <template v-if="node.path.startsWith('root.chains') && proxyMap[node.content]?.icon">
-            <span>
-              "<ProxyIcon
-                :icon="proxyMap[node.content].icon"
-                class="inline-block"
-                :margin="0"
-              />
-              {{ node.content }}"
-            </span>
+    <div class="flex h-full max-h-[69dvh] flex-col py-4 md:max-h-[89dvh] md:flex-row">
+      <div class="md:w-128">
+        <VueJsonPretty
+          :data="infoConn"
+          class="overflow-y-auto px-4"
+        >
+          <template #renderNodeValue="{ node, defaultValue }">
+            <template v-if="node.path.startsWith('root.chains') && proxyMap[node.content]?.icon">
+              <span>
+                "<ProxyIcon
+                  :icon="proxyMap[node.content].icon"
+                  class="inline-block"
+                  :margin="0"
+                />
+                {{ node.content }}"
+              </span>
+            </template>
+            <template v-else>
+              {{ defaultValue }}
+            </template>
           </template>
-          <template v-else>
-            {{ defaultValue }}
+        </VueJsonPretty>
+        <div
+          class="min-h-12 shrink-0 px-4 pt-2 text-sm"
+          v-if="destinationIP && !isPrivateIP"
+        >
+          <template v-if="details">
+            <div class="flex flex-wrap items-center gap-1">
+              <ArrowRightCircleIcon class="h-4 w-4 shrink-0" />
+              <div>
+                {{ details?.ip }}
+              </div>
+              <div>( AS{{ details?.asn }} )</div>
+            </div>
+            <div class="flex flex-wrap">
+              <div
+                class="mr-3 flex items-center gap-1"
+                v-if="details?.country"
+              >
+                <MapPinIcon class="h-4 w-4 shrink-0" />
+                <template v-if="details?.city && details?.city !== details?.country">
+                  {{ details?.city }},
+                </template>
+                <template v-else-if="details?.region && details?.region !== details?.country">
+                  {{ details?.region }},
+                </template>
+                {{ details?.country }}
+              </div>
+              <div class="flex items-center gap-1">
+                <ServerIcon class="h-4 w-4 shrink-0" />
+                {{ details?.organization }}
+              </div>
+            </div>
           </template>
-        </template>
-      </VueJsonPretty>
-      <div
-        class="min-h-12 shrink-0 px-4 pt-2 text-sm"
-        v-if="destinationIP && !isPrivateIP"
-      >
-        <template v-if="details">
-          <div class="flex flex-wrap items-center gap-1">
-            <ArrowRightCircleIcon class="h-4 w-4 shrink-0" />
-            <div>
-              {{ details?.ip }}
-            </div>
-            <div>( AS{{ details?.asn }} )</div>
-          </div>
-          <div class="flex flex-wrap">
-            <div
-              class="mr-3 flex items-center gap-1"
-              v-if="details?.country"
-            >
-              <MapPinIcon class="h-4 w-4 shrink-0" />
-              <template v-if="details?.city && details?.city !== details?.country">
-                {{ details?.city }},
-              </template>
-              <template v-else-if="details?.region && details?.region !== details?.country">
-                {{ details?.region }},
-              </template>
-              {{ details?.country }}
-            </div>
-            <div class="flex items-center gap-1">
-              <ServerIcon class="h-4 w-4 shrink-0" />
-              {{ details?.organization }}
-            </div>
-          </div>
-        </template>
+        </div>
       </div>
+      <template v-if="proxyChainStart">
+        <div class="divider md:divider-horizontal md:m-0" />
+        <div class="md:w-128">
+          <ProxyChains :name="proxyChainStart" />
+        </div>
+      </template>
     </div>
   </DialogWrapper>
 </template>
@@ -68,9 +77,11 @@ import { useConnections } from '@/composables/connections'
 import { proxyMap } from '@/store/proxies'
 import { ArrowRightCircleIcon, MapPinIcon, ServerIcon } from '@heroicons/vue/24/outline'
 import * as ipaddr from 'ipaddr.js'
+import { last } from 'lodash'
 import { computed, ref, watch } from 'vue'
 import VueJsonPretty from 'vue-json-pretty'
 import 'vue-json-pretty/lib/styles.css'
+import ProxyChains from '../common/ProxyChains.vue'
 import ProxyIcon from '../proxies/ProxyIcon.vue'
 
 const { infoConn, connectionDetailModalShow } = useConnections()
@@ -86,6 +97,14 @@ const isPrivateIP = computed(() => {
   const range = addr.range()
 
   return ['private', 'uniqueLocal', 'loopback', 'linkLocal'].includes(range)
+})
+
+const proxyChainStart = computed(() => {
+  if (!infoConn.value?.chains || !infoConn.value.chains.length) {
+    return null
+  }
+
+  return last(infoConn.value.chains)
 })
 
 watch(

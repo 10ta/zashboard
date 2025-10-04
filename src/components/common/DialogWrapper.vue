@@ -13,7 +13,7 @@
     </form>
     <div
       class="modal-box relative max-h-[90dvh] overflow-hidden p-0 max-md:max-h-[70dvh]"
-      :class="blurIntensity < 5 && 'backdrop-blur-sm!'"
+      :class="[blurIntensity < 5 && 'backdrop-blur-sm!', boxClass]"
     >
       <form method="dialog">
         <button class="btn btn-circle btn-ghost btn-xs absolute top-1 right-1 z-10">
@@ -37,7 +37,7 @@ import { ref, watch } from 'vue'
 
 const modalRef = ref<HTMLDialogElement>()
 const isOpen = defineModel<boolean>()
-defineProps<{ noPadding?: boolean }>()
+defineProps<{ noPadding?: boolean; boxClass?: string }>()
 
 watch(isOpen, (value) => {
   if (value) {

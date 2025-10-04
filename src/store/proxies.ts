@@ -26,6 +26,7 @@ import { computed, ref } from 'vue'
 import { activeConnections } from './connections'
 import {
   automaticDisconnection,
+  groupTestUrls,
   iconReflectList,
   independentLatencyTest,
   IPv6test,
@@ -50,6 +51,12 @@ const speedtestUrlWithDefault = computed(() => {
 export const getTestUrl = (groupName?: string) => {
   if (!groupName || !independentLatencyTest.value) {
     return speedtestUrlWithDefault.value
+  }
+
+  const groupTestUrl = groupTestUrls.value.find((item) => item.name === groupName)
+
+  if (groupTestUrl) {
+    return groupTestUrl.url
   }
 
   const proxyNode =
@@ -218,8 +225,11 @@ export const proxyLatencyTest = async (
   if (res.status !== 200) {
     showNotification({
       content: 'testFailedTip',
+      params: {
+        name: proxyName,
+        url,
+      },
       type: 'alert-error',
-      timeout: 2000,
     })
   }
 }
@@ -236,7 +246,11 @@ const setHistory = (proxyName: string, delay: number) => {
 
 const TIP_KEY = 'testLatencyOneByOneWithTip'
 const limiter = pLimit(5)
-const testLatencyOneByOneWithTip = async (nodes: string[], url = speedtestUrlWithDefault.value) => {
+const testLatencyOneByOneWithTip = async (
+  proxyGroupName: string,
+  nodes: string[],
+  url = speedtestUrlWithDefault.value,
+) => {
   const total = nodes.length
   let testDone = 0
   let testFailed = 0
@@ -255,9 +269,12 @@ const testLatencyOneByOneWithTip = async (nodes: string[], url = speedtestUrlWit
         testDone++
         showNotification({
           content: 'testFinishedTip',
-          key: TIP_KEY,
+          key: TIP_KEY + proxyGroupName,
           params: {
-            number: `${testDone}/${total}`,
+            name: proxyGroupName,
+            url,
+            total: total.toString(),
+            number: testDone.toString(),
           },
           type: 'alert-info',
           timeout: 0,
@@ -267,13 +284,16 @@ const testLatencyOneByOneWithTip = async (nodes: string[], url = speedtestUrlWit
   )
   showNotification({
     content: 'testFinishedResultTip',
-    key: TIP_KEY,
+    key: TIP_KEY + proxyGroupName,
     params: {
+      name: proxyGroupName,
+      url,
+      total: total.toString(),
       success: `${total - testFailed}`,
       failed: `${testFailed}`,
     },
     type: testFailed ? 'alert-warning' : 'alert-success',
-    timeout: 2000,
+    timeout: 3000,
   })
   await fetchProxies()
 }
@@ -291,7 +311,7 @@ export const proxyGroupLatencyTest = async (proxyGroupName: string) => {
     if (proxyNode.fixed) {
       deleteFixedProxyAPI(proxyGroupName)
     }
-    return testLatencyOneByOneWithTip(all, url)
+    return testLatencyOneByOneWithTip(proxyGroupName, all, url)
   }
 
   const timeout = Math.max(5000, speedtestTimeout.value)
@@ -315,12 +335,31 @@ export const proxyGroupLatencyTest = async (proxyGroupName: string) => {
   }
   await fetchProxyGroupLatencyAPI(proxyGroupName, url, timeout)
   await fetchProxies()
+
+  const total = all.length
+  const testFailed = all.filter(
+    (name) => getLatencyByName(name, proxyGroupName) === NOT_CONNECTED,
+  ).length
+
+  showNotification({
+    content: 'testFinishedResultTip',
+    key: TIP_KEY + proxyGroupName,
+    params: {
+      name: proxyGroupName,
+      url,
+      total: total.toString(),
+      success: `${total - testFailed}`,
+      failed: `${testFailed}`,
+    },
+    type: testFailed ? 'alert-warning' : 'alert-success',
+    timeout: 3000,
+  })
 }
 
 export const allProxiesLatencyTest = async () => {
   const proxyNode = Object.keys(proxyMap.value).filter((proxy) => !isProxyGroup(proxy))
 
-  return testLatencyOneByOneWithTip(proxyNode)
+  return testLatencyOneByOneWithTip('all', proxyNode)
 }
 
 const getLatencyFromHistory = (history: Proxy['history']) => {
@@ -351,6 +390,26 @@ export const getNowProxyNodeName = (name: string) => {
   }
 
   return node.name
+}
+
+export const getProxyGroupChains = (name: string) => {
+  let proxyNode = proxyMap.value[name]
+
+  if (!proxyNode) {
+    return []
+  }
+
+  const result = [name]
+
+  while (
+    proxyNode.now &&
+    proxyNode.now !== proxyNode.name &&
+    proxyGroupList.value.includes(proxyNode.now)
+  ) {
+    result.push(proxyNode.now)
+    proxyNode = proxyMap.value[proxyNode.now]
+  }
+  return result
 }
 
 export const hasSmartGroup = computed(() => {
