@@ -14,13 +14,6 @@
       >
         {{ $t('detailedCardPreset') }}
       </button>
-      <div class="flex-1"></div>
-      <button
-        class="btn btn-circle btn-neutral btn-sm"
-        @click="addLine"
-      >
-        <PlusIcon class="h-4 w-4" />
-      </button>
     </div>
     <div class="relative flex flex-col rounded-sm">
       <div
@@ -30,7 +23,7 @@
       >
         <button
           v-if="connectionCardLines.length > 1"
-          class="btn btn-circle btn-neutral btn-sm"
+          class="btn btn-circle bg-base-100 hover:bg-base-200 btn-sm shadow-sm"
           @click="removeLine(index)"
         >
           <TrashIcon class="h-4 w-4" />
@@ -44,13 +37,19 @@
           :item-key="(id: string) => id"
         >
           <template #item="{ element }">
-            <div
-              class="bg-neutral text-neutral-content flex h-8 cursor-move items-center rounded-sm px-2 select-none"
-            >
+            <button class="btn btn-sm bg-base-100 hover:bg-base-200 cursor-move shadow-sm">
               {{ $t(element) }}
-            </div>
+            </button>
           </template>
         </Draggable>
+      </div>
+      <div :class="`p-2 ${connectionCardLines.length % 2 === 1 ? 'bg-base-300' : 'bg-base-200'}`">
+        <button
+          class="btn btn-circle bg-base-100 hover:bg-base-200 btn-sm shadow-sm"
+          @click="addLine"
+        >
+          <PlusIcon class="h-4 w-4" />
+        </button>
       </div>
 
       <Draggable
@@ -62,11 +61,9 @@
         :item-key="(id: string) => id"
       >
         <template #item="{ element }">
-          <div
-            class="bg-base-200 text-base-content flex h-8 cursor-move items-center rounded-sm px-2 select-none"
-          >
+          <button class="btn btn-sm cursor-move">
             {{ $t(element) }}
-          </div>
+          </button>
         </template>
       </Draggable>
     </div>

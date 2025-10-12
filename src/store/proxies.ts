@@ -214,6 +214,14 @@ const latencyTestForSingle = async (proxyName: string, url: string, timeout: num
   return await fetchProxyLatencyAPI(independentLatencyTest.value ? proxyName : now, url, timeout)
 }
 
+const getNameForNotification = (name: string, url: string) => {
+  if (independentLatencyTest.value) {
+    return `${name}\n@${url}`
+  }
+
+  return name
+}
+
 export const proxyLatencyTest = async (
   proxyName: string,
   url = speedtestUrlWithDefault.value,
@@ -226,8 +234,7 @@ export const proxyLatencyTest = async (
     showNotification({
       content: 'testFailedTip',
       params: {
-        name: proxyName,
-        url,
+        name: getNameForNotification(proxyName, url),
       },
       type: 'alert-error',
     })
@@ -271,8 +278,7 @@ const testLatencyOneByOneWithTip = async (
           content: 'testFinishedTip',
           key: TIP_KEY + proxyGroupName,
           params: {
-            name: proxyGroupName,
-            url,
+            name: getNameForNotification(proxyGroupName, url),
             total: total.toString(),
             number: testDone.toString(),
           },
@@ -286,8 +292,7 @@ const testLatencyOneByOneWithTip = async (
     content: 'testFinishedResultTip',
     key: TIP_KEY + proxyGroupName,
     params: {
-      name: proxyGroupName,
-      url,
+      name: getNameForNotification(proxyGroupName, url),
       total: total.toString(),
       success: `${total - testFailed}`,
       failed: `${testFailed}`,
@@ -345,8 +350,7 @@ export const proxyGroupLatencyTest = async (proxyGroupName: string) => {
     content: 'testFinishedResultTip',
     key: TIP_KEY + proxyGroupName,
     params: {
-      name: proxyGroupName,
-      url,
+      name: getNameForNotification(proxyGroupName, url),
       total: total.toString(),
       success: `${total - testFailed}`,
       failed: `${testFailed}`,

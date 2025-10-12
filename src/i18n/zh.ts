@@ -90,6 +90,12 @@ const zh: LANG_MESSAGE = {
   bar: '条',
   exportSettings: '导出设置',
   importSettings: '导入设置',
+  connectionSettings: '连接设置',
+  proxySettings: '代理设置',
+  logSettings: '日志设置',
+  ruleSettings: '规则设置',
+  connectionDetails: '连接详情',
+  customTheme: '自定义主题',
   unavailableProxy: '隐藏不可用节点',
   protocolTips:
     '您正在尝试连接一个http后端但zashboard是通过https提供的，这可能会导致连接错误，请在浏览器设置中允许不安全的内容，或者使用http版本面板例如http://board.zash.run.place',
@@ -149,9 +155,9 @@ const zh: LANG_MESSAGE = {
   manual: '手动',
   tableWidthMode: '表格宽度模式',
   testFailed: '测速超时',
-  testFinishedTip: "{name}\n{'@'}{url} \n{number}/{total} 测试完成",
-  testFinishedResultTip: "{name}\n{'@'}{url} \n测试完成: {success} 成功，{failed} 超时",
-  testFailedTip: "{name}\n{'@'}{url} \n测速超时",
+  testFinishedTip: '{name}\n{number}/{total} 测试完成',
+  testFinishedResultTip: '{name}\n测试完成: {success} 成功，{failed} 超时',
+  testFailedTip: '{name}\n测速超时',
   updateFinishedTip: '{number} 更新完成',
   independentLatencyTest: '独立延迟测试',
   independentLatencyTestTip:
@@ -185,6 +191,7 @@ const zh: LANG_MESSAGE = {
   themeName: '主题名称',
   save: '保存',
   moreDetails: '更多详情',
+  moreSettings: '更多设置',
   customIcon: '自定义图标',
   disablePullToRefresh: '禁用下拉刷新',
   disablePullToRefreshTip:

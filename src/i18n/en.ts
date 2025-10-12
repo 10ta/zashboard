@@ -88,6 +88,12 @@ const en = {
   bar: 'Bar',
   exportSettings: 'Export Settings',
   importSettings: 'Import Settings',
+  connectionSettings: 'Connection Settings',
+  proxySettings: 'Proxy Settings',
+  logSettings: 'Log Settings',
+  ruleSettings: 'Rule Settings',
+  connectionDetails: 'Connection Details',
+  customTheme: 'Custom Theme',
   unavailableProxy: 'Hide Unavailable Proxies',
   protocolTips:
     'You are trying to connect to an HTTP backend, but zashboard is provided via HTTPS. This may cause connection errors. Please allow insecure content in your browser settings or use the HTTP version of zashboard, such as http://board.zash.run.place.',
@@ -148,9 +154,9 @@ const en = {
   manual: 'Manual',
   tableWidthMode: 'Table Width Mode',
   testFailed: 'Test Failed',
-  testFinishedTip: "{name}\n{'@'}{url} \n{number}/{total} Test Finished",
-  testFinishedResultTip: "{name}\n{'@'}{url} \nTest Finished: {success} Success, {failed} Timeout",
-  testFailedTip: "{name}\n{'@'}{url} \nTest Failed",
+  testFinishedTip: '{name}\n{number}/{total} Test Finished',
+  testFinishedResultTip: '{name}\nTest Finished: {success} Success, {failed} Timeout',
+  testFailedTip: '{name}\nTest Failed',
   updateFinishedTip: '{number} Update(s) Finished',
   independentLatencyTest: 'Independent Latency Test',
   independentLatencyTestTip:
@@ -186,6 +192,7 @@ const en = {
   themeName: 'Theme Name',
   save: 'Save',
   moreDetails: 'More Details',
+  moreSettings: 'More Settings',
   customIcon: 'Custom Icon',
   disablePullToRefresh: 'Disable Pull to Refresh',
   disablePullToRefreshTip:

@@ -90,6 +90,12 @@ const ru: LANG_MESSAGE = {
   bar: 'Полоса',
   exportSettings: 'Экспорт настроек',
   importSettings: 'Импорт настроек',
+  connectionSettings: 'Настройки подключения',
+  proxySettings: 'Настройки прокси',
+  logSettings: 'Настройки журнала',
+  ruleSettings: 'Настройки правил',
+  connectionDetails: 'Детали подключения',
+  customTheme: 'Пользовательская тема',
   unavailableProxy: 'Скрыть недоступное',
   protocolTips:
     'Вы пытаетесь подключиться к HTTP-бэкенду, но Zashboard предоставляется через HTTPS. Это может вызвать ошибки подключения. Разрешите небезопасный контент в настройках браузера или используйте HTTP-версию панели, например, http://board.zash.run.place.',
@@ -150,9 +156,9 @@ const ru: LANG_MESSAGE = {
   manual: 'Ручной',
   tableWidthMode: 'Режим ширины таблицы',
   testFailed: 'Тест задержки таймаут',
-  testFinishedTip: "{name}\n{'@'}{url} \n{number}/{total} Тест завершен",
-  testFinishedResultTip: "{name}\n{'@'}{url} \nТест завершен: {success} Успешно, {failed} Таймаут",
-  testFailedTip: "{name}\n{'@'}{url} \nТест задержки таймаут",
+  testFinishedTip: '{name}\n{number}/{total} Тест завершен',
+  testFinishedResultTip: '{name}\nТест завершен: {success} Успешно, {failed} Таймаут',
+  testFailedTip: '{name}\nТест задержки таймаут',
   updateFinishedTip: '{number} Обновление завершено',
   independentLatencyTest: 'Независимый тест задержки',
   independentLatencyTestTip:
@@ -188,6 +194,7 @@ const ru: LANG_MESSAGE = {
   themeName: 'Название темы',
   save: 'Сохранить',
   moreDetails: 'Подробнее',
+  moreSettings: 'Дополнительные настройки',
   customIcon: 'Пользовательская иконка',
   disablePullToRefresh: 'Отключить свойство обновления',
   disablePullToRefreshTip:

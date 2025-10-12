@@ -2,33 +2,29 @@
   <div>{{ $t('customTableColumns') }}</div>
   <div class="flex gap-4 rounded-sm">
     <Draggable
-      class="bg-base-200 flex flex-1 flex-col gap-2 p-4"
+      class="bg-base-200 flex flex-1 flex-col gap-2 p-2"
       v-model="connectionTableColumns"
       group="list"
       :animation="150"
       :item-key="(id: string) => id"
     >
       <template #item="{ element }">
-        <div
-          class="bg-neutral text-neutral-content flex h-8 cursor-move items-center justify-center rounded-sm px-2 select-none"
-        >
+        <button class="btn btn-sm bg-base-100 cursor-move shadow-sm">
           {{ $t(element) }}
-        </div>
+        </button>
       </template>
     </Draggable>
     <Draggable
-      class="flex flex-1 flex-col gap-2 p-4"
+      class="flex flex-1 flex-col gap-2 p-2"
       v-model="restOfColumns"
       group="list"
       :animation="150"
       :item-key="(id: string) => id"
     >
       <template #item="{ element }">
-        <div
-          class="bg-base-200 text-base-content flex h-8 cursor-move items-center justify-center rounded-sm px-2 select-none"
-        >
+        <button class="btn btn-sm cursor-move">
           {{ $t(element) }}
-        </div>
+        </button>
       </template>
     </Draggable>
   </div>
