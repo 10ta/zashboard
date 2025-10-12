@@ -76,7 +76,7 @@ export const customBackgroundURL = useStorage(
   'https://a.f22a.net/get-image/zash.jpg',
 )
 export const dashboardTransparent = useStorage('config/dashboard-transparent', 75)
-export const autoUpgrade = useStorage('config/auto-upgrade', false)
+export const autoUpgrade = useStorage('config/auto-upgrade', true)
 export const checkUpgradeCore = useStorage('config/check-upgrade-core', true)
 export const autoUpgradeCore = useStorage('config/auto-upgrade-core', false)
 export const swipeInPages = useStorage('config/swipe-in-pages', true)
@@ -86,8 +86,8 @@ export const displayAllFeatures = useStorage('config/display-all-features', true
 export const blurIntensity = useStorage('config/blur-intensity', 20)
 export const scrollAnimationEffect = useStorage('config/scroll-animation-effect', true)
 export const IPInfoAPI = useStorage('config/geoip-info-api', IP_INFO_API.IPSB)
-export const autoDisconnectIdleUDP = useStorage('config/auto-disconnect-idle-udp', false)
-export const autoDisconnectIdleUDPTime = useStorage('config/auto-disconnect-idle-udp-time', 300)
+export const autoDisconnectIdleUDP = useStorage('config/auto-disconnect-idle-udp', true)
+export const autoDisconnectIdleUDPTime = useStorage('config/auto-disconnect-idle-udp-time', 60)
 
 // overview
 export const splitOverviewPage = useStorage('config/split-overview-page', true)
@@ -107,9 +107,9 @@ export const displayProxiesRelationship = useStorage('config/display-proxies-rel
 // proxies
 export const collapseGroupMap = useStorage<Record<string, boolean>>('config/collapse-group-map', {})
 export const displayFinalOutbound = useStorage('config/show-seleted-for-now-node', false)
-export const twoColumnProxyGroup = useStorage('config/two-columns', true)
+export const twoColumnProxyGroup = useStorage('config/two-columns', false)
 export const speedtestUrl = useStorage<string>('config/speedtest-url', TEST_URL)
-export const independentLatencyTest = useStorage('config/independent-latency-test', false)
+export const independentLatencyTest = useStorage('config/independent-latency-test', true)
 export const speedtestTimeout = useStorage<number>('config/speedtest-timeout', 5000)
 export const proxySortType = useStorage<PROXY_SORT_TYPE>(
   'config/proxy-sort-type',
@@ -119,8 +119,8 @@ export const automaticDisconnection = useStorage('config/automatic-disconnection
 export const truncateProxyName = useStorage('config/truncate-proxy-name', true)
 export const proxyPreviewType = useStorage('config/proxy-preview-type', PROXY_PREVIEW_TYPE.AUTO)
 export const hideUnavailableProxies = useStorage('config/hide-unavailable-proxies', false)
-export const lowLatency = useStorage('config/low-latency', 400)
-export const mediumLatency = useStorage('config/medium-latency', 800)
+export const lowLatency = useStorage('config/low-latency', 200)
+export const mediumLatency = useStorage('config/medium-latency', 500)
 export const IPv6test = useStorage('config/ipv6-test', false)
 export const proxyCardSize = useStorage<PROXY_CARD_SIZE>(
   'config/proxy-card-size',
@@ -170,6 +170,7 @@ export const connectionTableColumns = useStorage<CONNECTIONS_TABLE_ACCESSOR_KEY[
     CONNECTIONS_TABLE_ACCESSOR_KEY.Host,
     CONNECTIONS_TABLE_ACCESSOR_KEY.Type,
     CONNECTIONS_TABLE_ACCESSOR_KEY.Rule,
+    CONNECTIONS_TABLE_ACCESSOR_KEY.SourceIP,
     CONNECTIONS_TABLE_ACCESSOR_KEY.Chains,
     CONNECTIONS_TABLE_ACCESSOR_KEY.DlSpeed,
     CONNECTIONS_TABLE_ACCESSOR_KEY.UlSpeed,
