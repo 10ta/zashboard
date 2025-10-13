@@ -5,7 +5,6 @@ import {
   FONTS,
   GLOBAL,
   IP_INFO_API,
-  IS_APPLE_DEVICE,
   LANG,
   PROXY_CARD_SIZE,
   PROXY_CHAIN_DIRECTION,
@@ -23,9 +22,9 @@ import { useStorage } from '@vueuse/core'
 import { computed } from 'vue'
 
 // global
-export const defaultTheme = useStorage<string>('config/default-theme', 'light')
+export const defaultTheme = useStorage<string>('config/default-theme', 'abyss')
 export const darkTheme = useStorage<string>('config/dark-theme', 'dark')
-export const autoTheme = useStorage<boolean>('config/auto-theme', true)
+export const autoTheme = useStorage<boolean>('config/auto-theme', false)
 export const theme = computed(() => {
   if (autoTheme.value && isPreferredDark.value) {
     return darkTheme.value
@@ -67,10 +66,7 @@ export const font = computed({
     fontConfig.value = val
   },
 })
-export const emoji = useStorage<EMOJIS>(
-  'config/emoji',
-  IS_APPLE_DEVICE ? EMOJIS.TWEMOJI : EMOJIS.NOTO_COLOR_EMOJI,
-)
+export const emoji = useStorage<EMOJIS>('config/emoji', EMOJIS.TWEMOJI)
 export const customBackgroundURL = useStorage(
   'config/custom-background-image',
   'https://a.f22a.net/get-image/zash.jpg',
@@ -87,7 +83,7 @@ export const blurIntensity = useStorage('config/blur-intensity', 20)
 export const scrollAnimationEffect = useStorage('config/scroll-animation-effect', true)
 export const IPInfoAPI = useStorage('config/geoip-info-api', IP_INFO_API.IPSB)
 export const autoDisconnectIdleUDP = useStorage('config/auto-disconnect-idle-udp', true)
-export const autoDisconnectIdleUDPTime = useStorage('config/auto-disconnect-idle-udp-time', 60)
+export const autoDisconnectIdleUDPTime = useStorage('config/auto-disconnect-idle-udp-time', 1)
 
 // overview
 export const splitOverviewPage = useStorage('config/split-overview-page', true)
