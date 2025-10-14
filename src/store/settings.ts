@@ -69,7 +69,7 @@ export const font = computed({
 export const emoji = useStorage<EMOJIS>('config/emoji', EMOJIS.TWEMOJI)
 export const customBackgroundURL = useStorage(
   'config/custom-background-image',
-  'https://a.f22a.net/get-image/zash.jpg',
+  'https://a.f22a.net/get-image/bg.jpg',
 )
 export const dashboardTransparent = useStorage('config/dashboard-transparent', 75)
 export const autoUpgrade = useStorage('config/auto-upgrade', true)
@@ -79,7 +79,7 @@ export const swipeInPages = useStorage('config/swipe-in-pages', true)
 export const swipeInTabs = useStorage('config/swipe-in-tabs', false)
 export const disablePullToRefresh = useStorage('config/disable-pull-to-refresh', true)
 export const displayAllFeatures = useStorage('config/display-all-features', true)
-export const blurIntensity = useStorage('config/blur-intensity', 20)
+export const blurIntensity = useStorage('config/blur-intensity', 10)
 export const scrollAnimationEffect = useStorage('config/scroll-animation-effect', true)
 export const IPInfoAPI = useStorage('config/geoip-info-api', IP_INFO_API.IPSB)
 export const autoDisconnectIdleUDP = useStorage('config/auto-disconnect-idle-udp', true)
