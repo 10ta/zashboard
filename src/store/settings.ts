@@ -5,7 +5,6 @@ import {
   FONTS,
   GLOBAL,
   IP_INFO_API,
-  IS_APPLE_DEVICE,
   LANG,
   OVERVIEW_CARD,
   PROXY_CARD_SIZE,
@@ -68,10 +67,7 @@ export const font = computed({
     fontConfig.value = val
   },
 })
-export const emoji = useStorage<EMOJIS>(
-  'config/emoji',
-  IS_APPLE_DEVICE ? EMOJIS.TWEMOJI : EMOJIS.NOTO_COLOR_EMOJI,
-)
+export const emoji = useStorage<EMOJIS>('config/emoji', EMOJIS.TWEMOJI)
 export const customBackgroundURL = useStorage(
   'config/custom-background-image',
   'https://a.f22a.net/get-image/bg.jpg',
@@ -87,8 +83,8 @@ export const displayAllFeatures = useStorage('config/display-all-features', true
 export const blurIntensity = useStorage('config/blur-intensity', 10)
 export const scrollAnimationEffect = useStorage('config/scroll-animation-effect', true)
 export const IPInfoAPI = useStorage('config/geoip-info-api', IP_INFO_API.IPSB)
-export const autoDisconnectIdleUDP = useStorage('config/auto-disconnect-idle-udp', false)
-export const autoDisconnectIdleUDPTime = useStorage('config/auto-disconnect-idle-udp-time', 300)
+export const autoDisconnectIdleUDP = useStorage('config/auto-disconnect-idle-udp', true)
+export const autoDisconnectIdleUDPTime = useStorage('config/auto-disconnect-idle-udp-time', 1)
 
 // overview
 export const splitOverviewPage = useStorage('config/split-overview-page', true)
@@ -149,7 +145,7 @@ if (missingCards.length > 0) {
 
 // proxies
 export const collapseGroupMap = useStorage<Record<string, boolean>>('config/collapse-group-map', {})
-export const displayFinalOutbound = useStorage('config/show-seleted-for-now-node', false)
+export const displayFinalOutbound = useStorage('config/show-seleted-for-now-node', true)
 export const twoColumnProxyGroup = useStorage('config/two-columns', false)
 export const speedtestUrl = useStorage<string>('config/speedtest-url', TEST_URL)
 export const independentLatencyTest = useStorage('config/independent-latency-test', false)
@@ -162,8 +158,8 @@ export const automaticDisconnection = useStorage('config/automatic-disconnection
 export const truncateProxyName = useStorage('config/truncate-proxy-name', true)
 export const proxyPreviewType = useStorage('config/proxy-preview-type', PROXY_PREVIEW_TYPE.AUTO)
 export const hideUnavailableProxies = useStorage('config/hide-unavailable-proxies', false)
-export const lowLatency = useStorage('config/low-latency', 200)
-export const mediumLatency = useStorage('config/medium-latency', 500)
+export const lowLatency = useStorage('config/low-latency', 400)
+export const mediumLatency = useStorage('config/medium-latency', 800)
 export const IPv6test = useStorage('config/ipv6-test', true)
 export const proxyCardSize = useStorage<PROXY_CARD_SIZE>(
   'config/proxy-card-size',
