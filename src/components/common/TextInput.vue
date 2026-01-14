@@ -71,40 +71,50 @@ const handlerSearchInputClick = (e: Event) => {
       return () =>
         h(
           'div',
-          { class: 'max-h-64 overflow-y-auto overflow-x-hidden scrollbar-hidden min-w-24' },
+          { class: 'max-h-64 overflow-y-auto overflow-x-hidden scrollbar-hidden min-w-24 py-1' },
           props.menus.map((item) =>
-            h('div', { class: 'cursor-pointer p-1 flex gap-2 items-center overflow-hidden' }, [
-              h(
-                'span',
-                {
-                  class: 'flex-1 transition-transform hover:scale-105 hover:text-primary truncate',
-                  onClick: () => {
-                    inputValue.value = item
-                    hideTip()
+            h(
+              'div',
+              {
+                class:
+                  'cursor-pointer rounded-sm p-1 px-3 flex gap-2 items-center overflow-hidden hover:bg-base-300',
+              },
+              [
+                h(
+                  'span',
+                  {
+                    class: 'flex-1 truncate',
+                    onClick: () => {
+                      inputValue.value = item
+                      hideTip()
+                    },
                   },
-                },
-                item,
-              ),
-              props.menusDeleteable &&
-                h(XMarkIcon, {
-                  class: 'h-3 w-3 transition-transform hover:scale-125',
-                  onClick: (e) => {
-                    const target = e.target as HTMLElement
+                  item,
+                ),
+                props.menusDeleteable &&
+                  h(XMarkIcon, {
+                    class: 'h-3 w-3 transition-transform hover:scale-125',
+                    onClick: (e) => {
+                      const target = e.target as HTMLElement
 
-                    emits(
-                      'update:menus',
-                      props.menus.filter((menu) => menu !== item),
-                    )
-                    target.closest('div')?.remove()
-                  },
-                }),
-            ]),
+                      emits(
+                        'update:menus',
+                        props.menus.filter((menu) => menu !== item),
+                      )
+                      target.closest('div')?.remove()
+                    },
+                  }),
+              ],
+            ),
           ),
         )
     },
   })
   const mountEl = document.createElement('div')
-  const app = createApp(PopContent, { menus: props.menus, menusDeleteable: props.menusDeleteable })
+  const app = createApp(PopContent, {
+    menus: props.menus,
+    menusDeleteable: props.menusDeleteable,
+  })
 
   app.mount(mountEl)
 

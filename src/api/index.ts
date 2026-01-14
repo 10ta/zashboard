@@ -156,7 +156,11 @@ export const fetchRulesAPI = () => {
   return axios.get<{ rules: Rule[] }>('/rules')
 }
 
-export const toggleRuleDisabledAPI = (uuid: string) => {
+export const toggleRuleDisabledAPI = (data: Record<number, boolean>) => {
+  return axios.patch(`/rules/disable`, data)
+}
+
+export const toggleRuleDisabledSingBoxAPI = (uuid: string) => {
   return axios.put(`/rules/${encodeURIComponent(uuid)}`)
 }
 

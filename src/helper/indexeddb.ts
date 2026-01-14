@@ -51,6 +51,7 @@ const useIndexedDB = (dbKey: string) => {
   }
 
   const put = async (key: string, value: string) => {
+    await dbPromise
     cacheMap.set(key, value)
     return executeTransaction('readwrite', (store) =>
       store.put({
@@ -66,6 +67,7 @@ const useIndexedDB = (dbKey: string) => {
   }
 
   const clear = async () => {
+    await dbPromise
     cacheMap.clear()
     return executeTransaction('readwrite', (store) => store.clear())
   }
@@ -76,6 +78,7 @@ const useIndexedDB = (dbKey: string) => {
   }
 
   const del = async (key: string) => {
+    await dbPromise
     cacheMap.delete(key)
     return executeTransaction('readwrite', (store) => store.delete(key))
   }

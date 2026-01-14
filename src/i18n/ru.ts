@@ -148,7 +148,8 @@ const ru: LANG_MESSAGE = {
   ipScreenshotTip: 'Пожалуйста, убедитесь, что реальный IP скрыт при создании скриншотов.',
   showStatisticsWhenSidebarCollapsed: 'Показать статистику при сворачивании панели',
   totalConnections: 'Статистика соединений',
-  totalConnectionsTip: 'Учитываются только соединения, открытые во время работы панели',
+  totalConnectionsTip:
+    'Учитываются только соединения, открытые во время работы панели. \nВремя начала записи: {statsStartTime}',
   mostDownloadHost: 'Ресурс с наибольшим скачиванием',
   mostUploadHost: 'Ресурс с наибольшей отправкой данных',
   mostDownloadSourceIP: 'IP-источник с наибольшим скачиванием',
@@ -191,6 +192,7 @@ const ru: LANG_MESSAGE = {
   displayGlobalByMode: 'Отображать GLOBAL по режиму',
   displaySelectedNode: 'Отображать выбранный узел',
   displayLatencyNumber: 'Отображать задержку',
+  disconnectOnRuleDisable: 'Разрывать соединения при отключении правила',
   tipForFixed:
     'Текущая стратегическая группа закреплена за текущим узлом. Нажмите «Тест скорости», чтобы восстановить поведение {type}.',
   remoteAddress: 'удалённый адрес',
@@ -270,6 +272,9 @@ const ru: LANG_MESSAGE = {
   providerTrafficOverview: 'Обзор трафика провайдера',
   topologyCharts: 'Топологические графики',
   connectionHistory: 'История подключений',
+  ruleHitCountCard: 'Статистика попаданий/промахов правил',
+  ruleHitChart: 'Статистика попаданий',
+  ruleMissChart: 'Статистика промахов',
   latency: 'Задержка',
   proxyStyle: 'Стиль прокси',
   icon: 'Иконка',
@@ -290,8 +295,17 @@ const ru: LANG_MESSAGE = {
   clearConnectionHistoryConfirm:
     'Вы уверены, что хотите очистить все данные истории соединений? Это действие нельзя отменить.',
   clearConnectionHistorySuccess: 'История соединений успешно очищена',
+  autoCleanupInterval: 'Интервал автоматической очистки',
+  autoCleanupIntervalWeek: 'Еженедельно',
+  autoCleanupIntervalMonth: 'Ежемесячно',
+  autoCleanupIntervalQuarter: 'Ежеквартально',
+  autoCleanupIntervalNever: 'Никогда',
   remainingTraffic: 'Осталось',
   usedTraffic: 'Использовано',
+  ruleHitCount: 'Попадание: {count} раз',
+  ruleLastHit: 'Последнее попадание: {time}',
+  ruleMissCount: 'Промах: {count} раз',
+  ruleLastMiss: 'Последний промах: {time}',
 }
 
 export default ru

@@ -1,32 +1,60 @@
 <template>
   <div class="card w-full backdrop-blur-none!">
     <div class="card-title need-blur flex items-center justify-between px-4 pt-4">
-      <div class="flex items-center gap-1">
-        {{ $t('totalConnections') }}
-        <QuestionMarkCircleIcon
-          class="h-4 w-4 cursor-pointer"
-          @mouseenter="showTip($event, $t('totalConnectionsTip'))"
-        />
-      </div>
-      <div class="flex items-center gap-2 font-normal">
-        <span class="text-sm max-md:hidden">{{ $t('aggregateBy') }}:</span>
-        <select
-          v-model="aggregationType"
-          class="select select-bordered select-sm w-32"
-        >
-          <option :value="ConnectionHistoryType.SourceIP">{{ $t('aggregateBySourceIP') }}</option>
-          <option :value="ConnectionHistoryType.Destination">
-            {{ $t('aggregateByDestination') }}
-          </option>
-          <option :value="ConnectionHistoryType.Process">{{ $t('aggregateByProcess') }}</option>
-          <option :value="ConnectionHistoryType.Outbound">{{ $t('aggregateByOutbound') }}</option>
-        </select>
-        <button
-          class="btn btn-circle btn-sm"
-          @click="showClearDialog = true"
-        >
-          <TrashIcon class="h-4 w-4" />
-        </button>
+      <div class="flex w-full items-center gap-4 max-sm:flex-col max-sm:items-start">
+        <div class="flex flex-1 items-center gap-2">
+          {{ $t('totalConnections') }}
+
+          <button
+            class="btn btn-circle btn-sm"
+            @click="showClearDialog = true"
+          >
+            <TrashIcon class="h-4 w-4" />
+          </button>
+          <QuestionMarkCircleIcon
+            class="h-4 w-4 cursor-pointer"
+            @mouseenter="showTip($event, totalConnectionsTip)"
+          />
+        </div>
+
+        <div class="flex items-center gap-2 font-normal max-sm:flex-col max-sm:items-start">
+          <div class="flex items-center gap-2">
+            <span class="text-sm">{{ $t('aggregateBy') }}</span>
+            <select
+              v-model="aggregationType"
+              class="select select-bordered select-sm w-32"
+            >
+              <option :value="ConnectionHistoryType.SourceIP">
+                {{ $t('aggregateBySourceIP') }}
+              </option>
+              <option :value="ConnectionHistoryType.Destination">
+                {{ $t('aggregateByDestination') }}
+              </option>
+              <option :value="ConnectionHistoryType.Process">{{ $t('aggregateByProcess') }}</option>
+              <option :value="ConnectionHistoryType.Outbound">
+                {{ $t('aggregateByOutbound') }}
+              </option>
+            </select>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="text-sm">{{ $t('autoCleanupInterval') }}</span>
+            <select
+              v-model="autoCleanupInterval"
+              class="select select-bordered select-sm w-28"
+            >
+              <option :value="AutoCleanupInterval.Never">
+                {{ $t('autoCleanupIntervalNever') }}
+              </option>
+              <option :value="AutoCleanupInterval.Week">{{ $t('autoCleanupIntervalWeek') }}</option>
+              <option :value="AutoCleanupInterval.Month">
+                {{ $t('autoCleanupIntervalMonth') }}
+              </option>
+              <option :value="AutoCleanupInterval.Quarter">
+                {{ $t('autoCleanupIntervalQuarter') }}
+              </option>
+            </select>
+          </div>
+        </div>
       </div>
     </div>
     <div class="card-body need-blur gap-0! p-0!">
@@ -176,13 +204,21 @@ import {
 } from '@tanstack/vue-table'
 import { useVirtualizer } from '@tanstack/vue-virtual'
 import { useStorage } from '@vueuse/core'
-import { computed, h, ref } from 'vue'
+import dayjs from 'dayjs'
+import { computed, h, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import DialogWrapper from '../common/DialogWrapper.vue'
 import ProxyName from '../proxies/ProxyName.vue'
 
 const { t } = useI18n()
 const { showTip } = useTooltip()
+
+enum AutoCleanupInterval {
+  Never = 'never',
+  Week = 'week',
+  Month = 'month',
+  Quarter = 'quarter',
+}
 
 interface ConnectionHistoryData {
   key: string
@@ -332,11 +368,57 @@ const virtualRows = computed(() => rowVirtualizer.value.getVirtualItems())
 const totalSize = computed(() => rowVirtualizer.value.getTotalSize() + 24)
 
 const showClearDialog = ref(false)
+const autoCleanupInterval = useStorage<AutoCleanupInterval>(
+  'config/connection-history-auto-cleanup-interval',
+  AutoCleanupInterval.Month,
+)
+const startTime = useStorage<number>('cache/connection-history-stats-start-time', Date.now())
+const totalConnectionsTip = computed(() => {
+  const dayjsTime = dayjs(startTime.value)
+
+  return t('totalConnectionsTip', {
+    statsStartTime: `${dayjsTime.format('YYYY-MM-DD HH:mm')} (${dayjsTime.fromNow()})`,
+  })
+})
+const getCleanupIntervalMs = (interval: AutoCleanupInterval): number => {
+  switch (interval) {
+    case AutoCleanupInterval.Week:
+      return 7 * 24 * 60 * 60 * 1000
+    case AutoCleanupInterval.Month:
+      return 30 * 24 * 60 * 60 * 1000
+    case AutoCleanupInterval.Quarter:
+      return 90 * 24 * 60 * 60 * 1000
+    case AutoCleanupInterval.Never:
+    default:
+      return 0
+  }
+}
+
+const checkAndPerformAutoCleanup = async () => {
+  if (autoCleanupInterval.value === AutoCleanupInterval.Never) {
+    return
+  }
+
+  const now = Date.now()
+  const intervalMs = getCleanupIntervalMs(autoCleanupInterval.value)
+  const timeSinceLastCleanup = now - startTime.value
+
+  if (timeSinceLastCleanup >= intervalMs) {
+    try {
+      await clearConnectionHistoryFromIndexedDB()
+      await initAggregatedDataMap()
+      startTime.value = now
+    } catch (error) {
+      console.error('Failed to perform auto cleanup:', error)
+    }
+  }
+}
 
 const handleClearHistory = async () => {
   try {
     await clearConnectionHistoryFromIndexedDB()
     await initAggregatedDataMap()
+    startTime.value = Date.now()
     showClearDialog.value = false
     showNotification({
       content: t('clearConnectionHistorySuccess'),
@@ -350,4 +432,8 @@ const handleClearHistory = async () => {
     })
   }
 }
+
+onMounted(() => {
+  checkAndPerformAutoCleanup()
+})
 </script>

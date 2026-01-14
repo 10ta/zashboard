@@ -7,6 +7,7 @@
   />
   <img
     v-else
+    class="inline-block"
     :style="style"
     :src="icon"
   />

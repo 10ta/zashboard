@@ -18,7 +18,7 @@
     >
       <ProxyIcon
         v-if="node?.icon"
-        class="mb-1 inline-block shrink-0"
+        class="-mt-[2px] shrink-0 align-middle"
         :icon="node.icon"
         :fill="active ? 'fill-primary-content' : 'fill-base-content'"
       /><span

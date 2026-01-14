@@ -5,14 +5,12 @@
       placeholder="Domain Name"
       :clearable="true"
     />
-    <select
+    <TextInput
       v-model="form.type"
-      class="join-item select select-sm"
-    >
-      <option value="A">A</option>
-      <option value="AAAA">AAAA</option>
-      <option value="MX">MX</option>
-    </select>
+      class="w-28"
+      placeholder="Type"
+      :menus="['A', 'AAAA', 'HTTPS']"
+    />
     <button
       class="btn join-item btn-sm"
       @click="query"

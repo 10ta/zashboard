@@ -19,6 +19,7 @@ import ChartsCard from '@/components/overview/ChartsCard.vue'
 import ConnectionHistory from '@/components/overview/ConnectionHistory.vue'
 import NetworkCard from '@/components/overview/NetworkCard.vue'
 import ProviderTrafficOverview from '@/components/overview/ProviderTrafficOverview.vue'
+import RuleHitCountCard from '@/components/overview/RuleHitCountCard.vue'
 import TopologyCharts from '@/components/overview/TopologyCharts.vue'
 import OverviewCtrl from '@/components/sidebar/OverviewCtrl.vue'
 import { usePaddingForViews } from '@/composables/paddingViews'
@@ -40,5 +41,6 @@ const cardComponents: Record<string, Component> = {
   ProviderTrafficOverview,
   TopologyCharts,
   ConnectionHistory,
+  RuleHitCountCard,
 }
 </script>

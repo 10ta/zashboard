@@ -146,7 +146,8 @@ const en = {
   ipScreenshotTip: 'Please hide the IP when taking screenshots.',
   showStatisticsWhenSidebarCollapsed: 'Show statistics when sidebar collapsed',
   totalConnections: 'Connection statistics',
-  totalConnectionsTip: 'Only connections opened while the panel is open are counted',
+  totalConnectionsTip:
+    'Only connections opened while the panel is open are counted. \nRecording start time: {statsStartTime}',
   mostDownloadHost: 'Most downloaded host',
   mostUploadHost: 'Most uploaded host',
   mostDownloadSourceIP: 'Most downloaded source IP',
@@ -188,6 +189,7 @@ const en = {
   displayGlobalByMode: 'Display GLOBAL by mode',
   displaySelectedNode: 'Show selected node',
   displayLatencyNumber: 'Show latency numbers',
+  disconnectOnRuleDisable: 'Disconnect connections when disabling rule',
   tipForFixed:
     'The current policy group is locked to the current node. Run a speed test to restore {type} behavior.',
   remoteAddress: 'Remote address',
@@ -267,6 +269,9 @@ const en = {
   providerTrafficOverview: 'Provider Traffic Overview',
   topologyCharts: 'Topology Charts',
   connectionHistory: 'Connection History',
+  ruleHitCountCard: 'Rule Hit/Miss Statistics',
+  ruleHitChart: 'Hit Statistics',
+  ruleMissChart: 'Miss Statistics',
   latency: 'Latency',
   proxyStyle: 'Proxy style',
   icon: 'Icon',
@@ -287,8 +292,17 @@ const en = {
   clearConnectionHistoryConfirm:
     'Are you sure you want to clear all connection history data? This action cannot be undone.',
   clearConnectionHistorySuccess: 'Connection history data cleared successfully',
+  autoCleanupInterval: 'Auto cleanup interval',
+  autoCleanupIntervalWeek: 'Weekly',
+  autoCleanupIntervalMonth: 'Monthly',
+  autoCleanupIntervalQuarter: 'Quarterly',
+  autoCleanupIntervalNever: 'Never',
   remainingTraffic: 'Remaining',
   usedTraffic: 'Used',
+  ruleHitCount: 'Hit: {count} times',
+  ruleLastHit: 'Last hit: {time}',
+  ruleMissCount: 'Miss: {count} times',
+  ruleLastMiss: 'Last miss: {time}',
 }
 
 export type LANG_MESSAGE = typeof en

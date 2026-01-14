@@ -3,7 +3,11 @@ import { useCtrlsBar } from '@/composables/useCtrlsBar'
 import { RULE_TAB_TYPE } from '@/constant'
 import { showNotification } from '@/helper/notification'
 import { fetchRules, ruleProviderList, rules, rulesFilter, rulesTabShow } from '@/store/rules'
-import { displayLatencyInRule, displayNowNodeInRule } from '@/store/settings'
+import {
+  disconnectOnRuleDisable,
+  displayLatencyInRule,
+  displayNowNodeInRule,
+} from '@/store/settings'
 import { ArrowPathIcon, WrenchScrewdriverIcon } from '@heroicons/vue/24/outline'
 import { computed, defineComponent, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -128,6 +132,14 @@ export default defineComponent({
                   class="toggle"
                   type="checkbox"
                   v-model={displayLatencyInRule.value}
+                />
+              </div>
+              <div class="flex items-center gap-2">
+                {t('disconnectOnRuleDisable')}
+                <input
+                  class="toggle"
+                  type="checkbox"
+                  v-model={disconnectOnRuleDisable.value}
                 />
               </div>
             </div>

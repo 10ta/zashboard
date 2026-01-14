@@ -15,11 +15,7 @@
   >
     <div :style="{ height: `${totalSize}px` }">
       <table
-        :class="[
-          'table-zebra table rounded-none shadow-md',
-          sizeOfTable,
-          isManualTable && 'table-fixed',
-        ]"
+        :class="['table rounded-none shadow-md', sizeOfTable, isManualTable && 'table-fixed']"
         :style="
           isManualTable && {
             width: `${tanstackTable.getCenterTotalSize()}px`,
@@ -117,11 +113,11 @@
               height: `${virtualRow.size}px`,
               transform: `translateY(${virtualRow.start - index * virtualRow.size}px)`,
             }"
-            class="bg-base-100 hover:bg-primary! hover:text-primary-content"
-            :class="{
-              'cursor-pointer': !isDragging,
-              'cursor-grabbing': isDragging,
-            }"
+            class="hover:bg-primary! hover:text-primary-content"
+            :class="[
+              index % 2 === 0 ? 'bg-base-100' : 'bg-base-200',
+              !isDragging ? 'cursor-pointer' : 'cursor-grabbing',
+            ]"
             @click="handlerClickRow(rows[virtualRow.index])"
           >
             <td

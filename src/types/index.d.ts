@@ -76,8 +76,18 @@ export type Rule = {
   payload: string
   proxy: string
   size: number
-  disabled: boolean
   uuid: string
+  // sing-box-reFind
+  disabled?: boolean
+  // mihomo
+  index: number
+  extra?: {
+    disabled: false
+    hitAt: string
+    hitCount: number
+    missAt: string
+    missCount: number
+  }
 }
 
 export type RuleProvider = {

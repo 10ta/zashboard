@@ -42,10 +42,16 @@
         >
           <ArrowPathIcon class="h-4 w-4" />
         </button>
+        <InformationCircleIcon
+          v-if="rule.extra"
+          class="-mt-[2px] ml-1 inline-block h-4 w-4"
+          @mouseenter="showRuleHitInfoTip"
+          @click.stop
+        />
       </div>
       <div class="flex min-h-6 flex-wrap items-center gap-1 md:gap-2">
         <input
-          v-if="rule.uuid"
+          v-if="rule.uuid || rule.extra"
           type="checkbox"
           class="toggle toggle-sm"
           :checked="!isDisabled"
@@ -105,11 +111,17 @@
 </template>
 
 <script setup lang="ts">
-import { toggleRuleDisabledAPI, updateRuleProviderAPI } from '@/api'
+import {
+  disconnectByIdAPI,
+  toggleRuleDisabledAPI,
+  toggleRuleDisabledSingBoxAPI,
+  updateRuleProviderAPI,
+} from '@/api'
 import { useBounceOnVisible } from '@/composables/bouncein'
 import { NOT_CONNECTED } from '@/constant'
 import { getColorForLatency } from '@/helper'
 import { useTooltip } from '@/helper/tooltip'
+import { activeConnections } from '@/store/connections'
 import {
   getLatencyByName,
   getNowProxyNodeName,
@@ -118,15 +130,21 @@ import {
   proxyMap,
 } from '@/store/proxies'
 import { fetchRules, ruleProviderList } from '@/store/rules'
-import { displayLatencyInRule, displayNowNodeInRule } from '@/store/settings'
+import {
+  disconnectOnRuleDisable,
+  displayLatencyInRule,
+  displayNowNodeInRule,
+} from '@/store/settings'
 import type { Rule } from '@/types'
 import {
   ArrowPathIcon,
   ArrowRightCircleIcon,
+  InformationCircleIcon,
   QuestionMarkCircleIcon,
 } from '@heroicons/vue/24/outline'
+import dayjs from 'dayjs'
 import { twMerge } from 'tailwind-merge'
-import { computed, ref } from 'vue'
+import { computed, createApp, defineComponent, h, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import ProxyGroup from '../proxies/ProxyGroup.vue'
 import ProxyName from '../proxies/ProxyName.vue'
@@ -158,7 +176,15 @@ const size = computed(() => {
 
 const isUpdating = ref(false)
 const isTogglingDisabled = ref(false)
-const isDisabled = computed(() => props.rule.disabled)
+const isDisabled = computed(() => {
+  const rule = props.rule
+
+  if (rule.extra) {
+    return rule.extra.disabled
+  }
+
+  return rule.disabled
+})
 
 const isUpdateableRuleSet = computed(() => {
   if (props.rule.type !== 'RuleSet') {
@@ -187,7 +213,26 @@ const toggleRuleDisabledHandler = async () => {
 
   try {
     isTogglingDisabled.value = true
-    await toggleRuleDisabledAPI(props.rule.uuid)
+    const willBeDisabled = !isDisabled.value
+
+    if (props.rule.uuid) {
+      await toggleRuleDisabledSingBoxAPI(props.rule.uuid)
+    } else {
+      await toggleRuleDisabledAPI({ [props.rule.index]: willBeDisabled })
+    }
+
+    if (willBeDisabled && disconnectOnRuleDisable.value) {
+      const matchingConnections = activeConnections.value.filter((conn) => {
+        const ruleTypeMatches = conn.rule === props.rule.type
+        const rulePayloadMatches = (conn.rulePayload || '') === (props.rule.payload || '')
+        return ruleTypeMatches && rulePayloadMatches
+      })
+
+      if (matchingConnections.length > 0) {
+        matchingConnections.forEach((conn) => disconnectByIdAPI(conn.id))
+      }
+    }
+
     await fetchRules()
   } finally {
     isTogglingDisabled.value = false
@@ -196,6 +241,44 @@ const toggleRuleDisabledHandler = async () => {
 
 const showMMDBSizeTip = (e: Event) => {
   showTip(e, t('mmdbSizeTip'))
+}
+
+const ruleHitCount = computed(() => t('ruleHitCount', { count: props.rule.extra?.hitCount }))
+const ruleLastHit = computed(() =>
+  t('ruleLastHit', { time: dayjs(props.rule.extra?.hitAt).format('YYYY-MM-DD HH:mm:ss') }),
+)
+const ruleMissCount = computed(() => t('ruleMissCount', { count: props.rule.extra?.missCount }))
+const ruleLastMiss = computed(() =>
+  t('ruleLastMiss', { time: dayjs(props.rule.extra?.missAt).format('YYYY-MM-DD HH:mm:ss') }),
+)
+
+const showRuleHitInfoTip = (e: Event) => {
+  if (!props.rule.extra) return
+
+  const PopContent = defineComponent({
+    setup() {
+      return () =>
+        h('div', { class: 'flex flex-col gap-2 text-sm' }, [
+          h('div', { class: 'flex flex-col gap-1' }, [
+            h('div', ruleHitCount.value),
+            h('div', ruleLastHit.value),
+          ]),
+          h('div', { class: 'flex flex-col gap-1' }, [
+            h('div', ruleMissCount.value),
+            h('div', ruleLastMiss.value),
+          ]),
+        ])
+    },
+  })
+  const mountEl = document.createElement('div')
+  const app = createApp(PopContent)
+
+  app.mount(mountEl)
+
+  showTip(e, mountEl, {
+    delay: [500, 0],
+    trigger: 'mouseenter',
+  })
 }
 
 const clickHandler = () => {

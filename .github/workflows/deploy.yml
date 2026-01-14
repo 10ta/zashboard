@@ -23,6 +23,7 @@ jobs:
         with:
           token: ${{ secrets.PAT }}
           release-type: node
+          target-branch: main
 
   build-and-deploy:
     needs: release-please
