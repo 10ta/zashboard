@@ -15,7 +15,7 @@ export const useSwipeRouter = () => {
   const swiperRef = ref()
   const route = useRoute()
   const router = useRouter()
-  const { direction } = useSwipe(swiperRef, { threshold: 75 })
+  const { direction } = useSwipe(swiperRef, { threshold: 90 })
 
   const swipeList = computed(() => {
     return flatten(
