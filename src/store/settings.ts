@@ -24,7 +24,7 @@ import { useStorage } from '@vueuse/core'
 import { computed } from 'vue'
 
 // global
-export const defaultTheme = useStorage<string>('config/default-theme', 'abyss')
+export const defaultTheme = useStorage<string>('config/default-theme', 'dracula')
 export const darkTheme = useStorage<string>('config/dark-theme', 'dark')
 export const autoTheme = useStorage<boolean>('config/auto-theme', false)
 export const theme = computed(() => {
@@ -55,7 +55,7 @@ export const isSidebarCollapsed = computed({
     isSidebarCollapsedConfig.value = value
   },
 })
-const fontConfig = useStorage<FONTS>('config/font', FONTS.MI_SANS)
+const fontConfig = useStorage<FONTS>('config/font', FONTS.SARASA_UI)
 export const font = computed({
   get: () => {
     const mode = import.meta.env.MODE
