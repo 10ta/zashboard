@@ -1,5 +1,11 @@
 <template>
-  <div class="join w-96 max-sm:w-full">
+  <div class="settings-section-label">
+    {{ $t('DNSQuery') }}
+  </div>
+  <form
+    class="join w-96 max-sm:w-full"
+    @submit.prevent="query"
+  >
     <TextInput
       v-model="form.name"
       placeholder="Domain Name"
@@ -12,13 +18,16 @@
       :menus="['A', 'AAAA', 'HTTPS']"
     />
     <button
+      type="submit"
       class="btn join-item btn-sm"
-      @click="query"
     >
       {{ $t('DNSQuery') }}
     </button>
-  </div>
-  <div class="flex max-h-96 flex-col gap-1 overflow-y-auto">
+  </form>
+  <div
+    class="flex max-h-96 flex-col gap-1 overflow-y-auto p-3"
+    v-if="resultList?.length"
+  >
     <div
       class="flex gap-1"
       v-for="item in resultList"

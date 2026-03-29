@@ -1,7 +1,7 @@
 <template>
   <div :class="`collapse ${showCollapse ? 'collapse-open' : 'collapse-close'}`">
     <div
-      class="collapse-title cursor-pointer overflow-hidden pr-4"
+      class="collapse-title cursor-pointer pr-4"
       @click="showCollapse = !showCollapse"
     >
       <slot name="title" />
@@ -16,7 +16,7 @@
     >
       <div
         v-if="showContent"
-        class="max-h-108 overflow-y-auto p-4 pt-0 max-md:p-2"
+        class="max-h-108 overflow-y-auto p-4 pt-0"
         :class="[SCROLLABLE_PARENT_CLASS, !showCollapse && 'opacity-0']"
       >
         <slot name="content" />
@@ -32,14 +32,17 @@ import { computed, ref, watch } from 'vue'
 
 const props = defineProps<{
   name: string
+  forceOpen?: boolean
 }>()
 
 const showCollapse = computed({
   get() {
-    return collapseGroupMap.value[props.name]
+    return props.forceOpen || collapseGroupMap.value[props.name]
   },
   set(value) {
-    collapseGroupMap.value[props.name] = value
+    if (!props.forceOpen) {
+      collapseGroupMap.value[props.name] = value
+    }
   },
 })
 

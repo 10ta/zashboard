@@ -1,35 +1,41 @@
 <template>
-  <template v-if="proxyGroup.now">
-    <Component
-      class="h-4 w-4 shrink-0 outline-none"
-      :is="isFixed ? LockClosedIcon : ArrowRightCircleIcon"
-      @mouseenter="tipForFixed"
-    />
-
-    <ProxyName
-      :name="proxyGroup.now"
-      class="text-base-content/80 text-xs md:text-sm"
-    />
-    <template v-if="finalOutbound && displayFinalOutbound">
-      <ArrowRightCircleIcon class="h-4 w-4 shrink-0" />
-      <ProxyName
-        :name="finalOutbound"
-        class="text-base-content/80 text-xs md:text-sm"
+  <div class="flex flex-1 items-center gap-1 truncate pb-1">
+    <template v-if="proxyGroup.now">
+      <Component
+        class="h-4 w-4 shrink-0 outline-none"
+        :is="isFixed ? LockClosedIcon : ArrowRightCircleIcon"
+        @mouseenter="tipForFixed"
       />
+      <ProxyName
+        :name="proxyGroup.now"
+        :class="
+          isNowAGroup && 'hover:bg-base-300 hover:-mx-1 hover:rounded-lg hover:px-1 hover:shadow'
+        "
+        class="text-base-content/80 text-xs md:text-sm"
+        @click="handlerClickNow"
+      />
+      <template v-if="finalOutbound && displayFinalOutbound">
+        <ArrowRightCircleIcon class="h-4 w-4 shrink-0" />
+        <ProxyName
+          :name="finalOutbound"
+          class="text-base-content/80 text-xs md:text-sm"
+        />
+      </template>
     </template>
-  </template>
-  <template v-else-if="proxyGroup.type.toLowerCase() === PROXY_TYPE.LoadBalance">
-    <CheckCircleIcon class="h-4 w-4 shrink-0" />
-    <span class="text-base-content/80 text-xs md:text-sm">
-      {{ $t('loadBalance') }}
-    </span>
-  </template>
+    <template v-else-if="proxyGroup.type.toLowerCase() === PROXY_TYPE.LoadBalance">
+      <CheckCircleIcon class="h-4 w-4 shrink-0" />
+      <span class="text-base-content/80 text-xs md:text-sm">
+        {{ $t('loadBalance') }}
+      </span>
+    </template>
+  </div>
 </template>
 
 <script setup lang="ts">
 import { PROXY_TYPE } from '@/constant'
 import { useTooltip } from '@/helper/tooltip'
-import { getNowProxyNodeName, proxyMap } from '@/store/proxies'
+import { scrollToGroup } from '@/helper/utils'
+import { getNowProxyNodeName, proxyGroupList, proxyMap } from '@/store/proxies'
 import { displayFinalOutbound } from '@/store/settings'
 import { ArrowRightCircleIcon, CheckCircleIcon, LockClosedIcon } from '@heroicons/vue/24/outline'
 import { computed } from 'vue'
@@ -58,6 +64,10 @@ const tipForFixed = (e: Event) => {
   })
 }
 
+const isNowAGroup = computed(() => {
+  return proxyGroupList.value.includes(proxyGroup.value.now)
+})
+
 const finalOutbound = computed(() => {
   const now = getNowProxyNodeName(proxyGroup.value.now)
 
@@ -67,4 +77,11 @@ const finalOutbound = computed(() => {
 
   return now
 })
+
+const handlerClickNow = (e: Event) => {
+  if (isNowAGroup.value) {
+    e.stopPropagation()
+    scrollToGroup(proxyGroup.value.now)
+  }
+}
 </script>

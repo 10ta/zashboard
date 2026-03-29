@@ -1,6 +1,7 @@
 <template>
   <div
     class="relative h-22 cursor-pointer"
+    :data-group-name="proxyGroup.name"
     ref="cardWrapperRef"
     @click="handlerGroupClick"
   >
@@ -72,7 +73,7 @@
         class="will-change-opacity max-h-108 overflow-y-auto overscroll-contain p-2 transition-opacity duration-200 ease-out"
         :class="[SCROLLABLE_PARENT_CLASS]"
         :style="{
-          width: 'calc(100vw - 1rem)',
+          width: WIDTH_STYLE,
           opacity: contentOpacity,
           contain: 'layout style paint',
         }"
@@ -105,6 +106,7 @@ import ProxiesContent from './ProxiesContent.vue'
 import ProxyGroupNow from './ProxyGroupNow.vue'
 import ProxyIcon from './ProxyIcon.vue'
 
+const WIDTH_STYLE = 'calc(100vw - 1.5rem)'
 const props = defineProps<{
   name: string
 }>()
@@ -190,7 +192,7 @@ const calcCardStyle = () => {
     }
 
     cardStyle.value = {
-      width: 'calc(100vw - 1rem)',
+      width: WIDTH_STYLE,
       maxHeight: `${innerHeight - verticalOffset - 112}px`,
       transform: `translate3d(0, ${transformValueY}px, 0) scale(1)`,
       transformOrigin,

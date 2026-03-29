@@ -3,16 +3,17 @@
     class="max-md:scrollbar-hidden h-full"
     :class="disableProxiesPageScroll ? 'overflow-y-hidden' : 'overflow-y-scroll'"
     :style="padding"
+    :id="PROXIES_PAGE"
     ref="proxiesRef"
     @scroll.passive="handleScroll"
   >
     <ProxiesCtrl />
     <template v-if="displayTwoColumns">
-      <div class="grid grid-cols-2 gap-1 p-2 md:pr-1">
+      <div class="grid grid-cols-2 gap-3 p-3 md:pr-1">
         <div
           v-for="idx in [0, 1]"
           :key="idx"
-          class="flex flex-1 flex-col gap-1"
+          class="flex flex-1 flex-col gap-3"
         >
           <component
             v-for="name in filterContent(renderGroups, idx)"
@@ -24,7 +25,7 @@
       </div>
     </template>
     <div
-      class="grid grid-cols-1 gap-1 p-2 md:pr-1"
+      class="grid grid-cols-1 gap-3 p-3 md:pr-1"
       v-else
     >
       <component
@@ -45,7 +46,7 @@ import ProxiesCtrl from '@/components/sidebar/ProxiesCtrl.tsx'
 import { usePaddingForViews } from '@/composables/paddingViews'
 import { disableProxiesPageScroll, isProxiesPageMounted, renderGroups } from '@/composables/proxies'
 import { PROXY_TAB_TYPE } from '@/constant'
-import { isMiddleScreen } from '@/helper/utils'
+import { isMiddleScreen, PROXIES_PAGE } from '@/helper/utils'
 import { fetchProxies, proxiesTabShow } from '@/store/proxies'
 import { twoColumnProxyGroup } from '@/store/settings'
 import { useSessionStorage } from '@vueuse/core'

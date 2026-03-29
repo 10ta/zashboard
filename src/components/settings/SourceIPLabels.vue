@@ -1,40 +1,53 @@
 <template>
-  <div class="flex items-center gap-2">
-    {{ $t('sourceIPLabels') }}
-    <template v-if="sourceIPLabelList.length"> ({{ sourceIPLabelList.length }}) </template>
+  <div class="setting-item">
+    <div class="setting-item-label">
+      {{ $t('sourceIPLabels') }}
+      <template v-if="sourceIPLabelList.length"> ({{ sourceIPLabelList.length }}) </template>
+    </div>
     <button
-      v-if="sourceIPLabelList.length"
-      class="btn btn-sm btn-circle"
-      @click="dialogVisible = !dialogVisible"
+      class="btn btn-sm"
+      @click="dialogVisible = true"
     >
-      <ChevronUpIcon
-        v-if="dialogVisible"
-        class="h-4 w-4"
-      />
-      <ChevronDownIcon
-        v-else
-        class="h-4 w-4"
-      />
+      <PencilSquareIcon class="h-4 w-4" />
     </button>
   </div>
-  <div
-    class="transparent-collapse collapse rounded-none shadow-none"
-    :class="dialogVisible ? 'collapse-open' : ''"
+
+  <DialogWrapper
+    v-model="dialogVisible"
+    :title="$t('sourceIPLabels')"
   >
-    <div class="collapse-content p-0">
-      <div class="flex flex-col gap-2">
-        <Draggable
-          v-if="dialogVisible"
-          class="flex flex-1 flex-col gap-2"
-          v-model="sourceIPLabelList"
-          group="list"
-          :animation="150"
-          :handle="'.drag-handle'"
-          :item-key="'uuid'"
-          @start="disableSwipe = true"
-          @end="disableSwipe = false"
+    <div class="flex flex-col gap-2 text-sm">
+      <div class="border-base-content/10 rounded-box border border-dashed p-2.5">
+        <SourceIPInput
+          v-model="newLabelForIP"
+          @keydown.enter="() => handlerLabelAdd()"
         >
-          <template #item="{ element: sourceIP }">
+          <template #prefix>
+            <TagIcon class="h-4 w-4 shrink-0" />
+          </template>
+          <template #default>
+            <button
+              class="btn btn-circle btn-sm"
+              @click="() => handlerLabelAdd()"
+            >
+              <PlusIcon class="h-4 w-4" />
+            </button>
+          </template>
+        </SourceIPInput>
+      </div>
+      <Draggable
+        v-if="dialogVisible"
+        class="flex flex-1 flex-col gap-2"
+        v-model="sourceIPLabelList"
+        group="list"
+        :animation="150"
+        :handle="'.drag-handle'"
+        :item-key="'uuid'"
+        @start="disableSwipe = true"
+        @end="disableSwipe = false"
+      >
+        <template #item="{ element: sourceIP }">
+          <div class="border-base-content/10 rounded-box border p-2.5">
             <SourceIPInput
               :model-value="sourceIP"
               @update:model-value="handlerLabelUpdate"
@@ -51,27 +64,11 @@
                 </button>
               </template>
             </SourceIPInput>
-          </template>
-        </Draggable>
-      </div>
+          </div>
+        </template>
+      </Draggable>
     </div>
-  </div>
-  <SourceIPInput
-    v-model="newLabelForIP"
-    @keydown.enter="handlerLabelAdd"
-  >
-    <template #prefix>
-      <TagIcon class="h-4 w-4 shrink-0" />
-    </template>
-    <template #default>
-      <button
-        class="btn btn-circle btn-sm"
-        @click="handlerLabelAdd"
-      >
-        <PlusIcon class="h-4 w-4" />
-      </button>
-    </template>
-  </SourceIPInput>
+  </DialogWrapper>
 </template>
 
 <script setup lang="ts">
@@ -79,17 +76,17 @@ import { disableSwipe } from '@/composables/swipe'
 import { sourceIPLabelList } from '@/store/settings'
 import type { SourceIPLabel } from '@/types'
 import {
-  ChevronDownIcon,
   ChevronUpDownIcon,
-  ChevronUpIcon,
+  PencilSquareIcon,
   PlusIcon,
   TagIcon,
   TrashIcon,
 } from '@heroicons/vue/24/outline'
 import { useSessionStorage } from '@vueuse/core'
 import { v4 as uuid } from 'uuid'
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import Draggable from 'vuedraggable'
+import DialogWrapper from '../common/DialogWrapper.vue'
 import SourceIPInput from './SourceIPInput.vue'
 
 const dialogVisible = useSessionStorage('cache/sourceip-label-dialog-visible', false)
@@ -98,21 +95,25 @@ const newLabelForIP = ref<Omit<SourceIPLabel, 'id'>>({
   label: '',
 })
 
-const handlerLabelAdd = () => {
+const resetNewLabelForIP = () => {
+  newLabelForIP.value = {
+    key: '',
+    label: '',
+  }
+}
+
+const handlerLabelAdd = (keepDialogOpen = true) => {
   if (!newLabelForIP.value.key || !newLabelForIP.value.label) {
     return
   }
 
-  dialogVisible.value = true
+  dialogVisible.value = keepDialogOpen
   sourceIPLabelList.value.push({
     ...newLabelForIP.value,
     id: uuid(),
   })
 
-  newLabelForIP.value = {
-    key: '',
-    label: '',
-  }
+  resetNewLabelForIP()
 }
 
 const handlerLabelRemove = (id: string) => {
@@ -130,4 +131,10 @@ const handlerLabelUpdate = (sourceIP: Partial<SourceIPLabel>) => {
     ...sourceIP,
   }
 }
+
+watch(dialogVisible, (visible, wasVisible) => {
+  if (!visible && wasVisible) {
+    handlerLabelAdd(false)
+  }
+})
 </script>

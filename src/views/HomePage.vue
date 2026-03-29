@@ -1,6 +1,6 @@
 <template>
   <div
-    class="bg-base-200/50 home-page flex size-full"
+    class="bg-base-200 home-page flex size-full"
     :class="isSidebarCollapsed ? 'sidebar-collapsed' : 'sidebar-expanded'"
   >
     <SideBar v-if="!isMiddleScreen" />
@@ -34,7 +34,7 @@
             <button
               v-for="r in renderRoutes"
               :key="r"
-              @click="router.push({ name: r })"
+              @click="router.push({ name: r, replace: true })"
               class="h-14 flex-col items-center justify-center pt-2"
               :class="r === route.name && 'dock-active'"
             >
@@ -47,7 +47,20 @@
               </span>
             </button>
           </div>
-          <div class="dock-shadow"></div>
+          <div
+            class="fixed bottom-0 z-10 w-full"
+            style="
+              background: linear-gradient(
+                to top,
+                rgba(0, 0, 0, 0.3),
+                rgba(0, 0, 0, 0.16),
+                rgba(0, 0, 0, 0.08),
+                rgba(0, 0, 0, 0.02),
+                rgba(0, 0, 0, 0)
+              );
+              height: env(safe-area-inset-bottom);
+            "
+          ></div>
         </template>
       </div>
     </RouterView>

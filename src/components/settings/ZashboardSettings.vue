@@ -2,9 +2,9 @@
   <!-- dashboard -->
   <div
     v-if="hasVisibleItems"
-    class="relative flex flex-col gap-2 p-4 text-sm"
+    class="relative flex flex-col text-sm"
   >
-    <div class="settings-title">
+    <div class="flex items-center gap-2 px-1">
       <div class="indicator">
         <span
           v-if="isUIUpdateAvailable"
@@ -16,9 +16,10 @@
         <a
           href="https://github.com/Zephyruso/zashboard"
           target="_blank"
+          class="text-lg font-semibold"
         >
-          <span> zashboard </span>
-          <span class="text-sm font-normal">
+          zashboard
+          <span class="text-sm font-normal opacity-50">
             {{ zashboardVersion }}
             <span
               v-if="commitId"
@@ -29,61 +30,101 @@
           </span>
         </a>
       </div>
+    </div>
+
+    <div
+      v-if="isVisibleUpgradeUI || isVisibleExportSettings || isVisibleImportSettings"
+      class="settings-grid my-3 gap-2 p-3 md:grid-cols-2!"
+    >
       <button
-        class="btn btn-sm absolute top-2 right-2"
-        @click="refreshPages"
-        v-if="isPWA"
+        v-if="isVisibleUpgradeUI"
+        :class="twMerge('btn btn-neutral btn-sm', isUIUpgrading ? 'animate-pulse' : '')"
+        @click="handlerClickUpgradeUI"
       >
-        {{ $t('refresh') }}
-        <ArrowPathIcon class="h-4 w-4" />
+        {{ $t('upgradeUI') }}
       </button>
+      <div class="hidden md:block"></div>
+      <button
+        v-if="isVisibleExportSettings"
+        class="btn btn-sm"
+        @click="exportSettings"
+      >
+        {{ $t('exportSettings') }}
+      </button>
+      <ImportSettings v-if="isVisibleImportSettings" />
     </div>
     <div class="settings-grid">
-      <LanguageSelect
-        v-if="!hiddenSettingsItems[`${SETTINGS_MENU_KEY.general}.zashboardSettings.language`]"
-      />
+      <LanguageSelect v-if="isVisibleLanguage" />
       <div
-        v-if="!hiddenSettingsItems[`${SETTINGS_MENU_KEY.general}.zashboardSettings.fonts`]"
+        v-if="isVisibleAutoUpgrade"
         class="setting-item"
       >
         <div class="setting-item-label">
-          {{ $t('fonts') }}
+          {{ $t('autoUpgrade') }}
         </div>
-        <select
-          class="select select-sm w-48"
-          v-model="font"
-        >
-          <option
-            v-for="opt in fontOptions"
-            :key="opt"
-            :value="opt"
-          >
-            {{ opt }}
-          </option>
-        </select>
+        <input
+          class="toggle"
+          type="checkbox"
+          v-model="autoUpgrade"
+        />
       </div>
+    </div>
+
+    <div
+      v-if="isPanelStyleVisible"
+      class="settings-section-label"
+    >
+      {{ $t('panelStyle') }}
+    </div>
+    <div
+      v-if="isPanelStyleVisible"
+      class="settings-grid"
+    >
       <div
-        v-if="!hiddenSettingsItems[`${SETTINGS_MENU_KEY.general}.zashboardSettings.emoji`]"
+        v-if="isVisibleAutoSwitchTheme"
         class="setting-item"
       >
-        <div class="setting-item-label">Emoji</div>
-        <select
-          class="select select-sm w-48"
-          v-model="emoji"
-        >
-          <option
-            v-for="opt in Object.values(EMOJIS)"
-            :key="opt"
-            :value="opt"
-          >
-            {{ opt }}
-          </option>
-        </select>
+        <div class="setting-item-label">
+          {{ $t('autoSwitchTheme') }}
+        </div>
+        <input
+          type="checkbox"
+          v-model="autoTheme"
+          class="toggle"
+        />
       </div>
       <div
-        v-if="
-          !hiddenSettingsItems[`${SETTINGS_MENU_KEY.general}.zashboardSettings.customBackgroundURL`]
-        "
+        v-if="isVisibleDefaultTheme"
+        class="setting-item"
+      >
+        <div class="setting-item-label">
+          {{ $t('defaultTheme') }}
+        </div>
+        <div class="join">
+          <ThemeSelector
+            class="w-38!"
+            v-model:value="defaultTheme"
+          />
+          <button
+            class="btn btn-sm join-item"
+            @click="customThemeModal = !customThemeModal"
+          >
+            <PlusIcon class="h-4 w-4" />
+          </button>
+        </div>
+        <CustomTheme v-model:value="customThemeModal" />
+      </div>
+      <div
+        v-if="autoTheme && isVisibleDarkTheme"
+        class="setting-item"
+      >
+        <div class="setting-item-label">
+          {{ $t('darkTheme') }}
+        </div>
+        <ThemeSelector v-model:value="darkTheme" />
+      </div>
+      <div
+        v-if="isVisibleCustomBackgroundURL"
         class="setting-item"
       >
         <div class="setting-item-label">
@@ -118,144 +159,80 @@
           @change="handlerFileChange"
         />
       </div>
-      <template
-        v-if="
-          customBackgroundURL &&
-          displayBgProperty &&
-          !hiddenSettingsItems[`${SETTINGS_MENU_KEY.general}.zashboardSettings.transparent`]
-        "
-      >
-        <div class="setting-item">
-          <div class="setting-item-label">
-            {{ $t('transparent') }}
-          </div>
-          <input
-            type="range"
-            min="0"
-            max="100"
-            v-model="dashboardTransparent"
-            class="range max-w-64"
-            @touchstart.passive.stop
-            @touchmove.passive.stop
-            @touchend.passive.stop
-          />
-        </div>
-      </template>
-      <template
-        v-if="
-          customBackgroundURL &&
-          displayBgProperty &&
-          !hiddenSettingsItems[`${SETTINGS_MENU_KEY.general}.zashboardSettings.blurIntensity`]
-        "
-      >
-        <div class="setting-item">
-          <div class="setting-item-label">
-            {{ $t('blurIntensity') }}
-          </div>
-          <input
-            type="range"
-            min="0"
-            max="40"
-            v-model="blurIntensity"
-            class="range max-w-64"
-            @touchstart.stop
-            @touchmove.stop
-            @touchend.stop
-          />
-        </div>
-      </template>
       <div
-        v-if="!hiddenSettingsItems[`${SETTINGS_MENU_KEY.general}.zashboardSettings.defaultTheme`]"
+        v-if="customBackgroundURL && displayBgProperty && isVisibleTransparent"
         class="setting-item"
       >
         <div class="setting-item-label">
-          {{ $t('defaultTheme') }}
+          {{ $t('transparent') }}
         </div>
-        <div class="join">
-          <ThemeSelector
-            class="w-38!"
-            v-model:value="defaultTheme"
-          />
-          <button
-            class="btn btn-sm join-item"
-            @click="customThemeModal = !customThemeModal"
+        <input
+          type="range"
+          min="0"
+          max="100"
+          v-model="dashboardTransparent"
+          class="range max-w-64"
+          @touchstart.passive.stop
+          @touchmove.passive.stop
+          @touchend.passive.stop
+        />
+      </div>
+      <div
+        v-if="customBackgroundURL && displayBgProperty && isVisibleBlurIntensity"
+        class="setting-item"
+      >
+        <div class="setting-item-label">
+          {{ $t('blurIntensity') }}
+        </div>
+        <input
+          type="range"
+          min="0"
+          max="40"
+          v-model="blurIntensity"
+          class="range max-w-64"
+          @touchstart.stop
+          @touchmove.stop
+          @touchend.stop
+        />
+      </div>
+      <div
+        v-if="isVisibleFonts"
+        class="setting-item"
+      >
+        <div class="setting-item-label">
+          {{ $t('fonts') }}
+        </div>
+        <select
+          class="select select-sm w-48"
+          v-model="font"
+        >
+          <option
+            v-for="opt in fontOptions"
+            :key="opt"
+            :value="opt"
           >
-            <PlusIcon class="h-4 w-4" />
-          </button>
-        </div>
-        <CustomTheme v-model:value="customThemeModal" />
+            {{ opt }}
+          </option>
+        </select>
       </div>
       <div
-        v-if="
-          autoTheme &&
-          !hiddenSettingsItems[`${SETTINGS_MENU_KEY.general}.zashboardSettings.darkTheme`]
-        "
+        v-if="isVisibleEmoji"
         class="setting-item"
       >
-        <div class="setting-item-label">
-          {{ $t('darkTheme') }}
-        </div>
-        <ThemeSelector v-model:value="darkTheme" />
+        <div class="setting-item-label">Emoji</div>
+        <select
+          class="select select-sm w-48"
+          v-model="emoji"
+        >
+          <option
+            v-for="opt in Object.values(EMOJIS)"
+            :key="opt"
+            :value="opt"
+          >
+            {{ opt }}
+          </option>
+        </select>
       </div>
-      <div
-        v-if="
-          !hiddenSettingsItems[`${SETTINGS_MENU_KEY.general}.zashboardSettings.autoSwitchTheme`]
-        "
-        class="setting-item"
-      >
-        <div class="setting-item-label">
-          {{ $t('autoSwitchTheme') }}
-        </div>
-        <input
-          type="checkbox"
-          v-model="autoTheme"
-          class="toggle"
-        />
-      </div>
-      <div
-        v-if="!hiddenSettingsItems[`${SETTINGS_MENU_KEY.general}.zashboardSettings.autoUpgrade`]"
-        class="setting-item"
-      >
-        <div class="setting-item-label">
-          {{ $t('autoUpgrade') }}
-        </div>
-        <input
-          class="toggle"
-          type="checkbox"
-          v-model="autoUpgrade"
-        />
-      </div>
-    </div>
-    <div
-      v-if="
-        !hiddenSettingsItems[`${SETTINGS_MENU_KEY.general}.zashboardSettings.upgradeUI`] ||
-        !hiddenSettingsItems[`${SETTINGS_MENU_KEY.general}.zashboardSettings.exportSettings`] ||
-        !hiddenSettingsItems[`${SETTINGS_MENU_KEY.general}.zashboardSettings.importSettings`]
-      "
-      class="mt-4 grid max-w-3xl grid-cols-2 gap-2 gap-y-3 md:grid-cols-4"
-    >
-      <button
-        v-if="!hiddenSettingsItems[`${SETTINGS_MENU_KEY.general}.zashboardSettings.upgradeUI`]"
-        :class="twMerge('btn btn-primary btn-sm', isUIUpgrading ? 'animate-pulse' : '')"
-        @click="handlerClickUpgradeUI"
-      >
-        {{ $t('upgradeUI') }}
-      </button>
-      <div
-        v-if="!hiddenSettingsItems[`${SETTINGS_MENU_KEY.general}.zashboardSettings.upgradeUI`]"
-        class="sm:hidden"
-      ></div>
-
-      <button
-        v-if="!hiddenSettingsItems[`${SETTINGS_MENU_KEY.general}.zashboardSettings.exportSettings`]"
-        class="btn btn-sm"
-        @click="exportSettings"
-      >
-        {{ $t('exportSettings') }}
-      </button>
-      <ImportSettings
-        v-if="!hiddenSettingsItems[`${SETTINGS_MENU_KEY.general}.zashboardSettings.importSettings`]"
-      />
     </div>
   </div>
 </template>
@@ -263,11 +240,12 @@
 <script setup lang="ts">
 import { upgradeUIAPI, zashboardVersion } from '@/api'
 import LanguageSelect from '@/components/settings/LanguageSelect.vue'
-import { useSettings } from '@/composables/settings'
-import { EMOJIS, FONTS, SETTINGS_MENU_KEY } from '@/constant'
+import { useIsSettingVisible, useSettings } from '@/composables/settings'
+import { GENERAL_ITEM_KEYS } from '@/config/settingsItems'
+import { EMOJIS, FONTS } from '@/constant'
 import { handlerUpgradeSuccess } from '@/helper'
 import { deleteBase64FromIndexedDB, LOCAL_IMAGE, saveBase64ToIndexedDB } from '@/helper/indexeddb'
-import { exportSettings, isPWA } from '@/helper/utils'
+import { exportSettings } from '@/helper/utils'
 import {
   autoTheme,
   autoUpgrade,
@@ -278,14 +256,8 @@ import {
   defaultTheme,
   emoji,
   font,
-  hiddenSettingsItems,
 } from '@/store/settings'
-import {
-  AdjustmentsHorizontalIcon,
-  ArrowPathIcon,
-  ArrowUpTrayIcon,
-  PlusIcon,
-} from '@heroicons/vue/24/outline'
+import { AdjustmentsHorizontalIcon, ArrowUpTrayIcon, PlusIcon } from '@heroicons/vue/24/outline'
 import { twMerge } from 'tailwind-merge'
 import { computed, ref, watch } from 'vue'
 import ImportSettings from '../common/ImportSettings.vue'
@@ -294,33 +266,51 @@ import CustomTheme from './CustomTheme.vue'
 import ThemeSelector from './ThemeSelector.vue'
 
 const customThemeModal = ref(false)
+const k = GENERAL_ITEM_KEYS
+const isVisibleLanguage = useIsSettingVisible(k.language)
+const isVisibleFonts = useIsSettingVisible(k.fonts)
+const isVisibleEmoji = useIsSettingVisible(k.emoji)
+const isVisibleCustomBackgroundURL = useIsSettingVisible(k.customBackgroundURL)
+const isVisibleTransparent = useIsSettingVisible(k.transparent)
+const isVisibleBlurIntensity = useIsSettingVisible(k.blurIntensity)
+const isVisibleDefaultTheme = useIsSettingVisible(k.defaultTheme)
+const isVisibleDarkTheme = useIsSettingVisible(k.darkTheme)
+const isVisibleAutoSwitchTheme = useIsSettingVisible(k.autoSwitchTheme)
+const isVisibleAutoUpgrade = useIsSettingVisible(k.autoUpgrade)
+const isVisibleUpgradeUI = useIsSettingVisible(k.upgradeUI)
+const isVisibleExportSettings = useIsSettingVisible(k.exportSettings)
+const isVisibleImportSettings = useIsSettingVisible(k.importSettings)
 
-// 检查是否有可见的子项
-const hasVisibleItems = computed(() => {
+const displayBgProperty = ref(false)
+
+const isPanelStyleVisible = computed(() => {
   return (
-    !hiddenSettingsItems.value[`${SETTINGS_MENU_KEY.general}.zashboardSettings.language`] ||
-    !hiddenSettingsItems.value[`${SETTINGS_MENU_KEY.general}.zashboardSettings.fonts`] ||
-    !hiddenSettingsItems.value[`${SETTINGS_MENU_KEY.general}.zashboardSettings.emoji`] ||
-    !hiddenSettingsItems.value[
-      `${SETTINGS_MENU_KEY.general}.zashboardSettings.customBackgroundURL`
-    ] ||
-    (customBackgroundURL.value &&
-      displayBgProperty.value &&
-      !hiddenSettingsItems.value[`${SETTINGS_MENU_KEY.general}.zashboardSettings.transparent`]) ||
-    (customBackgroundURL.value &&
-      displayBgProperty.value &&
-      !hiddenSettingsItems.value[`${SETTINGS_MENU_KEY.general}.zashboardSettings.blurIntensity`]) ||
-    !hiddenSettingsItems.value[`${SETTINGS_MENU_KEY.general}.zashboardSettings.defaultTheme`] ||
-    (autoTheme.value &&
-      !hiddenSettingsItems.value[`${SETTINGS_MENU_KEY.general}.zashboardSettings.darkTheme`]) ||
-    !hiddenSettingsItems.value[`${SETTINGS_MENU_KEY.general}.zashboardSettings.autoSwitchTheme`] ||
-    !hiddenSettingsItems.value[`${SETTINGS_MENU_KEY.general}.zashboardSettings.autoUpgrade`] ||
-    !hiddenSettingsItems.value[`${SETTINGS_MENU_KEY.general}.zashboardSettings.upgradeUI`] ||
-    !hiddenSettingsItems.value[`${SETTINGS_MENU_KEY.general}.zashboardSettings.exportSettings`] ||
-    !hiddenSettingsItems.value[`${SETTINGS_MENU_KEY.general}.zashboardSettings.importSettings`]
+    isVisibleDefaultTheme.value ||
+    isVisibleAutoSwitchTheme.value ||
+    (autoTheme.value && isVisibleDarkTheme.value) ||
+    isVisibleCustomBackgroundURL.value ||
+    isVisibleFonts.value ||
+    isVisibleEmoji.value
   )
 })
-const displayBgProperty = ref(false)
+
+const hasVisibleItems = computed(() => {
+  return (
+    isVisibleLanguage.value ||
+    isVisibleFonts.value ||
+    isVisibleEmoji.value ||
+    isVisibleCustomBackgroundURL.value ||
+    (customBackgroundURL.value && displayBgProperty.value && isVisibleTransparent.value) ||
+    (customBackgroundURL.value && displayBgProperty.value && isVisibleBlurIntensity.value) ||
+    isVisibleDefaultTheme.value ||
+    (autoTheme.value && isVisibleDarkTheme.value) ||
+    isVisibleAutoSwitchTheme.value ||
+    isVisibleAutoUpgrade.value ||
+    isVisibleUpgradeUI.value ||
+    isVisibleExportSettings.value ||
+    isVisibleImportSettings.value
+  )
+})
 const commitId = __COMMIT_ID__
 
 watch(customBackgroundURL, (value) => {
@@ -376,14 +366,5 @@ const handlerClickUpgradeUI = async () => {
   } catch {
     isUIUpgrading.value = false
   }
-}
-
-const refreshPages = async () => {
-  const registrations = await navigator.serviceWorker.getRegistrations()
-
-  for (const registration of registrations) {
-    registration.unregister()
-  }
-  window.location.reload()
 }
 </script>

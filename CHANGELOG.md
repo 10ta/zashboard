@@ -2,6 +2,57 @@
 
 # Changelog
 
+## [2.10.0](https://github.com/Zephyruso/zashboard/compare/v2.9.0...v2.10.0) (2026-03-29)
+
+
+### Features
+
+* add two-column layout for settings page on wide screens ([85d675b](https://github.com/Zephyruso/zashboard/commit/85d675b215afd368a9ef5a733c8076a63a2ce376))
+* force ProxyGroup open when rule proxy chain is expanded ([789d080](https://github.com/Zephyruso/zashboard/commit/789d0803d673f989f552d3df8c2f6b088b552334))
+* improve slide transitions with iOS-style animation ([eb7d932](https://github.com/Zephyruso/zashboard/commit/eb7d932a163371e18e6d8d90d47de213d2b5487b))
+* refine card layout with scroller-group system and proxy chain redesign ([6dfad29](https://github.com/Zephyruso/zashboard/commit/6dfad29a1ec68b730079faf994bcc2057ddf0987))
+
+## [2.9.0](https://github.com/Zephyruso/zashboard/compare/v2.8.1...v2.9.0) (2026-03-28)
+
+
+### Features
+
+* add Apple-style themes and refine UI to macOS/iOS aesthetic ([f75144a](https://github.com/Zephyruso/zashboard/commit/f75144addf8072b049798f9aef463aa61537c6cc))
+* enhance settings components with improved dialog handling and grid layout ([4711084](https://github.com/Zephyruso/zashboard/commit/4711084d26646a1990d6d4bceb271ac70fe4c223))
+* enhance settings UI with improved layout and new components ([761ae3f](https://github.com/Zephyruso/zashboard/commit/761ae3f5bffe3e3b75bbd68c5b139e3ae31f18d5))
+* improve settings page scroll tracking and relocate refresh button ([7eaebee](https://github.com/Zephyruso/zashboard/commit/7eaebeed0f3d673a132096b5dc92040788551d2e))
+* refine overview charts with MiniSparkline and improved axis labels ([ca22d39](https://github.com/Zephyruso/zashboard/commit/ca22d398578256d0e16b4a4c1d928ec833bd83c7))
+* refine UI components with macOS-style design improvements ([a9a93a6](https://github.com/Zephyruso/zashboard/commit/a9a93a63d60cbd3b014b2afa3ffe32e6aaba4610))
+* reorganize settings layout and consolidate panel style section ([349c0b3](https://github.com/Zephyruso/zashboard/commit/349c0b328a7ab5800e0fcc6e76030b3093a4e90b))
+
+## [2.8.1](https://github.com/Zephyruso/zashboard/compare/v2.8.0...v2.8.1) (2026-03-26)
+
+
+### Bug Fixes
+
+* abnormal scrolling when expanding proxy groups ([d865be9](https://github.com/Zephyruso/zashboard/commit/d865be9e50e830816ddf9ece3c87f7538471f560))
+* add replace option to router push for consistent navigation behavior when running in mobile browser or in webui app like ksu ([#601](https://github.com/Zephyruso/zashboard/issues/601)) ([8307db4](https://github.com/Zephyruso/zashboard/commit/8307db4e5048345ecf391e98fd52b34c5b90c9e2))
+* **api:** decode URL in error notification for better readability ([a66cb4c](https://github.com/Zephyruso/zashboard/commit/a66cb4c8e4dfe4af3e3c7e35459a27341506742b))
+* **DialogWrapper:** add Enter key event support and optimized focus management ([#599](https://github.com/Zephyruso/zashboard/issues/599)) ([f228d21](https://github.com/Zephyruso/zashboard/commit/f228d2124807514238247f7f8953500bef34c4b8))
+* **DialogWrapper:** remove default focus outline on modal box ([cd280da](https://github.com/Zephyruso/zashboard/commit/cd280dad817dec8f71bb76aade0cd6cab633c29d))
+
+## [2.8.0](https://github.com/Zephyruso/zashboard/compare/v2.7.0...v2.8.0) (2026-03-19)
+
+
+### Features
+
+* add `light-monet` and `dark-monet` accent color themes provided by ksu webui when running in ksu app ([#592](https://github.com/Zephyruso/zashboard/issues/592)) ([69c276b](https://github.com/Zephyruso/zashboard/commit/69c276b36af024c9bebc877f46600162e6884224))
+* add scroll-to-group button in ProxyGroupNow ([b148917](https://github.com/Zephyruso/zashboard/commit/b148917518a9931e56a974a05cc9555a1bc5a44f))
+* add update configs functionality via path or payload ([4308a92](https://github.com/Zephyruso/zashboard/commit/4308a92a1cdfaa7711c36c0c00f2eaeff43d38db))
+* redesign settings layout and icon settings with drag-drop upload ([7c914d2](https://github.com/Zephyruso/zashboard/commit/7c914d2ada8a6231052171b2d7edea1c8710a4c5))
+
+
+### Bug Fixes
+
+* click on the backend  version will redirect you to an incorrect repository link when the backend is `mihomo_smart` ([#594](https://github.com/Zephyruso/zashboard/issues/594)) ([b0c4872](https://github.com/Zephyruso/zashboard/commit/b0c487280f91021a7e75b2f8dc3bab9a34b09669))
+* improve DNS query and TextInput component ([42bde0a](https://github.com/Zephyruso/zashboard/commit/42bde0ab8f974529e1f74795cacef0fb9b857897))
+* update ProxyNodeGrid styling to ensure proper grid layout and responsiveness ([edb87c7](https://github.com/Zephyruso/zashboard/commit/edb87c70ee64ed5fd00d85e100592b65620fbc4d))
+
 ## [2.7.0](https://github.com/Zephyruso/zashboard/compare/v2.6.1...v2.7.0) (2026-02-27)
 
 

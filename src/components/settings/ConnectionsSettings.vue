@@ -2,14 +2,11 @@
   <!-- connections -->
   <div
     v-if="hasVisibleItems"
-    class="flex flex-col gap-2 p-4 text-sm"
+    class="flex flex-col gap-3 text-sm"
   >
-    <div class="settings-title">
-      {{ $t('connections') }}
-    </div>
     <div class="settings-grid">
       <div
-        v-if="!hiddenSettingsItems[`${SETTINGS_MENU_KEY.connections}.connectionStyle`]"
+        v-if="isVisibleConnectionStyle"
         class="setting-item"
       >
         <div class="setting-item-label">
@@ -28,7 +25,7 @@
         </select>
       </div>
       <div
-        v-if="!hiddenSettingsItems[`${SETTINGS_MENU_KEY.connections}.proxyChainDirection`]"
+        v-if="isVisibleProxyChainDirection"
         class="setting-item"
       >
         <div class="setting-item-label">
@@ -47,84 +44,68 @@
           </option>
         </select>
       </div>
-    </div>
-    <div
-      v-if="!useConnectionCard"
-      class="settings-grid"
-    >
-      <div
-        v-if="!hiddenSettingsItems[`${SETTINGS_MENU_KEY.connections}.tableWidthMode`]"
-        class="setting-item"
-      >
-        <div class="setting-item-label">
-          {{ $t('tableWidthMode') }}
-        </div>
-        <select
-          class="select select-sm min-w-24"
-          v-model="tableWidthMode"
+      <template v-if="!useConnectionCard">
+        <div
+          v-if="isVisibleTableWidthMode"
+          class="setting-item"
         >
-          <option
-            v-for="opt in Object.values(TABLE_WIDTH_MODE)"
-            :key="opt"
-            :value="opt"
+          <div class="setting-item-label">
+            {{ $t('tableWidthMode') }}
+          </div>
+          <select
+            class="select select-sm min-w-24"
+            v-model="tableWidthMode"
           >
-            {{ $t(opt) }}
-          </option>
-        </select>
-      </div>
-      <div
-        v-if="!hiddenSettingsItems[`${SETTINGS_MENU_KEY.connections}.tableSize`]"
-        class="setting-item"
-      >
-        <div class="setting-item-label">
-          {{ $t('tableSize') }}
+            <option
+              v-for="opt in Object.values(TABLE_WIDTH_MODE)"
+              :key="opt"
+              :value="opt"
+            >
+              {{ $t(opt) }}
+            </option>
+          </select>
         </div>
-        <select
-          class="select select-sm min-w-24"
-          v-model="tableSize"
+        <div
+          v-if="isVisibleTableSize"
+          class="setting-item"
         >
-          <option
-            v-for="opt in Object.values(TABLE_SIZE)"
-            :key="opt"
-            :value="opt"
+          <div class="setting-item-label">
+            {{ $t('tableSize') }}
+          </div>
+          <select
+            class="select select-sm min-w-24"
+            v-model="tableSize"
           >
-            {{ $t(opt) }}
-          </option>
-        </select>
-      </div>
+            <option
+              v-for="opt in Object.values(TABLE_SIZE)"
+              :key="opt"
+              :value="opt"
+            >
+              {{ $t(opt) }}
+            </option>
+          </select>
+        </div>
+      </template>
+      <SourceIPLabels v-if="isVisibleSourceIPLabels" />
     </div>
-    <div
-      v-if="!hiddenSettingsItems[`${SETTINGS_MENU_KEY.connections}.sourceIPLabels`]"
-      class="divider"
-    ></div>
-    <SourceIPLabels
-      v-if="!hiddenSettingsItems[`${SETTINGS_MENU_KEY.connections}.sourceIPLabels`]"
-    />
   </div>
 </template>
 
 <script setup lang="ts">
 import SourceIPLabels from '@/components/settings/SourceIPLabels.vue'
+import { useHasAnyVisibleSetting, useIsSettingVisible } from '@/composables/settings'
+import { CONNECTIONS_ITEM_KEYS, getItemKeysByCategory } from '@/config/settingsItems'
 import { PROXY_CHAIN_DIRECTION, SETTINGS_MENU_KEY, TABLE_SIZE, TABLE_WIDTH_MODE } from '@/constant'
-import {
-  hiddenSettingsItems,
-  proxyChainDirection,
-  tableSize,
-  tableWidthMode,
-  useConnectionCard,
-} from '@/store/settings'
-import { computed } from 'vue'
+import { proxyChainDirection, tableSize, tableWidthMode, useConnectionCard } from '@/store/settings'
 
-// 检查是否有可见的子项
-const hasVisibleItems = computed(() => {
-  return (
-    !hiddenSettingsItems.value[`${SETTINGS_MENU_KEY.connections}.connectionStyle`] ||
-    !hiddenSettingsItems.value[`${SETTINGS_MENU_KEY.connections}.proxyChainDirection`] ||
-    (!useConnectionCard.value &&
-      !hiddenSettingsItems.value[`${SETTINGS_MENU_KEY.connections}.tableWidthMode`]) ||
-    (!useConnectionCard.value &&
-      !hiddenSettingsItems.value[`${SETTINGS_MENU_KEY.connections}.tableSize`]) ||
-    !hiddenSettingsItems.value[`${SETTINGS_MENU_KEY.connections}.sourceIPLabels`]
-  )
-})
+const k = CONNECTIONS_ITEM_KEYS
+const isVisibleConnectionStyle = useIsSettingVisible(k.connectionStyle)
+const isVisibleProxyChainDirection = useIsSettingVisible(k.proxyChainDirection)
+const isVisibleTableWidthMode = useIsSettingVisible(k.tableWidthMode)
+const isVisibleTableSize = useIsSettingVisible(k.tableSize)
+const isVisibleSourceIPLabels = useIsSettingVisible(k.sourceIPLabels)
+
+const hasVisibleItems = useHasAnyVisibleSetting(
+  getItemKeysByCategory(SETTINGS_MENU_KEY.connections),
+)
 </script>
