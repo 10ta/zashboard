@@ -1,14 +1,14 @@
 <template>
   <div :class="{ 'opacity-50': isDisabled, 'scroller-item': 1 }">
     <div
-      class="hover:bg-base-200/40 flex flex-col gap-2 overflow-hidden p-3 pt-2 text-sm transition-colors"
+      class="hover:bg-base-200/40 flex flex-col gap-3 overflow-hidden px-3 py-2 text-sm transition-colors"
       :class="{
         'cursor-pointer': isSelectable,
       }"
       @click="clickHandler"
     >
-      <div class="min-h-6 leading-6">
-        <span class="text-base-content/40 text-xs">
+      <div class="min-h-5 leading-5">
+        <span class="text-base-content/40 text-xs tabular-nums">
           {{ index }}
         </span>
         <span class="text-base-content/80 ml-4 text-xs"
@@ -22,7 +22,7 @@
         </span>
         <span
           v-if="typeof size === 'number' && size !== -1"
-          class="text-base-content/80 ml-1 text-xs"
+          class="text-base-content/50 ml-1 text-xs tabular-nums"
         >
           ({{ size }})
           <QuestionMarkCircleIcon
@@ -50,7 +50,7 @@
           @click.stop
         />
       </div>
-      <div class="flex min-h-6 flex-wrap items-center gap-1 md:gap-2">
+      <div class="flex items-center gap-2">
         <input
           v-if="rule.uuid || rule.extra"
           type="checkbox"
@@ -59,63 +59,15 @@
           @change="toggleRuleDisabledHandler"
           @click.stop
         />
-        <div
-          class="proxy-chain-path"
-          v-if="isCollapsed"
-        >
-          <span class="proxy-chain-node">
-            <ProxyName :name="rule.proxy" />
-          </span>
-          <template v-if="proxyNode?.now && displayNowNodeInRule">
-            <ChevronRightIcon class="proxy-chain-separator" />
-            <span class="proxy-chain-node pointer-events-none">
-              <ProxyName :name="getNowProxyNodeName(rule.proxy)" />
-            </span>
-          </template>
-        </div>
-        <template v-else>
-          <div class="proxy-chain-path">
-            <template
-              v-for="(chain, index) in proxyChains"
-              :key="chain"
-            >
-              <ChevronRightIcon
-                class="proxy-chain-separator"
-                v-if="index > 0"
-              />
-              <span
-                class="proxy-chain-node"
-                :class="{
-                  'proxy-chain-node-active': selected === chain,
-                }"
-                @click.stop="selected = chain"
-              >
-                <ProxyName :name="chain" />
-              </span>
-            </template>
-            <template
-              v-if="
-                getNowProxyNodeName(rule.proxy) &&
-                getNowProxyNodeName(rule.proxy) !== proxyChains[proxyChains.length - 1]
-              "
-            >
-              <ChevronRightIcon class="proxy-chain-separator" />
-              <span
-                class="proxy-chain-node proxy-chain-node-terminal"
-                @click.stop
-              >
-                <ProxyName :name="getNowProxyNodeName(rule.proxy)" />
-              </span>
-            </template>
-          </div>
-        </template>
-        <span
-          v-if="latency !== NOT_CONNECTED && displayLatencyInRule"
-          :class="latencyColor"
-          class="ml-1 text-xs"
-        >
-          {{ latency }}
-        </span>
+        <ProxyChainPath
+          :proxy="rule.proxy"
+          :selected="selected"
+          :collapsed="isCollapsed"
+          :show-now-node="displayNowNodeInRule"
+          :show-latency="displayLatencyInRule"
+          :interactive="!isCollapsed"
+          @update:selected="selected = $event"
+        />
       </div>
     </div>
 
@@ -138,17 +90,9 @@ import {
   updateRuleProviderAPI,
 } from '@/api'
 import { useBounceOnVisible } from '@/composables/bouncein'
-import { NOT_CONNECTED } from '@/constant'
-import { getColorForLatency } from '@/helper'
 import { useTooltip } from '@/helper/tooltip'
 import { activeConnections } from '@/store/connections'
-import {
-  getLatencyByName,
-  getNowProxyNodeName,
-  getProxyGroupChains,
-  proxyGroupList,
-  proxyMap,
-} from '@/store/proxies'
+import { proxyGroupList } from '@/store/proxies'
 import { fetchRules, ruleProviderList } from '@/store/rules'
 import {
   disconnectOnRuleDisable,
@@ -158,7 +102,6 @@ import {
 import type { Rule } from '@/types'
 import {
   ArrowPathIcon,
-  ChevronRightIcon,
   InformationCircleIcon,
   QuestionMarkCircleIcon,
 } from '@heroicons/vue/24/outline'
@@ -167,8 +110,8 @@ import { twMerge } from 'tailwind-merge'
 import type { Ref } from 'vue'
 import { computed, createApp, defineComponent, h, inject, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
+import ProxyChainPath from '../common/ProxyChainPath.vue'
 import ProxyGroup from '../proxies/ProxyGroup.vue'
-import ProxyName from '../proxies/ProxyName.vue'
 
 const props = defineProps<{
   rule: Rule
@@ -180,13 +123,9 @@ const ruleKey = computed(() => `${props.index}-${props.rule.payload}`)
 const isCollapsed = computed(() => expandedRule.value !== ruleKey.value)
 const isSelectable = computed(() => proxyGroupList.value.includes(props.rule.proxy))
 const selected = ref('')
-const proxyChains = computed(() => getProxyGroupChains(props.rule.proxy))
 
 const { t } = useI18n()
 const { showTip } = useTooltip()
-const proxyNode = computed(() => proxyMap.value[props.rule.proxy])
-const latency = computed(() => getLatencyByName(props.rule.proxy, props.rule.proxy))
-const latencyColor = computed(() => getColorForLatency(Number(latency.value)))
 
 const size = computed(() => {
   if (props.rule.type === 'RuleSet') {
@@ -313,53 +252,3 @@ const clickHandler = () => {
 
 useBounceOnVisible()
 </script>
-
-<style scoped>
-.proxy-chain-path {
-  flex-shrink: 1;
-  display: inline-flex;
-  align-items: center;
-  border-radius: 9999px;
-  background-color: color-mix(in srgb, var(--color-base-content) 4%, transparent);
-  padding: 2px;
-  gap: 0;
-  overflow-x: auto;
-}
-
-.proxy-chain-node {
-  flex-shrink: 0;
-  padding: 1px 10px;
-  border-radius: 9999px;
-  font-size: 0.75rem;
-  line-height: 1.25rem;
-  cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.32, 0.72, 0, 1);
-  white-space: nowrap;
-}
-
-.proxy-chain-node:hover {
-  background-color: color-mix(in srgb, var(--color-base-content) 8%, transparent);
-}
-
-.proxy-chain-node-active {
-  background-color: var(--color-neutral);
-  color: var(--color-neutral-content);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-}
-
-.proxy-chain-node-active:hover {
-  background-color: var(--color-neutral);
-}
-
-.proxy-chain-node-terminal {
-  cursor: not-allowed;
-  opacity: 0.6;
-}
-
-.proxy-chain-separator {
-  width: 12px;
-  height: 12px;
-  flex-shrink: 0;
-  opacity: 0.35;
-}
-</style>

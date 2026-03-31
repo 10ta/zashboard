@@ -1,85 +1,9 @@
 <template>
-  <!-- dashboard -->
-  <div
-    v-if="hasVisibleItems"
-    class="relative flex flex-col text-sm"
-  >
-    <div class="flex items-center gap-2 px-1">
-      <div class="indicator">
-        <span
-          v-if="isUIUpdateAvailable"
-          class="indicator-item top-1 -right-1 flex"
-        >
-          <span class="bg-secondary absolute h-2 w-2 animate-ping rounded-full"></span>
-          <span class="bg-secondary h-2 w-2 rounded-full"></span>
-        </span>
-        <a
-          href="https://github.com/Zephyruso/zashboard"
-          target="_blank"
-          class="text-lg font-semibold"
-        >
-          zashboard
-          <span class="text-sm font-normal opacity-50">
-            {{ zashboardVersion }}
-            <span
-              v-if="commitId"
-              class="text-xs"
-            >
-              {{ commitId }}
-            </span>
-          </span>
-        </a>
-      </div>
-    </div>
-
-    <div
-      v-if="isVisibleUpgradeUI || isVisibleExportSettings || isVisibleImportSettings"
-      class="settings-grid my-3 gap-2 p-3 md:grid-cols-2!"
-    >
-      <button
-        v-if="isVisibleUpgradeUI"
-        :class="twMerge('btn btn-neutral btn-sm', isUIUpgrading ? 'animate-pulse' : '')"
-        @click="handlerClickUpgradeUI"
-      >
-        {{ $t('upgradeUI') }}
-      </button>
-      <div class="hidden md:block"></div>
-      <button
-        v-if="isVisibleExportSettings"
-        class="btn btn-sm"
-        @click="exportSettings"
-      >
-        {{ $t('exportSettings') }}
-      </button>
-      <ImportSettings v-if="isVisibleImportSettings" />
+  <template v-if="hasVisibleStyleItems">
+    <div class="settings-section-label">
+      {{ $t('appearance') }}
     </div>
     <div class="settings-grid">
-      <LanguageSelect v-if="isVisibleLanguage" />
-      <div
-        v-if="isVisibleAutoUpgrade"
-        class="setting-item"
-      >
-        <div class="setting-item-label">
-          {{ $t('autoUpgrade') }}
-        </div>
-        <input
-          class="toggle"
-          type="checkbox"
-          v-model="autoUpgrade"
-        />
-      </div>
-    </div>
-
-    <div
-      v-if="isPanelStyleVisible"
-      class="settings-section-label"
-    >
-      {{ $t('panelStyle') }}
-    </div>
-    <div
-      v-if="isPanelStyleVisible"
-      class="settings-grid"
-    >
       <div
         v-if="isVisibleAutoSwitchTheme"
         class="setting-item"
@@ -234,21 +158,16 @@
         </select>
       </div>
     </div>
-  </div>
+  </template>
 </template>
 
 <script setup lang="ts">
-import { upgradeUIAPI, zashboardVersion } from '@/api'
-import LanguageSelect from '@/components/settings/LanguageSelect.vue'
-import { useIsSettingVisible, useSettings } from '@/composables/settings'
+import { useIsSettingVisible } from '@/composables/settings'
 import { GENERAL_ITEM_KEYS } from '@/config/settingsItems'
 import { EMOJIS, FONTS } from '@/constant'
-import { handlerUpgradeSuccess } from '@/helper'
 import { deleteBase64FromIndexedDB, LOCAL_IMAGE, saveBase64ToIndexedDB } from '@/helper/indexeddb'
-import { exportSettings } from '@/helper/utils'
 import {
   autoTheme,
-  autoUpgrade,
   blurIntensity,
   customBackgroundURL,
   darkTheme,
@@ -258,16 +177,14 @@ import {
   font,
 } from '@/store/settings'
 import { AdjustmentsHorizontalIcon, ArrowUpTrayIcon, PlusIcon } from '@heroicons/vue/24/outline'
-import { twMerge } from 'tailwind-merge'
 import { computed, ref, watch } from 'vue'
-import ImportSettings from '../common/ImportSettings.vue'
-import TextInput from '../common/TextInput.vue'
+import TextInput from '../../common/TextInput.vue'
 import CustomTheme from './CustomTheme.vue'
 import ThemeSelector from './ThemeSelector.vue'
 
 const customThemeModal = ref(false)
+
 const k = GENERAL_ITEM_KEYS
-const isVisibleLanguage = useIsSettingVisible(k.language)
 const isVisibleFonts = useIsSettingVisible(k.fonts)
 const isVisibleEmoji = useIsSettingVisible(k.emoji)
 const isVisibleCustomBackgroundURL = useIsSettingVisible(k.customBackgroundURL)
@@ -276,14 +193,10 @@ const isVisibleBlurIntensity = useIsSettingVisible(k.blurIntensity)
 const isVisibleDefaultTheme = useIsSettingVisible(k.defaultTheme)
 const isVisibleDarkTheme = useIsSettingVisible(k.darkTheme)
 const isVisibleAutoSwitchTheme = useIsSettingVisible(k.autoSwitchTheme)
-const isVisibleAutoUpgrade = useIsSettingVisible(k.autoUpgrade)
-const isVisibleUpgradeUI = useIsSettingVisible(k.upgradeUI)
-const isVisibleExportSettings = useIsSettingVisible(k.exportSettings)
-const isVisibleImportSettings = useIsSettingVisible(k.importSettings)
 
 const displayBgProperty = ref(false)
 
-const isPanelStyleVisible = computed(() => {
+const hasVisibleStyleItems = computed(() => {
   return (
     isVisibleDefaultTheme.value ||
     isVisibleAutoSwitchTheme.value ||
@@ -293,25 +206,6 @@ const isPanelStyleVisible = computed(() => {
     isVisibleEmoji.value
   )
 })
-
-const hasVisibleItems = computed(() => {
-  return (
-    isVisibleLanguage.value ||
-    isVisibleFonts.value ||
-    isVisibleEmoji.value ||
-    isVisibleCustomBackgroundURL.value ||
-    (customBackgroundURL.value && displayBgProperty.value && isVisibleTransparent.value) ||
-    (customBackgroundURL.value && displayBgProperty.value && isVisibleBlurIntensity.value) ||
-    isVisibleDefaultTheme.value ||
-    (autoTheme.value && isVisibleDarkTheme.value) ||
-    isVisibleAutoSwitchTheme.value ||
-    isVisibleAutoUpgrade.value ||
-    isVisibleUpgradeUI.value ||
-    isVisibleExportSettings.value ||
-    isVisibleImportSettings.value
-  )
-})
-const commitId = __COMMIT_ID__
 
 watch(customBackgroundURL, (value) => {
   if (value) {
@@ -323,6 +217,7 @@ const inputFileRef = ref()
 const handlerClickUpload = () => {
   inputFileRef.value?.click()
 }
+
 const handlerBackgroundURLChange = () => {
   if (!customBackgroundURL.value.includes(LOCAL_IMAGE)) {
     deleteBase64FromIndexedDB()
@@ -349,22 +244,4 @@ const fontOptions = computed(() => {
 
   return Object.values(FONTS)
 })
-
-const { isUIUpdateAvailable } = useSettings()
-
-const isUIUpgrading = ref(false)
-const handlerClickUpgradeUI = async () => {
-  if (isUIUpgrading.value) return
-  isUIUpgrading.value = true
-  try {
-    await upgradeUIAPI()
-    isUIUpgrading.value = false
-    handlerUpgradeSuccess()
-    setTimeout(() => {
-      window.location.reload()
-    }, 1000)
-  } catch {
-    isUIUpgrading.value = false
-  }
-}
 </script>

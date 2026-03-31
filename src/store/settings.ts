@@ -1,5 +1,6 @@
 import { SETTINGS_CATEGORIES } from '@/config/settingsItems'
 import {
+  ALL_THEME,
   CONNECTIONS_TABLE_ACCESSOR_KEY,
   DETAILED_CARD_STYLE,
   EMOJIS,
@@ -33,8 +34,20 @@ export const theme = computed(() => {
   }
   return defaultTheme.value
 })
-
 export const customThemes = useStorage<THEME[]>('config/custom-themes', [])
+
+const replaceLegacyTheme = (theme: string, defaultTheme: string) => {
+  if (theme === 'dark-apple') {
+    return 'dark'
+  }
+  if ([...ALL_THEME, ...customThemes.value.map((theme) => theme.name)].includes(theme)) {
+    return theme
+  }
+  return defaultTheme
+}
+
+defaultTheme.value = replaceLegacyTheme(defaultTheme.value, 'light')
+darkTheme.value = replaceLegacyTheme(darkTheme.value, 'dark')
 
 export const language = useStorage<LANG>(
   'config/language',
@@ -74,7 +87,7 @@ export const customBackgroundURL = useStorage(
   'https://a.f22a.net/get-image/bg.jpg',
 )
 export const dashboardTransparent = useStorage('config/dashboard-transparent', 75)
-export const autoUpgrade = useStorage('config/auto-upgrade', false)
+export const autoUpgradeDashboard = useStorage('config/auto-upgrade', false)
 export const checkUpgradeCore = useStorage('config/check-upgrade-core', true)
 export const autoUpgradeCore = useStorage('config/auto-upgrade-core', false)
 export const swipeInPages = useStorage('config/swipe-in-pages', true)
@@ -201,7 +214,7 @@ export const proxyChainDirection = useStorage(
   PROXY_CHAIN_DIRECTION.NORMAL,
 )
 export const showFullProxyChain = useStorage('config/show-full-proxy-chain', true)
-export const tableSize = useStorage<TABLE_SIZE>('config/connecticon-table-size', TABLE_SIZE.SMALL)
+export const tableSize = useStorage<TABLE_SIZE>('config/connecticon-table-size', TABLE_SIZE.LARGE)
 export const tableWidthMode = useStorage('config/table-width-mode', TABLE_WIDTH_MODE.AUTO)
 export const connectionTableColumns = useStorage<CONNECTIONS_TABLE_ACCESSOR_KEY[]>(
   'config/connection-table-columns',

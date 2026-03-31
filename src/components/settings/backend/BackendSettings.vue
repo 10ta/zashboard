@@ -28,18 +28,20 @@
       </div>
     </div>
 
-    <div class="settings-grid p-3">
-      <BackendSwitch v-if="isVisibleBackendSwitch" />
+    <div
+      class="settings-grid"
+      v-if="isVisibleActions || isVisibleBackendSwitch || isVisibleDnsQuery"
+    >
+      <div
+        v-if="isVisibleBackendSwitch"
+        class="setting-item p-4"
+      >
+        <BackendSwitch />
+      </div>
 
       <div
         v-if="isVisibleActions"
-        class="settings-section-label"
-      >
-        {{ $t('actions') }}
-      </div>
-      <div
-        v-if="isVisibleActions"
-        class="grid grid-cols-1 gap-2 md:grid-cols-2"
+        class="grid grid-cols-1 gap-2 px-4 py-3 md:grid-cols-2"
       >
         <template v-if="!isSingBox || displayAllFeatures">
           <button
@@ -108,86 +110,86 @@
         </button>
       </div>
 
-      <template v-if="!isSingBox && configs && isVisiblePorts">
-        <div class="settings-section-label">{{ $t('settings') }}</div>
-        <div class="settings-grid">
-          <div
-            class="setting-item"
-            v-for="portConfig in portList"
-            :key="portConfig.key"
-          >
-            <div class="setting-item-label">
-              {{ $t(portConfig.label) }}
-            </div>
-            <input
-              class="input input-sm w-20 sm:w-24"
-              type="number"
-              v-model="configs[portConfig.key as keyof Config]"
-              @change="
-                updateConfigs({ [portConfig.key]: Number(configs[portConfig.key as keyof Config]) })
-              "
-            />
+      <div
+        v-if="isVisibleDnsQuery"
+        class="setting-item flex-col items-start py-3"
+      >
+        <div class="flex w-full flex-col">
+          <div class="settings-section-label">
+            {{ $t('DNSQuery') }}
           </div>
-          <div
-            v-if="configs?.tun && isVisibleTunMode"
-            class="setting-item"
-          >
-            <div class="setting-item-label">
-              {{ $t('tunMode') }}
-            </div>
-            <input
-              class="toggle"
-              type="checkbox"
-              v-model="configs.tun.enable"
-              @change="hanlderTunModeChange"
-            />
-          </div>
-          <div
-            v-if="isVisibleAllowLan"
-            class="setting-item"
-          >
-            <div class="setting-item-label">
-              {{ $t('allowLan') }}
-            </div>
-            <input
-              class="toggle"
-              type="checkbox"
-              v-model="configs['allow-lan']"
-              @change="handlerAllowLanChange"
-            />
-          </div>
-          <template v-if="!activeBackend?.disableUpgradeCore">
-            <div
-              v-if="isVisibleCheckUpgrade"
-              class="setting-item"
-            >
-              <div class="setting-item-label">
-                {{ $t('checkUpgrade') }}
-              </div>
-              <input
-                class="toggle"
-                type="checkbox"
-                v-model="checkUpgradeCore"
-                @change="handlerCheckUpgradeCoreChange"
-              />
-            </div>
-            <div
-              v-if="checkUpgradeCore && isVisibleAutoUpgrade"
-              class="setting-item"
-            >
-              <div class="setting-item-label">
-                {{ $t('autoUpgrade') }}
-              </div>
-              <input
-                class="toggle"
-                type="checkbox"
-                v-model="autoUpgradeCore"
-              />
-            </div>
-          </template>
+          <DnsQuery />
         </div>
-      </template>
-      <DnsQuery v-if="isVisibleDnsQuery" />
+      </div>
+    </div>
+
+    <div
+      v-if="!isSingBox && configs && hasVisibleSettings"
+      class="grid"
+    >
+      <div class="settings-section-label">
+        {{ $t('settings') }}
+      </div>
+      <div class="settings-grid">
+        <BackendPortsGrid v-if="isVisiblePorts" />
+        <div
+          v-if="configs?.tun && isVisibleTunMode"
+          class="setting-item"
+        >
+          <div class="setting-item-label">
+            {{ $t('tunMode') }}
+          </div>
+          <input
+            class="toggle"
+            type="checkbox"
+            v-model="configs.tun.enable"
+            @change="hanlderTunModeChange"
+          />
+        </div>
+        <div
+          v-if="isVisibleAllowLan"
+          class="setting-item"
+        >
+          <div class="setting-item-label">
+            {{ $t('allowLan') }}
+          </div>
+          <input
+            class="toggle"
+            type="checkbox"
+            v-model="configs['allow-lan']"
+            @change="handlerAllowLanChange"
+          />
+        </div>
+        <template v-if="!activeBackend?.disableUpgradeCore">
+          <div
+            v-if="isVisibleCheckUpgrade"
+            class="setting-item"
+          >
+            <div class="setting-item-label">
+              {{ $t('checkCoreUpgrade') }}
+            </div>
+            <input
+              class="toggle"
+              type="checkbox"
+              v-model="checkUpgradeCore"
+              @change="handlerCheckUpgradeCoreChange"
+            />
+          </div>
+          <div
+            v-if="checkUpgradeCore && isVisibleAutoUpgrade"
+            class="setting-item"
+          >
+            <div class="setting-item-label">
+              {{ $t('autoUpgradeCore') }}
+            </div>
+            <input
+              class="toggle"
+              type="checkbox"
+              v-model="autoUpgradeCore"
+            />
+          </div>
+        </template>
+      </div>
     </div>
 
     <UpgradeCoreModal v-model="showUpgradeCoreModal" />
@@ -208,8 +210,9 @@ import {
   updateGeoDataAPI,
 } from '@/api'
 import BackendVersion from '@/components/common/BackendVersion.vue'
-import BackendSwitch from '@/components/settings/BackendSwitch.vue'
-import DnsQuery from '@/components/settings/DnsQuery.vue'
+import BackendPortsGrid from '@/components/settings/backend/BackendPortsGrid.vue'
+import BackendSwitch from '@/components/settings/backend/BackendSwitch.vue'
+import DnsQuery from '@/components/settings/backend/DnsQuery.vue'
 import { useIsSettingVisible } from '@/composables/settings'
 import { BACKEND_ITEM_KEYS } from '@/config/settingsItems'
 import { MIHOMO, MIHOMO_CHANNEL } from '@/constant'
@@ -219,7 +222,6 @@ import { fetchProxies, hasSmartGroup } from '@/store/proxies'
 import { fetchRules } from '@/store/rules'
 import { autoUpgradeCore, checkUpgradeCore, displayAllFeatures } from '@/store/settings'
 import { activeBackend } from '@/store/setup'
-import type { Config } from '@/types'
 import { computed, ref } from 'vue'
 import UpdateConfigModal from './UpdateConfigModal.vue'
 import UpgradeCoreModal from './UpgradeCoreModal.vue'
@@ -229,53 +231,31 @@ const isVisibleBackendSwitch = useIsSettingVisible(k.backend)
 const isVisiblePorts = useIsSettingVisible(k.ports)
 const isVisibleTunMode = useIsSettingVisible(k.tunMode)
 const isVisibleAllowLan = useIsSettingVisible(k.allowLan)
-const isVisibleCheckUpgrade = useIsSettingVisible(k.checkUpgrade)
-const isVisibleAutoUpgrade = useIsSettingVisible(k.autoUpgrade)
+const isVisibleCheckUpgrade = useIsSettingVisible(k.checkCoreUpgrade)
+const isVisibleAutoUpgrade = useIsSettingVisible(k.autoUpgradeCore)
 const isVisibleActions = useIsSettingVisible(k.actions)
 const isVisibleDnsQuery = useIsSettingVisible(k.DNSQuery)
 
 const hasVisibleItems = computed(() => {
   return (
     isVisibleBackendSwitch.value ||
-    (!isSingBox.value && configs.value && isVisiblePorts.value) ||
-    (!isSingBox.value && configs.value?.tun && isVisibleTunMode.value) ||
-    (!isSingBox.value && configs.value && isVisibleAllowLan.value) ||
-    (!isSingBox.value &&
-      configs.value &&
-      !activeBackend.value?.disableUpgradeCore &&
-      isVisibleCheckUpgrade.value) ||
-    (!isSingBox.value &&
-      configs.value &&
-      !activeBackend.value?.disableUpgradeCore &&
-      checkUpgradeCore.value &&
-      isVisibleAutoUpgrade.value) ||
+    hasVisibleSettings.value ||
     isVisibleActions.value ||
     isVisibleDnsQuery.value
   )
 })
 
-const portList = [
-  {
-    label: 'mixedPort',
-    key: 'mixed-port',
-  },
-  {
-    label: 'httpPort',
-    key: 'port',
-  },
-  {
-    label: 'socksPort',
-    key: 'socks-port',
-  },
-  {
-    label: 'redirPort',
-    key: 'redir-port',
-  },
-  {
-    label: 'tproxyPort',
-    key: 'tproxy-port',
-  },
-]
+const hasVisibleSettings = computed(() => {
+  return (
+    !isSingBox.value &&
+    !!configs.value &&
+    (isVisiblePorts.value ||
+      (configs.value.tun && isVisibleTunMode.value) ||
+      isVisibleAllowLan.value ||
+      (!activeBackend.value?.disableUpgradeCore &&
+        (isVisibleCheckUpgrade.value || (checkUpgradeCore.value && isVisibleAutoUpgrade.value))))
+  )
+})
 
 const reloadAll = () => {
   fetchConfigs()

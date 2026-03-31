@@ -23,13 +23,15 @@
     box-class="max-w-173"
     no-padding
   >
-    <BackendSettings class="w-full p-2" />
+    <div class="bg-base-200 size-full p-4">
+      <BackendSettings />
+    </div>
   </DialogWrapper>
 </template>
 
 <script setup lang="ts">
 import DialogWrapper from '@/components/common/DialogWrapper.vue'
-import BackendSettings from '@/components/settings/BackendSettings.vue'
+import BackendSettings from '@/components/settings/backend/BackendSettings.vue'
 import { useTooltip } from '@/helper/tooltip'
 import { getLabelFromBackend } from '@/helper/utils'
 import { isSidebarCollapsed } from '@/store/settings'

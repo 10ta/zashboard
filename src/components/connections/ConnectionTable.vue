@@ -1,7 +1,7 @@
 <template>
   <div
     ref="parentRef"
-    class="m-3 mr-0 h-full overflow-auto rounded-xl pr-3 shadow-xs"
+    class="base-container m-3 h-full overflow-auto"
     :class="{
       'select-none': isDragging,
     }"
@@ -22,7 +22,7 @@
           }
         "
       >
-        <thead class="bg-base-100 border-base-300/60 sticky -top-0 z-10 border-b">
+        <thead class="bg-base-100 border-base-300/60 sticky top-0 z-10 border-b">
           <tr
             v-for="headerGroup in tanstackTable.getHeaderGroups()"
             :key="headerGroup.id"
@@ -35,7 +35,7 @@
               :class="[
                 header.column.getCanSort() ? 'cursor-pointer select-none' : '',
                 header.column.getIsPinned && header.column.getIsPinned() === 'left'
-                  ? 'pinned-td bg-base-100 sticky -left-2 z-20'
+                  ? 'pinned-td bg-base-100 sticky left-0 z-20'
                   : '',
               ]"
               :style="
@@ -113,9 +113,9 @@
               height: `${virtualRow.size}px`,
               transform: `translateY(${virtualRow.start - index * virtualRow.size}px)`,
             }"
-            class="hover:bg-primary hover:text-primary-content"
+            class="hover:bg-primary! hover:text-primary-content!"
             :class="[
-              index % 2 === 0 ? 'bg-base-100' : 'bg-base-200/50',
+              index % 2 === 0 && 'bg-base-150',
               !isDragging ? 'cursor-pointer' : 'cursor-grabbing',
             ]"
             @click="handlerClickRow(rows[virtualRow.index])"
@@ -143,7 +143,7 @@
                         'max-w-xl truncate',
                     ),
                 cell.column.getIsPinned && cell.column.getIsPinned() === 'left'
-                  ? 'pinned-td sticky -left-2 z-20 bg-inherit shadow-sm'
+                  ? 'pinned-td sticky left-0 z-20 bg-inherit shadow-sm'
                   : '',
               ]"
               @contextmenu="handleCellRightClick($event, cell)"
@@ -701,7 +701,7 @@ const handleCellRightClick = (
 }
 </script>
 
-<style>
+<style scoped>
 th .resizer {
   @apply opacity-0;
 }

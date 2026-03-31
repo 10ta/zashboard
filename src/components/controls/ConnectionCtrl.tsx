@@ -27,10 +27,11 @@ import {
 import { defineComponent, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
+import CtrlsBar from '../common/CtrlsBar.vue'
 import DialogWrapper from '../common/DialogWrapper.vue'
 import TextInput from '../common/TextInput.vue'
-import ConnectionCardSettings from '../settings/ConnectionCardSettings.vue'
-import TableSettings from '../settings/TableSettings.vue'
+import ConnectionCardSettings from '../settings/connections/ConnectionCardSettings.vue'
+import TableSettings from '../settings/connections/TableSettings.vue'
 import ConnectionTabs from './ConnectionTabs.vue'
 import SourceIPFilter from './SourceIPFilter.vue'
 
@@ -234,7 +235,7 @@ export default defineComponent({
         </div>
       )
 
-      return <div class="ctrls-bar">{content}</div>
+      return <CtrlsBar>{content}</CtrlsBar>
     }
   },
 })
