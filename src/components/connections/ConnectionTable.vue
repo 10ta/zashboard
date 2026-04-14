@@ -1,7 +1,7 @@
 <template>
   <div
     ref="parentRef"
-    class="base-container m-3 h-full overflow-auto"
+    class="base-container m-3 h-full overflow-auto backdrop-blur-none!"
     :class="{
       'select-none': isDragging,
     }"
@@ -22,7 +22,9 @@
           }
         "
       >
-        <thead class="bg-base-100 border-base-300/60 sticky top-0 z-10 border-b">
+        <thead
+          class="bg-base-100 border-base-300/60 sticky top-0 z-10 border-b backdrop-blur-none!"
+        >
           <tr
             v-for="headerGroup in tanstackTable.getHeaderGroups()"
             :key="headerGroup.id"
@@ -33,16 +35,17 @@
               :colSpan="header.colSpan"
               class="relative"
               :class="[
-                header.column.getCanSort() ? 'cursor-pointer select-none' : '',
-                header.column.getIsPinned && header.column.getIsPinned() === 'left'
-                  ? 'pinned-td bg-base-100 sticky left-0 z-20'
-                  : '',
+                inheritedStyle,
+                header.column.getCanSort() && 'cursor-pointer select-none',
+                header.column.getIsPinned &&
+                  header.column.getIsPinned() === 'left' &&
+                  'pinned-td sticky left-0 z-20',
               ]"
-              :style="
+              :style="[
                 isManualTable && {
                   width: `${header.getSize()}px`,
-                }
-              "
+                },
+              ]"
               @click="header.column.getToggleSortingHandler()?.($event)"
             >
               <div class="flex items-center gap-1">
@@ -106,6 +109,19 @@
           </tr>
         </thead>
         <tbody>
+          <tr v-if="rows.length === 0">
+            <td
+              :colspan="tanstackTable.getVisibleLeafColumns().length"
+              class="text-base-content/50 h-90"
+            >
+              <div class="flex h-full flex-col items-center justify-center gap-3 px-6 text-center">
+                <CircleStackIcon class="h-10 w-10 opacity-60" />
+                <div class="space-y-1">
+                  <div class="text-base font-medium">{{ t('noData') }}</div>
+                </div>
+              </div>
+            </td>
+          </tr>
           <tr
             v-for="(virtualRow, index) in virtualRows"
             :key="virtualRow.key.toString()"
@@ -115,7 +131,7 @@
             }"
             class="hover:bg-primary! hover:text-primary-content!"
             :class="[
-              index % 2 === 0 && 'bg-base-150',
+              virtualRow.index % 2 === 0 ? 'bg-base-150' : 'bg-base-100',
               !isDragging ? 'cursor-pointer' : 'cursor-grabbing',
             ]"
             @click="handlerClickRow(rows[virtualRow.index])"
@@ -142,9 +158,9 @@
                       ].includes(cell.column.id as CONNECTIONS_TABLE_ACCESSOR_KEY) &&
                         'max-w-xl truncate',
                     ),
-                cell.column.getIsPinned && cell.column.getIsPinned() === 'left'
-                  ? 'pinned-td sticky left-0 z-20 bg-inherit shadow-sm'
-                  : '',
+                cell.column.getIsPinned &&
+                  cell.column.getIsPinned() === 'left' &&
+                  `pinned-td sticky left-0 z-20 ${inheritedStyle}`,
               ]"
               @contextmenu="handleCellRightClick($event, cell)"
             >
@@ -205,6 +221,7 @@ import {
   getNetworkTypeFromConnection,
   getProcessFromConnection,
 } from '@/helper'
+import { backgroundImage } from '@/helper/indexeddb'
 import { showNotification } from '@/helper/notification'
 import { getIPLabelFromMap } from '@/helper/sourceip'
 import { fromNow, prettyBytesHelper } from '@/helper/utils'
@@ -221,6 +238,7 @@ import {
   ArrowDownCircleIcon,
   ArrowRightCircleIcon,
   ArrowUpCircleIcon,
+  CircleStackIcon,
   MagnifyingGlassMinusIcon,
   MagnifyingGlassPlusIcon,
   MapPinIcon,
@@ -588,6 +606,16 @@ const classMap = {
 }
 const sizeOfTable = computed(() => {
   return classMap[tableSize.value]
+})
+
+const inheritedStyle = computed(() => {
+  const baseStyle = 'bg-inherit'
+
+  if (!backgroundImage.value) {
+    return baseStyle
+  }
+
+  return `${baseStyle} backdrop-blur-sm`
 })
 
 const handlerClickRow = (row: Row<Connection>) => {

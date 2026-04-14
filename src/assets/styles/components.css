@@ -1,3 +1,21 @@
+div {
+  @apply scrollbar-thin;
+}
+
+.text-main {
+  @apply text-primary;
+}
+
+[data-theme='dark'] .text-main {
+  color: oklch(72% 0.233 277.117);
+}
+[data-theme='lofi'] .text-main,
+[data-theme='wireframe'] .text-main,
+[data-theme='business'] .text-main,
+[data-theme='black'] .text-main {
+  @apply text-info;
+}
+
 .dock {
   @apply absolute right-2 left-2 z-30 rounded-3xl;
 }
@@ -10,8 +28,7 @@
   @apply bg-base-100 grid grid-cols-1 overflow-hidden rounded-xl;
 }
 .setting-item {
-  @apply flex min-h-11 items-center gap-3 px-4;
-  border-bottom: 1px solid color-mix(in srgb, var(--color-base-content) 8%, transparent);
+  @apply border-base-border flex min-h-11 items-center gap-3 border-b px-4;
   &:last-child {
     border-bottom: none;
   }

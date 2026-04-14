@@ -6,7 +6,7 @@ import { useStorage, watchOnce } from '@vueuse/core'
 import dayjs from 'dayjs'
 import { computed, ref, watch } from 'vue'
 import { initAggregatedDataMap, saveConnectionHistory } from './connHistory'
-import { autoDisconnectIdleUDP, autoDisconnectIdleUDPTime, useConnectionCard } from './settings'
+import { autoDisconnectIdleUDP, autoDisconnectIdleUDPTime, isConnectionCard } from './settings'
 
 export const connectionTabShow = ref(CONNECTION_TAB_TYPE.ACTIVE)
 export const connectionSortType = useStorage<SORT_TYPE>(
@@ -183,6 +183,10 @@ export const renderConnections = computed(() => {
         conn.metadata.sourceIP,
         conn.metadata.sourcePort,
         conn.metadata.sniffHost,
+        conn.metadata.inboundUser,
+        conn.metadata.inboundName,
+        conn.metadata.inboundPort,
+        conn.metadata.process,
         conn.metadata.processPath,
         conn.metadata.type,
         conn.metadata.network,
@@ -213,10 +217,10 @@ export const renderConnections = computed(() => {
       return true
     })
     .sort((a, b) => {
-      if (useConnectionCard.value && isDesc.value) {
+      if (isConnectionCard.value && isDesc.value) {
         ;[a, b] = [b, a]
       }
-      const sortResult = useConnectionCard.value
+      const sortResult = isConnectionCard.value
         ? sortFunctionMap[connectionSortType.value](a, b)
         : sortFunctionMap[SORT_TYPE.HOST](a, b)
 

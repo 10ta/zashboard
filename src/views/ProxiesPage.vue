@@ -1,7 +1,10 @@
 <template>
   <div
     class="max-md:scrollbar-hidden h-full"
-    :class="disableProxiesPageScroll ? 'overflow-y-hidden' : 'overflow-y-scroll'"
+    :class="[
+      disableProxiesPageScroll ? 'overflow-y-hidden' : 'overflow-y-scroll',
+      disableProxiesPageTextSelect ? 'select-none' : '',
+    ]"
     :style="padding"
     :id="PROXIES_PAGE"
     ref="proxiesRef"
@@ -48,7 +51,7 @@ import { disableProxiesPageScroll, isProxiesPageMounted, renderGroups } from '@/
 import { PROXY_TAB_TYPE } from '@/constant'
 import { isMiddleScreen, PROXIES_PAGE } from '@/helper/utils'
 import { fetchProxies, proxiesTabShow } from '@/store/proxies'
-import { twoColumnProxyGroup } from '@/store/settings'
+import { disableProxiesPageTextSelect, twoColumnProxyGroup } from '@/store/settings'
 import { useSessionStorage } from '@vueuse/core'
 import { computed, nextTick, onMounted, ref, watch } from 'vue'
 
@@ -63,15 +66,20 @@ const scrollStatus = useSessionStorage('cache/proxies-scroll-status', {
 })
 
 const handleScroll = () => {
+  if (!proxiesRef.value) return
   scrollStatus.value[proxiesTabShow.value] = proxiesRef.value.scrollTop
 }
 
 const waitTickUntilReady = (startTime = performance.now()) => {
+  const proxiesEl = proxiesRef.value
+  const isTimedOut = performance.now() - startTime > 300
+
   if (
-    performance.now() - startTime > 300 ||
-    proxiesRef.value.scrollHeight > scrollStatus.value[proxiesTabShow.value]
+    isTimedOut ||
+    (proxiesEl && proxiesEl.scrollHeight > scrollStatus.value[proxiesTabShow.value])
   ) {
-    proxiesRef.value.scrollTo({
+    if (!proxiesEl) return
+    proxiesEl.scrollTo({
       top: scrollStatus.value[proxiesTabShow.value],
       behavior: 'smooth',
     })

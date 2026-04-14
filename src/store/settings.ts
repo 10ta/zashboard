@@ -2,6 +2,7 @@ import { SETTINGS_CATEGORIES } from '@/config/settingsItems'
 import {
   ALL_THEME,
   CONNECTIONS_TABLE_ACCESSOR_KEY,
+  CONNECTION_DISPLAY_STYLE,
   DETAILED_CARD_STYLE,
   EMOJIS,
   FONTS,
@@ -23,6 +24,51 @@ import { getMinCardWidth, isMiddleScreen, isPreferredDark } from '@/helper/utils
 import type { SourceIPLabel } from '@/types'
 import { useStorage } from '@vueuse/core'
 import { computed } from 'vue'
+
+const migrateLegacyStorageKey = (legacyKey: string, nextKey: string) => {
+  if (typeof window === 'undefined') {
+    return
+  }
+
+  const legacyValue = localStorage.getItem(legacyKey)
+  const nextValue = localStorage.getItem(nextKey)
+
+  if (legacyValue !== null && nextValue === null) {
+    localStorage.setItem(nextKey, legacyValue)
+  }
+  localStorage.removeItem(legacyKey)
+}
+
+migrateLegacyStorageKey('config/show-seleted-for-now-node', 'config/show-selected-for-now-node')
+migrateLegacyStorageKey('config/use-connecticon-card', 'config/use-connection-card')
+migrateLegacyStorageKey('config/connecticon-table-size', 'config/connection-table-size')
+
+const migrateLegacyConnectionDisplayStyle = () => {
+  if (typeof window === 'undefined') {
+    return
+  }
+
+  const nextKey = 'config/connection-display-style'
+  const nextValue = localStorage.getItem(nextKey)
+  const legacyKey = 'config/use-connection-card'
+
+  if (nextValue !== null) {
+    return
+  }
+
+  const legacyValue = localStorage.getItem(legacyKey)
+
+  if (legacyValue === 'true' || legacyValue === 'false') {
+    localStorage.setItem(
+      nextKey,
+      legacyValue === 'true' ? CONNECTION_DISPLAY_STYLE.CARD : CONNECTION_DISPLAY_STYLE.TABLE,
+    )
+  }
+
+  localStorage.removeItem(legacyKey)
+}
+
+migrateLegacyConnectionDisplayStyle()
 
 // global
 export const defaultTheme = useStorage<string>('config/default-theme', 'dracula')
@@ -99,6 +145,7 @@ export const scrollAnimationEffect = useStorage('config/scroll-animation-effect'
 export const IPInfoAPI = useStorage('config/geoip-info-api', IP_INFO_API.IPSB)
 export const autoDisconnectIdleUDP = useStorage('config/auto-disconnect-idle-udp', true)
 export const autoDisconnectIdleUDPTime = useStorage('config/auto-disconnect-idle-udp-time', 1)
+export const keyboardShortcuts = useStorage<Record<string, string>>('config/keyboard-shortcuts', {})
 
 // overview
 export const splitOverviewPage = useStorage('config/split-overview-page', true)
@@ -122,11 +169,11 @@ const defaultOverviewCardOrder: { card: OVERVIEW_CARD; visible: boolean }[] = [
     visible: true,
   },
   {
-    card: OVERVIEW_CARD.ProviderTrafficOverview,
+    card: OVERVIEW_CARD.TopologyCharts,
     visible: true,
   },
   {
-    card: OVERVIEW_CARD.TopologyCharts,
+    card: OVERVIEW_CARD.ProviderTrafficOverview,
     visible: true,
   },
   {
@@ -159,7 +206,7 @@ if (missingCards.length > 0) {
 
 // proxies
 export const collapseGroupMap = useStorage<Record<string, boolean>>('config/collapse-group-map', {})
-export const displayFinalOutbound = useStorage('config/show-seleted-for-now-node', true)
+export const displayFinalOutbound = useStorage('config/show-selected-for-now-node', true)
 export const twoColumnProxyGroup = useStorage('config/two-columns', false)
 export const speedtestUrl = useStorage<string>('config/speedtest-url', TEST_URL)
 export const independentLatencyTest = useStorage('config/independent-latency-test', false)
@@ -170,6 +217,10 @@ export const proxySortType = useStorage<PROXY_SORT_TYPE>(
 )
 export const automaticDisconnection = useStorage('config/automatic-disconnection', true)
 export const truncateProxyName = useStorage('config/truncate-proxy-name', true)
+export const disableProxiesPageTextSelect = useStorage(
+  'config/disable-proxies-page-text-select',
+  true,
+)
 export const proxyPreviewType = useStorage('config/proxy-preview-type', PROXY_PREVIEW_TYPE.AUTO)
 export const hideUnavailableProxies = useStorage('config/hide-unavailable-proxies', false)
 export const lowLatency = useStorage('config/low-latency', 400)
@@ -208,13 +259,25 @@ export const groupTestUrls = useStorage<
 >('config/group-test-urls', [])
 
 // connections
-export const useConnectionCard = useStorage('config/use-connecticon-card', window.innerWidth < 640)
+export const connectionDisplayStyle = useStorage<CONNECTION_DISPLAY_STYLE>(
+  'config/connection-display-style',
+  CONNECTION_DISPLAY_STYLE.AUTO,
+)
+export const isConnectionCard = computed(() => {
+  if (connectionDisplayStyle.value === CONNECTION_DISPLAY_STYLE.CARD) {
+    return true
+  }
+  if (connectionDisplayStyle.value === CONNECTION_DISPLAY_STYLE.TABLE) {
+    return false
+  }
+  return isMiddleScreen.value
+})
 export const proxyChainDirection = useStorage(
   'config/proxy-chain-direction',
   PROXY_CHAIN_DIRECTION.NORMAL,
 )
 export const showFullProxyChain = useStorage('config/show-full-proxy-chain', true)
-export const tableSize = useStorage<TABLE_SIZE>('config/connecticon-table-size', TABLE_SIZE.LARGE)
+export const tableSize = useStorage<TABLE_SIZE>('config/connection-table-size', TABLE_SIZE.LARGE)
 export const tableWidthMode = useStorage('config/table-width-mode', TABLE_WIDTH_MODE.AUTO)
 export const connectionTableColumns = useStorage<CONNECTIONS_TABLE_ACCESSOR_KEY[]>(
   'config/connection-table-columns',

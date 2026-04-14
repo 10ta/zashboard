@@ -1,10 +1,12 @@
 :root,
 [data-theme] {
   --color-base-150: color-mix(in oklch, var(--color-base-100) 50%, var(--color-base-200));
+  --color-base-border: color-mix(in srgb, var(--color-base-content) 8%, transparent);
 }
 
 @theme inline {
   --color-base-150: var(--color-base-150);
+  --color-base-border: var(--color-base-border);
 }
 
 @utility base-container {
@@ -27,7 +29,7 @@
 }
 
 .base-container:not(.virtual-scroller) .scroller-item + .scroller-item {
-  @apply border-base-200/80 border-t;
+  @apply border-base-border border-t;
 }
 
 @utility badge {
@@ -88,12 +90,17 @@
     .ctrls-bar,
     .settings-grid,
     .base-container,
+    .btn:not(.btn-ghost, .btn-neutral, .btn-primary),
     .tabs {
       @apply bg-base-100/$(i);
     }
 
+    .btn.btn-neutral {
+      @apply bg-neutral/$(i);
+    }
+
     .badge {
-      @apply bg-base-200/$(i) border-base-200/$(i);
+      @apply bg-base-200/$(i) border-transparent;
     }
 
     option,
@@ -147,6 +154,7 @@
     .need-blur,
     .settings-grid,
     .base-container,
+    .btn,
     .table thead {
       /* prettier-ignore */
       backdrop-filter: blur($(i)px);

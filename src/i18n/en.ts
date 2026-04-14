@@ -22,10 +22,11 @@ const en = {
   noData: 'No data',
 
   // Backend actions and feedback
-  flushFakeIP: 'Flush Fake IP',
+  flushFakeIP: 'Flush fake IP',
   flushDNSCache: 'Flush DNS cache',
   flushDNSCacheSuccess: 'DNS cache flushed successfully',
   flushFakeIPSuccess: 'Fake IP flushed successfully',
+  flushSmartWeightsSuccess: 'Smart weights flushed successfully',
   restartCoreSuccess: 'Core restarted successfully',
   reloadConfigsSuccess: 'Configs reloaded successfully',
   updateGeoSuccess: 'Geo database updated successfully',
@@ -95,6 +96,7 @@ const en = {
   upgradeToAlpha: 'Upgrade to alpha release',
   updateGeoDatabase: 'Update GEO database',
   truncateProxyName: 'Truncate proxy name',
+  disableProxiesPageTextSelect: 'Disable text selection on proxies page',
   sourceIPLabels: 'Source IP labels',
   proxyPreviewType: 'Proxy preview type',
   auto: 'Auto',
@@ -131,7 +133,7 @@ const en = {
   currentBackendUnavailable:
     'The current backend is unavailable. Would you like to switch to another backend?',
   confirm: 'Confirm',
-  backendSwitchTo: 'Auto switch to {backend}',
+  backendSwitchTo: 'Switched backend to {backend}',
 
   // Backend settings
   ipv6Test: 'IPv6 test',
@@ -203,6 +205,10 @@ const en = {
   resetSettings: 'Reset settings',
   resetSettingsConfirm:
     'Are you sure you want to reset all dashboard settings to default values? This action cannot be undone.',
+  backgroundToneSwitchConfirm:
+    'This background looks better with the {theme}. Do you want to switch?',
+  backgroundToneLightThemeLabel: 'light theme',
+  backgroundToneDarkThemeLabel: 'dark theme',
   minProxyCardWidth: 'Minimum proxy card width',
   displayGlobalByMode: 'Show GLOBAL based on mode',
   displaySelectedNode: 'Show selected node',
@@ -219,6 +225,17 @@ const en = {
   disablePullToRefresh: 'Disable pull to refresh',
   disablePullToRefreshTip:
     'Pull-to-refresh and virtual scrolling components may conflict. If you experience lag or accidentally trigger pull-to-refresh while scrolling, try disabling this feature.',
+  keyboardShortcuts: 'Keyboard shortcuts',
+  keyboardShortcutsTip:
+    'Click the input and press a key or key combination to set a shortcut. Press Backspace or Delete to clear it.',
+  keyboardShortcutPageName: '{name} page',
+  toggleSidebar: 'Toggle sidebar',
+  switchToPreviousBackend: 'Switch to previous backend',
+  switchToNextBackend: 'Switch to next backend',
+  keyboardShortcutsConflict:
+    'Duplicate shortcuts detected: {keys}. Only the first one will take effect.',
+  resetKeyboardShortcuts: 'Reset shortcuts',
+  pressAnyKey: 'Press a key',
   displayAllFeatures: 'Show all features',
   displayAllFeaturesTip:
     "Show all features, including those not supported by the official sing-box version. If you're using a forked version of sing-box that supports some of these features, you can try enabling them.",
@@ -272,24 +289,24 @@ const en = {
   proxyChainExit: 'Proxy chain exit',
   nodeType: 'Node type',
   connectionCount: 'Connection count',
-  zashboardSettings: 'Dashboard Settings',
-  backendSettings: 'Backend Settings',
-  generalSettings: 'General Settings',
-  overviewSettings: 'Overview Settings',
-  overviewCardSettings: 'Card Settings',
-  chartsCard: 'Charts Card',
-  networkCard: 'Network Card',
-  providerTrafficOverview: 'Provider Traffic Overview',
-  topologyCharts: 'Topology Charts',
-  connectionHistory: 'Connection History',
-  ruleHitCountCard: 'Rule Hit/Miss Statistics',
+  zashboardSettings: 'Dashboard settings',
+  backendSettings: 'Backend settings',
+  generalSettings: 'General settings',
+  overviewSettings: 'Overview settings',
+  overviewCardSettings: 'Card settings',
+  chartsCard: 'Charts card',
+  networkCard: 'Network card',
+  providerTrafficOverview: 'Provider traffic overview',
+  topologyCharts: 'Topology charts',
+  connectionHistory: 'Connection history',
+  ruleHitCountCard: 'Rule hit/miss statistics',
   latency: 'Latency',
   icon: 'Icon',
-  settingsVisibility: 'Settings Visibility',
+  settingsVisibility: 'Settings visibility',
   ports: 'Ports',
   actions: 'Actions',
-  showAllPreset: 'Show All',
-  minimalPreset: 'Minimal View',
+  showAllPreset: 'Show all',
+  minimalPreset: 'Minimal view',
   aggregateBy: 'Aggregate by',
   aggregateBySourceIP: 'By source IP',
   aggregateByDestination: 'By destination',
@@ -311,6 +328,11 @@ const en = {
   ruleLastHit: 'Last hit: {time}',
   ruleMissCount: 'Miss: {count} times',
   ruleLastMiss: 'Last miss: {time}',
+
+  // Smart Core
+  RarelyUsed: 'Rarely used',
+  OccasionalUsed: 'Occasionally used',
+  MostUsed: 'Most used',
 }
 
 export type LANG_MESSAGE = typeof en

@@ -28,6 +28,7 @@ const zh: LANG_MESSAGE = {
   flushDNSCache: '清空DNS缓存',
   flushDNSCacheSuccess: 'DNS缓存清空成功',
   flushFakeIPSuccess: 'Fake IP清空成功',
+  flushSmartWeightsSuccess: 'Smart权重清空成功',
   restartCoreSuccess: '核心重启成功',
   reloadConfigsSuccess: '配置重载成功',
   updateGeoSuccess: 'GEO数据库更新成功',
@@ -97,6 +98,7 @@ const zh: LANG_MESSAGE = {
   updateGeoDatabase: '更新GEO',
   tunMode: 'Tun 模式',
   truncateProxyName: '截断节点名称',
+  disableProxiesPageTextSelect: '禁用代理页文字选中',
   sourceIPLabels: '源IP标签',
   proxyPreviewType: '节点预览类型',
   auto: '自动',
@@ -132,7 +134,7 @@ const zh: LANG_MESSAGE = {
   DNSQuery: 'DNS 查询',
   currentBackendUnavailable: '当前后端不可用，尝试切换到其他后端?',
   confirm: '确定',
-  backendSwitchTo: '自动切换到{backend}',
+  backendSwitchTo: '已切换后端为{backend}',
 
   // Backend settings
   ipv6Test: 'IPv6 测试',
@@ -201,6 +203,9 @@ const zh: LANG_MESSAGE = {
   reset: '重置',
   resetSettings: '恢复默认设置',
   resetSettingsConfirm: '确定要将面板设置恢复为默认值吗？此操作不可撤销。',
+  backgroundToneSwitchConfirm: '检测到这张背景图更适合使用{theme}，是否切换？',
+  backgroundToneLightThemeLabel: '浅色主题',
+  backgroundToneDarkThemeLabel: '深色主题',
   minProxyCardWidth: '节点卡片最小宽度',
   displayGlobalByMode: '根据模式显示 GLOBAL',
   displaySelectedNode: '显示选中节点',
@@ -216,6 +221,16 @@ const zh: LANG_MESSAGE = {
   disablePullToRefresh: '禁用下拉刷新',
   disablePullToRefreshTip:
     '下拉刷新和虚拟滚动的组件有时会有冲突，如果你在上下滚动的时候经常卡顿或者误触发下拉刷新，可以尝试禁用下拉刷新',
+  keyboardShortcuts: '快捷键设置',
+  keyboardShortcutsTip:
+    '点击输入框后可直接按单键或组合键设置快捷键，按 Backspace 或 Delete 可清空。',
+  keyboardShortcutPageName: '{name}页',
+  toggleSidebar: '展开/收起侧边栏',
+  switchToPreviousBackend: '切换到上一个后端',
+  switchToNextBackend: '切换到下一个后端',
+  keyboardShortcutsConflict: '检测到重复快捷键：{keys}。只有第一项会生效。',
+  resetKeyboardShortcuts: '重置快捷键',
+  pressAnyKey: '按下任意键',
   displayAllFeatures: '显示所有功能',
   displayAllFeaturesTip:
     '显示所有功能，包括sing-box官方版本不支持的功能，如果您使用了fork版本的sing-box支持其中的某些功能，可以尝试启用',
@@ -307,6 +322,11 @@ const zh: LANG_MESSAGE = {
   ruleLastHit: '最后命中: {time}',
   ruleMissCount: '未命中: {count} 次',
   ruleLastMiss: '最后未命中: {time}',
+
+  // Smart Core
+  RarelyUsed: '很少使用',
+  OccasionalUsed: '偶尔使用',
+  MostUsed: '经常使用',
 }
 
 export default zh

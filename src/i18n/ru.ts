@@ -28,6 +28,7 @@ const ru: LANG_MESSAGE = {
   flushDNSCache: 'Очистить DNS кэш',
   flushDNSCacheSuccess: 'DNS кэш успешно очищен',
   flushFakeIPSuccess: 'Fake IP успешно очищен',
+  flushSmartWeightsSuccess: 'Smart веса успешно очищены',
   restartCoreSuccess: 'Ядро успешно перезапущено',
   reloadConfigsSuccess: 'Конфигурации успешно перезагружены',
   updateGeoSuccess: 'Geo база данных успешно обновлена',
@@ -97,6 +98,7 @@ const ru: LANG_MESSAGE = {
   upgradeToAlpha: 'Обновить ядро до Alpha',
   updateGeoDatabase: 'Обновить GEO',
   truncateProxyName: 'Усечение имени прокси',
+  disableProxiesPageTextSelect: 'Запретить выделение текста на странице прокси',
   sourceIPLabels: 'Метки исходного IP',
   proxyPreviewType: 'Тип предварительного просмотра прокси',
   auto: 'Авто',
@@ -133,7 +135,7 @@ const ru: LANG_MESSAGE = {
   currentBackendUnavailable:
     'Текущий бэкенд недоступен. Попробуйте переключиться на другой бэкенд?',
   confirm: 'Подтвердить',
-  backendSwitchTo: 'Автоматическое переключение на {backend}',
+  backendSwitchTo: 'Бэкенд переключен на {backend}',
 
   // Backend settings
   ipv6Test: 'IPv6-тест',
@@ -206,6 +208,9 @@ const ru: LANG_MESSAGE = {
   resetSettings: 'Сбросить настройки',
   resetSettingsConfirm:
     'Вы уверены, что хотите сбросить все настройки панели к значениям по умолчанию? Это действие нельзя отменить.',
+  backgroundToneSwitchConfirm: 'Для этого фона лучше подходит {theme}. Переключить тему?',
+  backgroundToneLightThemeLabel: 'светлая тема',
+  backgroundToneDarkThemeLabel: 'темная тема',
   minProxyCardWidth: 'Минимальная ширина карточки прокси',
   displayGlobalByMode: 'Отображать GLOBAL по режиму',
   displaySelectedNode: 'Отображать выбранный узел',
@@ -222,6 +227,17 @@ const ru: LANG_MESSAGE = {
   disablePullToRefresh: 'Отключить свойство обновления',
   disablePullToRefreshTip:
     'Компоненты Pull-to-refresh и виртуальной прокрутки иногда могут конфликтовать. Если при прокрутке вверх-вниз у вас часто возникают задержки или случайные срабатывания Pull-to-refresh, попробуйте отключить Pull-to-refresh.',
+  keyboardShortcuts: 'Горячие клавиши',
+  keyboardShortcutsTip:
+    'Нажмите на поле и затем нужную клавишу или сочетание клавиш. Для очистки используйте Backspace или Delete.',
+  keyboardShortcutPageName: 'Страница {name}',
+  toggleSidebar: 'Переключить боковую панель',
+  switchToPreviousBackend: 'Переключиться на предыдущий бэкенд',
+  switchToNextBackend: 'Переключиться на следующий бэкенд',
+  keyboardShortcutsConflict:
+    'Обнаружены повторяющиеся горячие клавиши: {keys}. Сработает только первое совпадение.',
+  resetKeyboardShortcuts: 'Сбросить горячие клавиши',
+  pressAnyKey: 'Нажмите клавишу',
   displayAllFeatures: 'Показать все функции',
   displayAllFeaturesTip:
     'Показать все функции, включая те, которые не поддерживаются официальной версией sing-box. Если вы используете форк sing-box, поддерживающий некоторые из этих функций, вы можете попробовать их включить.',
@@ -314,6 +330,11 @@ const ru: LANG_MESSAGE = {
   ruleLastHit: 'Последнее попадание: {time}',
   ruleMissCount: 'Промах: {count} раз',
   ruleLastMiss: 'Последний промах: {time}',
+
+  // Smart Core
+  RarelyUsed: 'Редко используется',
+  OccasionalUsed: 'Иногда используется',
+  MostUsed: 'Часто используется',
 }
 
 export default ru

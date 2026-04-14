@@ -2,6 +2,68 @@
 
 # Changelog
 
+## [3.4.0](https://github.com/Zephyruso/zashboard/compare/v3.3.0...v3.4.0) (2026-04-13)
+
+
+### Features
+
+* **backend:** add success notification for flushing smart weights ([426491f](https://github.com/Zephyruso/zashboard/commit/426491f55ac6a37366a29b10a01b49bad2ac3460))
+* **proxies:** add option to disable text selection on proxies page ([#631](https://github.com/Zephyruso/zashboard/issues/631)) ([2db4168](https://github.com/Zephyruso/zashboard/commit/2db4168e70712ef26ca3abe3222ff27600b62f11))
+* **shortcuts:** add backend switch shortcuts ([52f3686](https://github.com/Zephyruso/zashboard/commit/52f3686c2eaceb47219f3ba5d70cfc0e2aaee309))
+* **shortcuts:** add configurable keyboard shortcuts ([c467b4f](https://github.com/Zephyruso/zashboard/commit/c467b4f5fd60a3a13a13149f5a4a5ff1f5a3f7d7))
+
+
+### Bug Fixes
+
+* **btn:** primary btn style with background ([59324be](https://github.com/Zephyruso/zashboard/commit/59324bef543ada3cfd478a011459e0993e3d5518))
+
+## [3.3.0](https://github.com/Zephyruso/zashboard/compare/v3.2.0...v3.3.0) (2026-04-09)
+
+
+### Features
+
+* **connections:** Add auto-toggle display type for connections page ([184ed82](https://github.com/Zephyruso/zashboard/commit/184ed823d3014445f8e524aa1aeaf47514ad32c0))
+* **ConnectionTable:** add no data message to ConnectionTable component ([925980c](https://github.com/Zephyruso/zashboard/commit/925980c8c94376336c5e31d28d71b2d07abd5240))
+* **controls:** update sorting icons in ConnectionCtrl with new design ([1191b70](https://github.com/Zephyruso/zashboard/commit/1191b701b3b8a2ab793a231923ee4a8bdd8c60e1))
+
+
+### Bug Fixes
+
+* prevent TypeError when proxiesRef is null during scroll or waitTick ([#629](https://github.com/Zephyruso/zashboard/issues/629)) ([4b0f0f1](https://github.com/Zephyruso/zashboard/commit/4b0f0f144a9c69cdbb0c7dd69916f335d962ab20))
+* **sidebar:** adjust collapse animation timing ([5b1aa2f](https://github.com/Zephyruso/zashboard/commit/5b1aa2f597423a48538087c7ccb58405ceef4192))
+
+## [3.2.0](https://github.com/Zephyruso/zashboard/compare/v3.1.0...v3.2.0) (2026-04-03)
+
+
+### Features
+
+* **backend:** add disableTunMode property and update related logic ([356f1cb](https://github.com/Zephyruso/zashboard/commit/356f1cba577c449cc4edbd252feec4c698f77bca))
+* **providers:** redesign ProxyProvider and RuleProvider with Apple-style aesthetics ([5d7035b](https://github.com/Zephyruso/zashboard/commit/5d7035bb794dfc4614528710b562e73369c4241f))
+* **sidebar:** simplify statistics structure and improve readability ([0f04fb6](https://github.com/Zephyruso/zashboard/commit/0f04fb6392c4d95101831057c5e5f2a756b431ad))
+
+
+### Bug Fixes
+
+* **ConnectionDetails:** improve layout and styling for better responsiveness ([544f096](https://github.com/Zephyruso/zashboard/commit/544f0967bf1b18c7a04eda946dd8ee2b36c08df8))
+* **i18n:** missing i18n for smart core ([64e786d](https://github.com/Zephyruso/zashboard/commit/64e786de453b514a8635a72806d5ef37c7454594))
+
+## [3.1.0](https://github.com/Zephyruso/zashboard/compare/v3.0.0...v3.1.0) (2026-04-02)
+
+
+### Features
+
+* enhance backend settings UI and add BackendPortsGrid component ([4eeb05d](https://github.com/Zephyruso/zashboard/commit/4eeb05d5b7a33c17bca1027adef077aa9a82b4c1))
+* **settings:** implement background settings component with theme detection ([482f8d0](https://github.com/Zephyruso/zashboard/commit/482f8d0a1308f4c03511f7238962c6b159d6f684))
+
+
+### Bug Fixes
+
+* **main:** prevent history state manipulation in Edge browser ([87799dd](https://github.com/Zephyruso/zashboard/commit/87799dd9e9f3312c10d257f59f29909fabc2fdaf))
+* **proxy:** update display format for proxy group type and count ([1acc253](https://github.com/Zephyruso/zashboard/commit/1acc253f8a08350e5578a7ed82f6364cb7a27bc6))
+* **pwa:** load fonts and images from assets instead of public ([773e2d6](https://github.com/Zephyruso/zashboard/commit/773e2d6f324f83ebb74bc54c8d9e3f3be9d439b2))
+* **storage:** migrate legacy storage keys for selected node and connection card ([72d2b49](https://github.com/Zephyruso/zashboard/commit/72d2b492fd2d7b8c59dea92581b415b47216c2d7))
+* **table:** correct translucent background styling ([c8f34cc](https://github.com/Zephyruso/zashboard/commit/c8f34cc2f07c78500b58f2cec0aa4be3a199c0f0))
+
 ## [3.0.0](https://github.com/Zephyruso/zashboard/compare/v2.10.1...v3.0.0) (2026-03-31)
 
 
