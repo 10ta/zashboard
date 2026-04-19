@@ -130,7 +130,7 @@ export const font = computed({
 export const emoji = useStorage<EMOJIS>('config/emoji', EMOJIS.TWEMOJI)
 export const customBackgroundURL = useStorage(
   'config/custom-background-image',
-  'https://a.f22a.net/get-image/bg.jpg',
+  'https://zonotrichia.f22a.net/get-image/bg.jpg',
 )
 export const dashboardTransparent = useStorage('config/dashboard-transparent', 75)
 export const autoUpgradeDashboard = useStorage('config/auto-upgrade', false)
