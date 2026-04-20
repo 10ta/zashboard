@@ -14,6 +14,7 @@ const en = {
   password: 'Password',
   submit: 'Submit',
   cancel: 'Cancel',
+  delete: 'Delete',
   download: 'Download',
   upload: 'Upload',
   downloadSpeed: 'Download speed',
@@ -106,6 +107,14 @@ const en = {
   // Settings page
   exportSettings: 'Export settings',
   importSettings: 'Import settings',
+  dashboardSettings: 'Dashboard settings',
+  dashboardSettingsCore: 'Core',
+  dashboardSettingsJsonFile: 'JSON file',
+  dashboardSettingsUrl: 'URL',
+  autoSyncSettings: 'Auto-sync settings',
+  uploadSettings: 'Upload settings to core',
+  syncSettings: 'Sync settings from core',
+  deleteUploadedSettings: 'Delete uploaded settings from core',
   connectionSettings: 'Connection settings',
   proxySettings: 'Proxy settings',
   logSettings: 'Log settings',
@@ -182,6 +191,8 @@ const en = {
   independentLatencyTestTip:
     "When enabled, the latency test will use URLs specified in the configuration file instead of zashboard's URL settings. Latency will be displayed independently based on the URLs set in policy groups.",
   search: 'Search',
+  searchProxyGroup: 'Search proxy groups',
+  searchProxyNode: 'Search proxy nodes',
   searchMultiple: 'Space-separated keywords',
   importing: 'Importing...',
   hideConnection: 'Hide connection',
@@ -245,6 +256,13 @@ const en = {
   // Import, export, and upgrade
   importFromFile: 'Import from file',
   importFromUrl: 'Import from URL',
+  uploadSettingsSuccess: 'Settings uploaded successfully',
+  uploadSettingsIconReflectListRemoved:
+    'Custom icon data was too large and has been removed during upload. Please reduce it and try again.',
+  syncSettingsSuccess: 'Settings synced successfully',
+  deleteUploadedSettingsSuccess: 'Uploaded settings deleted successfully',
+  deleteUploadedSettingsConfirm:
+    'Are you sure you want to delete the uploaded settings on the backend? This action cannot be undone.',
   upgradeSuccess: 'Upgrade successful',
   numberOfChartsInSidebar: 'Number of charts in the sidebar',
   flushSmartWeights: 'Clear smart weights',
@@ -307,6 +325,7 @@ const en = {
   actions: 'Actions',
   showAllPreset: 'Show all',
   minimalPreset: 'Minimal view',
+  settingsPageTwoColumns: 'Two column layout',
   aggregateBy: 'Aggregate by',
   aggregateBySourceIP: 'By source IP',
   aggregateByDestination: 'By destination',

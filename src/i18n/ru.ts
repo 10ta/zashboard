@@ -16,6 +16,7 @@ const ru: LANG_MESSAGE = {
   password: 'Пароль',
   submit: 'Отправить',
   cancel: 'Отмена',
+  delete: 'Удалить',
   download: 'Загружено',
   upload: 'Отправлено',
   downloadSpeed: 'Скорость загрузки',
@@ -108,6 +109,14 @@ const ru: LANG_MESSAGE = {
   // Settings page
   exportSettings: 'Экспорт настроек',
   importSettings: 'Импорт настроек',
+  dashboardSettings: 'Настройки панели',
+  dashboardSettingsCore: 'Ядро',
+  dashboardSettingsJsonFile: 'JSON файл',
+  dashboardSettingsUrl: 'URL',
+  autoSyncSettings: 'Автосинхронизация настроек',
+  uploadSettings: 'Загрузить настройки в ядро',
+  syncSettings: 'Синхронизировать настройки из ядра',
+  deleteUploadedSettings: 'Удалить загруженные настройки из ядра',
   connectionSettings: 'Настройки подключения',
   proxySettings: 'Настройки прокси',
   logSettings: 'Настройки журнала',
@@ -184,6 +193,8 @@ const ru: LANG_MESSAGE = {
   independentLatencyTestTip:
     'Включение независимого тестирования задержки попытается использовать URL-адреса, указанные в конфигурационном файле, вместо настроек URL-адресов в панели управления во время теста задержки. Задержка будет отображаться отдельно на основе URL-адресов, установленных в группах политик.',
   search: 'Поиск',
+  searchProxyGroup: 'Поиск групп прокси',
+  searchProxyNode: 'Поиск узлов прокси',
   searchMultiple: 'Ключевые слова через пробелы',
   importing: 'Импортируется',
   hideConnection: 'Скрыть соединение',
@@ -247,6 +258,13 @@ const ru: LANG_MESSAGE = {
   // Import, export, and upgrade
   importFromFile: 'Импортировать из файла',
   importFromUrl: 'Импортировать из URL',
+  uploadSettingsSuccess: 'Настройки успешно загружены',
+  uploadSettingsIconReflectListRemoved:
+    'Данные пользовательских иконок слишком велики и были удалены при загрузке. Уменьшите их размер и попробуйте снова.',
+  syncSettingsSuccess: 'Настройки успешно синхронизированы',
+  deleteUploadedSettingsSuccess: 'Загруженные настройки успешно удалены',
+  deleteUploadedSettingsConfirm:
+    'Вы уверены, что хотите удалить загруженные на бэкенд настройки? Это действие нельзя отменить.',
   upgradeSuccess: 'Обновление до новой версии выполнено успешно',
   numberOfChartsInSidebar: 'Количество графиков в боковой панели',
   flushSmartWeights: 'Очистить Smart веса',
@@ -309,6 +327,7 @@ const ru: LANG_MESSAGE = {
   actions: 'Действия',
   showAllPreset: 'Показать все',
   minimalPreset: 'Минимальный вид',
+  settingsPageTwoColumns: 'Двухколоночный режим',
   aggregateBy: 'Агрегация по',
   aggregateBySourceIP: 'По исходному IP',
   aggregateByDestination: 'По назначению',
