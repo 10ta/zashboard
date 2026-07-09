@@ -11,7 +11,6 @@ import {
   GEOIP_COUNTRY_DATABASE_URL,
   GLOBAL,
   IP_INFO_API,
-  IS_APPLE_DEVICE,
   LANG,
   OVERVIEW_CARD,
   PROXY_CARD_SIZE,
@@ -80,9 +79,9 @@ const migrateLegacyConnectionDisplayStyle = () => {
 migrateLegacyConnectionDisplayStyle()
 
 // global
-export const defaultTheme = useStorage<string>('config/default-theme', 'light')
+export const defaultTheme = useStorage<string>('config/default-theme', 'dracula')
 export const darkTheme = useStorage<string>('config/dark-theme', 'dark')
-export const autoTheme = useStorage<boolean>('config/auto-theme', true)
+export const autoTheme = useStorage<boolean>('config/auto-theme', false)
 export const theme = computed(() => {
   if (autoTheme.value && isPreferredDark.value) {
     return darkTheme.value
@@ -123,7 +122,7 @@ export const isSidebarCollapsed = computed({
     isSidebarCollapsedConfig.value = value
   },
 })
-const fontConfig = useStorage<FONTS>('config/font', FONTS.MI_SANS)
+const fontConfig = useStorage<FONTS>('config/font', FONTS.SARASA_UI)
 export const font = computed({
   get: () => {
     const mode = import.meta.env.MODE
@@ -136,19 +135,19 @@ export const font = computed({
     fontConfig.value = val
   },
 })
-export const emoji = useStorage<EMOJIS>(
-  'config/emoji',
-  IS_APPLE_DEVICE ? EMOJIS.TWEMOJI : EMOJIS.NOTO_COLOR_EMOJI,
+export const emoji = useStorage<EMOJIS>('config/emoji', EMOJIS.TWEMOJI)
+export const customBackgroundURL = useStorage(
+  'config/custom-background-image',
+  'https://passer.f22a.net/get-image/bg.jpg',
 )
-export const customBackgroundURL = useStorage('config/custom-background-image', '')
-export const dashboardTransparent = useStorage('config/dashboard-transparent', 90)
+export const dashboardTransparent = useStorage('config/dashboard-transparent', 75)
 export const autoUpgradeDashboard = useStorage('config/auto-upgrade', false)
 export const checkUpgradeCore = useStorage('config/check-upgrade-core', true)
 export const autoUpgradeCore = useStorage('config/auto-upgrade-core', false)
 export const swipeInPages = useStorage('config/swipe-in-pages', true)
 export const swipeInTabs = useStorage('config/swipe-in-tabs', false)
 export const disablePullToRefresh = useStorage('config/disable-pull-to-refresh', true)
-export const displayAllFeatures = useStorage('config/display-all-features', false)
+export const displayAllFeatures = useStorage('config/display-all-features', true)
 export const blurIntensity = useStorage('config/blur-intensity', 10)
 export const scrollAnimationEffect = useStorage('config/scroll-animation-effect', true)
 export const IPInfoAPI = useStorage('config/geoip-info-api', IP_INFO_API.IPSB)
@@ -160,12 +159,12 @@ export const geoipASNDatabaseURL = useStorage(
   'config/geoip-asn-database-url',
   GEOIP_ASN_DATABASE_URL,
 )
-export const autoDisconnectIdleUDP = useStorage('config/auto-disconnect-idle-udp', false)
-export const autoDisconnectIdleUDPTime = useStorage('config/auto-disconnect-idle-udp-time', 300)
+export const autoDisconnectIdleUDP = useStorage('config/auto-disconnect-idle-udp', true)
+export const autoDisconnectIdleUDPTime = useStorage('config/auto-disconnect-idle-udp-time', 1)
 export const keyboardShortcuts = useStorage<Record<string, string>>('config/keyboard-shortcuts', {})
 
 // overview
-export const splitOverviewPage = useStorage('config/split-overview-page', false)
+export const splitOverviewPage = useStorage('config/split-overview-page', true)
 export const autoIPCheck = useStorage('config/auto-ip-check', true)
 export const autoConnectionCheck = useStorage('config/auto-connection-check', true)
 export const showStatisticsWhenSidebarCollapsed = useStorage(
@@ -227,13 +226,12 @@ export const proxyGroupFilterMap = useStorage<Record<string, string>>(
   'cache/proxy-group-filter-map',
   {},
 )
-export const displayFinalOutbound = useStorage('config/show-selected-for-now-node', false)
-export const twoColumnProxyGroup = useStorage('config/two-columns', true)
+export const displayFinalOutbound = useStorage('config/show-selected-for-now-node', true)
+export const twoColumnProxyGroup = useStorage('config/two-columns', false)
 export const proxyFolderMode = useStorage<FOLDER_MODE>(
   'config/proxy-folder-mode-setting',
   FOLDER_MODE.AUTO,
 )
-
 export const speedtestUrl = useStorage<string>('config/speedtest-url', TEST_URL)
 export const independentLatencyTest = useStorage('config/independent-latency-test', false)
 export const speedtestTimeout = useStorage<number>('config/speedtest-timeout', 5000)
@@ -263,7 +261,7 @@ export const proxyPreviewType = useStorage('config/proxy-preview-type', PROXY_PR
 export const hideUnavailableProxies = useStorage('config/hide-unavailable-proxies', false)
 export const lowLatency = useStorage('config/low-latency', 400)
 export const mediumLatency = useStorage('config/medium-latency', 800)
-export const IPv6test = useStorage('config/ipv6-test', false)
+export const IPv6test = useStorage('config/ipv6-test', true)
 export const proxyCardSize = useStorage<PROXY_CARD_SIZE>(
   'config/proxy-card-size',
   PROXY_CARD_SIZE.LARGE,
