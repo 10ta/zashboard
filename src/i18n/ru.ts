@@ -146,6 +146,26 @@ const ru: LANG_MESSAGE = {
   usbipConfigurations: 'Конфигурации',
   usbipInterfaceN: 'Интерфейс {n}',
 
+  // OpenVPN
+  openvpn: 'OpenVPN',
+  ovpnNoEndpoints: 'Нет конечных точек OpenVPN',
+  ovpnAuthentication: 'Аутентификация',
+  ovpnServer: 'Сервер',
+  ovpnNetwork: 'Сеть',
+  ovpnCipher: 'Шифр',
+  ovpnIPv4: 'IPv4',
+  ovpnIPv6: 'IPv6',
+  ovpnDNS: 'DNS',
+  ovpnMTU: 'MTU',
+  ovpnConnected: 'Подключено',
+  ovpnUsername: 'Имя пользователя',
+  ovpnPassword: 'Пароль',
+  ovpnResponse: 'Ответ',
+  ovpnOpenAuthURL: 'Открыть ссылку аутентификации',
+  ovpnSubmit: 'Отправить',
+  ovpnCancel: 'Отмена',
+  ovpnVerifying: 'Проверка',
+
   // Shared labels and actions
   protocol: 'Протокол',
   host: 'Хост',
@@ -173,6 +193,7 @@ const ru: LANG_MESSAGE = {
   updateGeoSuccess: 'Geo база данных успешно обновлена',
   chains: 'Цепочки',
   outbound: 'Исходящий',
+  proxyGroup: 'Группа прокси',
   sortBy: 'Сортировать по',
   rule: 'Правило',
   sourceIP: 'Исходный IP',
@@ -424,6 +445,8 @@ const ru: LANG_MESSAGE = {
     'В бэкенде сохранены настройки, которые перезапишут следующие локальные настройки:\n\n{keys}\n\nПрименить их?',
   importSettingsConfirm:
     'Импортированные настройки перезапишут следующие локальные настройки:\n\n{keys}\n\nПрименить их?',
+  dontAskAgainAlwaysApply: 'Больше не спрашивать, применять автоматически',
+  confirmBeforeOverride: 'Подтверждать перезапись локальных настроек',
   deleteUploadedSettingsSuccess: 'Загруженные настройки успешно удалены',
   deleteUploadedSettingsConfirm:
     'Вы уверены, что хотите удалить загруженные на бэкенд настройки? Это действие нельзя отменить.',
@@ -502,6 +525,7 @@ const ru: LANG_MESSAGE = {
   aggregateByDestination: 'По назначению',
   aggregateByProcess: 'По процессу',
   aggregateByOutbound: 'По исходящему',
+  aggregateByProxyGroup: 'По группе прокси',
   totalTraffic: 'Общий трафик',
   total: 'Итого',
   clearConnectionHistory: 'Очистить историю соединений',

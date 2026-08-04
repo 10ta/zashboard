@@ -5,7 +5,7 @@
     :no-padding="true"
     box-class="max-w-160"
   >
-    <div class="flex max-h-[70dvh] flex-col overflow-hidden">
+    <div class="flex h-[70dvh] max-h-142 flex-col overflow-hidden">
       <div class="shrink-0 p-3 pb-0">
         <ProxyChainPath
           :proxy="proxyGroupChainTarget"
@@ -15,12 +15,11 @@
           @update:selected="selectedProxy = $event"
         />
       </div>
-      <div class="flex flex-1 flex-col overflow-y-auto">
-        <ProxyGroup
-          :name="selectedProxy || proxyGroupChainTarget"
-          :force-open="true"
-          class="transparent-collapse rounded-none!"
-        />
+      <div
+        class="flex flex-1 flex-col overflow-y-auto"
+        :class="PROXIES_PARENT_CLASS"
+      >
+        <ProxyGroupPanel :name="selectedProxy || proxyGroupChainTarget" />
       </div>
     </div>
   </DialogWrapper>
@@ -29,12 +28,13 @@
 <script setup lang="ts">
 import DialogWrapper from '@/components/common/DialogWrapper.vue'
 import ProxyChainPath from '@/components/common/ProxyChainPath.vue'
-import ProxyGroup from '@/components/proxies/ProxyGroup.vue'
+import ProxyGroupPanel from '@/components/proxies/ProxyGroupPanel.vue'
 import {
   closeProxyGroupChain,
   proxyGroupChainModalOpen,
   proxyGroupChainTarget,
 } from '@/composables/proxyGroupChain'
+import { PROXIES_PARENT_CLASS } from '@/helper/utils'
 import { ref, watch } from 'vue'
 import { proxyMap } from '@/assembly/proxies'
 

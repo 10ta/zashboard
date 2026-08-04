@@ -3,7 +3,6 @@ import { connectionAccessor } from '@/assembly/connections'
 import { hiddenGroupMap, proxyMap } from '@/assembly/proxies'
 import { NOT_CONNECTED, PROXY_CHAIN_DIRECTION, PROXY_TYPE, ROUTE_NAME } from '@/constant'
 import { showNotification } from '@/helper/notification'
-import { timeSaved } from '@/store/overview'
 import {
   customThemes,
   lowLatency,
@@ -12,10 +11,8 @@ import {
   splitOverviewPage,
 } from '@/store/settings'
 import type { Connection } from '@/types'
-import dayjs from 'dayjs'
 import * as ipaddr from 'ipaddr.js'
 import { computed } from 'vue'
-import { prettyBytesHelper } from './utils'
 
 export const isProxyGroup = (name: string) => {
   const proxyNode = proxyMap.value[name]
@@ -111,29 +108,6 @@ export const getChainsStringFromConnection = (connection: Connection) => {
   }
 
   return chains.join('')
-}
-
-export const getToolTipForParams = (
-  params: ToolTipParams,
-  config: {
-    suffix: string
-    binary: boolean
-  },
-) => {
-  const { suffix = '', binary = false } = config
-
-  // fake data
-  if (params.data.name < timeSaved + 1) {
-    return ``
-  }
-  return `
-    <div class="flex items-center my-2 gap-1">
-      <div class="w-4 h-4 rounded-full" style="background-color: ${params.color}"></div>
-      ${params.seriesName}
-      (${dayjs(params.data.name).format('HH:mm:ss')}): ${prettyBytesHelper(params.data.value, {
-        binary: binary,
-      })}${suffix}
-    </div>`
 }
 
 export const getColorForLatency = (latency: number) => {

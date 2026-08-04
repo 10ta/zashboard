@@ -40,6 +40,9 @@
             <option :value="ConnectionHistoryType.Outbound">
               {{ $t('aggregateByOutbound') }}
             </option>
+            <option :value="ConnectionHistoryType.ProxyGroup">
+              {{ $t('aggregateByProxyGroup') }}
+            </option>
           </select>
         </div>
         <div class="flex items-center gap-2">
@@ -192,7 +195,7 @@
 </template>
 
 <script setup lang="ts">
-import { ConnectionHistoryType, clearConnectionHistoryFromIndexedDB } from '@/helper/indexeddb'
+import { ConnectionHistoryType } from '@/helper/indexeddb'
 import { showNotification } from '@/helper/notification'
 import { getIPLabelFromMap } from '@/helper/sourceip'
 import { useTooltip } from '@/helper/tooltip'
@@ -200,7 +203,7 @@ import { prettyBytesHelper } from '@/helper/utils'
 import {
   aggregateConnections,
   aggregatedDataMap,
-  initAggregatedDataMap,
+  clearConnectionHistory,
   mergeAggregatedData,
 } from '@/store/connHistory'
 import { activeConnections } from '@/store/connections'
@@ -275,6 +278,8 @@ const aggregateSourceLabel = computed(() => {
     return t('host')
   } else if (aggregationType.value === ConnectionHistoryType.Process) {
     return t('process')
+  } else if (aggregationType.value === ConnectionHistoryType.ProxyGroup) {
+    return t('proxyGroup')
   } else {
     return t('outbound')
   }
@@ -421,8 +426,7 @@ const checkAndPerformAutoCleanup = async () => {
 
   if (timeSinceLastCleanup >= intervalMs) {
     try {
-      await clearConnectionHistoryFromIndexedDB()
-      await initAggregatedDataMap()
+      await clearConnectionHistory()
       startTime.value = now
     } catch (error) {
       console.error('Failed to perform auto cleanup:', error)
@@ -432,8 +436,7 @@ const checkAndPerformAutoCleanup = async () => {
 
 const handleClearHistory = async () => {
   try {
-    await clearConnectionHistoryFromIndexedDB()
-    await initAggregatedDataMap()
+    await clearConnectionHistory()
     startTime.value = Date.now()
     showClearDialog.value = false
     showNotification({

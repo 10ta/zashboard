@@ -15,14 +15,14 @@
           :class="twMerge('btn btn-sm', isUIUpgrading ? 'animate-pulse' : '')"
           @click="handlerClickUpgradeUI"
         >
-          {{ $t('upgradeDashboard') }}
+          <ArrowUpCircleIcon class="h-4 w-4" />
         </button>
       </SettingItem>
       <SettingItem :setting-key="k.actions">
         <div class="setting-item-label">
           {{ $t('dashboardSettings') }}
         </div>
-        <DashboardSettings />
+        <DashboardSettings icon-only />
       </SettingItem>
       <LanguageSelect />
       <SettingItem
@@ -222,7 +222,7 @@ import {
   swipeInPages,
   swipeInTabs,
 } from '@/store/settings'
-import { QuestionMarkCircleIcon } from '@heroicons/vue/24/outline'
+import { ArrowUpCircleIcon, QuestionMarkCircleIcon } from '@heroicons/vue/24/outline'
 import { computed, ref } from 'vue'
 
 const { showTip } = useTooltip()
