@@ -201,8 +201,8 @@ const { stateOf } = useBackendListProbe(isListVisible)
 const emptyForm = (): Omit<Backend, 'uuid'> => ({
   type: 'clash' as BackendType,
   protocol: 'http',
-  host: '127.0.0.1',
-  port: '9090',
+  host: '10.1.0.9',
+  port: '9011',
   secondaryPath: '',
   password: '',
   label: '',
