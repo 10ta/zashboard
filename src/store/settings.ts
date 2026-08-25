@@ -155,7 +155,7 @@ export const language = useStorage<LANG>(
   'config/language',
   Object.values(LANG).includes(navigator.language as LANG)
     ? (navigator.language as LANG)
-    : LANG.EN_US,
+    : LANG.ZH_CN,
 )
 export const isSidebarCollapsedConfig = useStorage('config/is-sidebar-collapsed', true)
 export const isSidebarCollapsed = computed({
@@ -190,7 +190,7 @@ export const customBackgroundURL = useStorage(
 )
 export const dashboardTransparent = useStorage('config/dashboard-transparent', 75)
 export const autoUpgradeDashboard = useStorage('config/auto-upgrade', false)
-export const checkUpgradeCore = useStorage('config/check-upgrade-core', true)
+export const checkUpgradeCore = useStorage('config/check-upgrade-core', false)
 export const autoUpgradeCore = useStorage('config/auto-upgrade-core', false)
 export const swipeInPages = useStorage('config/swipe-in-pages', true)
 export const swipeInTabs = useStorage('config/swipe-in-tabs', false)
@@ -336,7 +336,7 @@ export const proxySortType = useStorage<PROXY_SORT_TYPE>(
   PROXY_SORT_TYPE.DEFAULT,
 )
 export const automaticDisconnection = useStorage('config/automatic-disconnection', true)
-export const truncateProxyName = useStorage('config/truncate-proxy-name', true)
+export const truncateProxyName = useStorage('config/truncate-proxy-name', false)
 export const disableProxiesPageTextSelect = useStorage(
   'config/disable-proxies-page-text-select',
   true,

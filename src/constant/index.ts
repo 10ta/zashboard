@@ -10,7 +10,7 @@ import {
 export const IS_APPLE_DEVICE = /Mac|iPod|iPhone|iPad/.test(navigator.platform)
 
 export const GLOBAL = 'GLOBAL'
-export const TEST_URL = 'https://www.gstatic.com/generate_204'
+export const TEST_URL = 'https://cp.cloudflare.com'
 export const IPV6_TEST_URL = 'https://ipv6.google.com/generate_204'
 export const NOT_CONNECTED = 0
 export enum LANG {
@@ -330,11 +330,11 @@ export enum MIHOMO {
 
 export const MIHOMO_CHANNEL: Record<MIHOMO, { url: string; check_update_url: string }> = {
   [MIHOMO.Meta]: {
-    url: 'https://github.com/metacubex/mihomo',
-    check_update_url: 'https://api.github.com/repos/MetaCubeX/mihomo/releases/latest',
+    url: 'https://github.com/SagerNet/sing-box',
+    check_update_url: 'https://api.github.com/repos/SagerNet/sing-box/releases/latest',
   },
   [MIHOMO.Alpha]: {
-    url: 'https://github.com/metacubex/mihomo',
+    url: 'https://github.com/SagerNet/sing-box',
     check_update_url:
       'https://api.github.com/repos/MetaCubeX/mihomo/releases/tags/Prerelease-Alpha',
   },

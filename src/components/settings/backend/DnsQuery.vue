@@ -100,7 +100,7 @@ const DNS_TYPE_LABELS: Record<number, string> = {
 }
 
 const form = reactive({
-  name: 'www.google.com',
+  name: 'www.cloudflare.com',
   type: 'A',
 })
 const details = ref<IPInfo | null>(null)
