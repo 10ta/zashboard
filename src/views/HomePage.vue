@@ -1,6 +1,6 @@
 <template>
   <div
-    class="bg-base-200 home-page flex size-full"
+    class="home-page flex size-full"
     :class="sidebarLayoutCollapsed ? 'sidebar-collapsed' : 'sidebar-expanded'"
   >
     <div

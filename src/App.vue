@@ -9,6 +9,7 @@ import BackendSwitchToast from './components/common/BackendSwitchToast.vue'
 import BackendManager from './components/settings/backend/BackendManager.vue'
 import UpdateConfigModal from './components/settings/backend/UpdateConfigModal.vue'
 import UpgradeCoreModal from './components/settings/backend/UpgradeCoreModal.vue'
+import { useAppearanceVars } from './composables/useAppearanceVars'
 import { showUpdateConfigModal, showUpgradeCoreModal } from './composables/backendActions'
 import ConfirmDialogHost from './components/common/ConfirmDialogHost.vue'
 import { useKeyboard } from './composables/keyboard'
@@ -22,14 +23,7 @@ import {
 import { backgroundImage } from './helper/indexeddb'
 import { initNotification } from './helper/notification'
 import { getBackendFromUrl, isPreferredDark } from './helper/utils'
-import {
-  blurIntensity,
-  dashboardTransparent,
-  disablePullToRefresh,
-  emoji,
-  font,
-  theme,
-} from './store/settings'
+import { disablePullToRefresh, emoji, font, theme } from './store/settings'
 import { backendList, setActiveBackend } from './store/setup'
 import type { Backend } from './types'
 
@@ -197,14 +191,7 @@ onMounted(async () => {
   }
 })
 
-const blurClass = computed(() => {
-  if (!backgroundImage.value || blurIntensity.value === 0) {
-    return ''
-  }
-
-  return `blur-intensity-${blurIntensity.value}`
-})
-
+useAppearanceVars()
 useKeyboard()
 </script>
 
@@ -215,9 +202,7 @@ useKeyboard()
     :class="[
       'bg-base-100 flex w-screen overflow-hidden',
       fontClassName,
-      backgroundImage &&
-        `custom-background-${dashboardTransparent} custom-background bg-cover bg-center`,
-      blurClass,
+      backgroundImage && 'custom-background bg-cover bg-center',
     ]"
     :style="[backgroundImage, { height: 'var(--app-height, 100dvh)' }]"
   >

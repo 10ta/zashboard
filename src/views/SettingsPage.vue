@@ -9,7 +9,7 @@
     <CtrlsBar v-if="!showSideNavigation">
       <div class="mx-auto flex w-full max-w-4xl flex-wrap items-center gap-2 p-2">
         <button
-          v-if="showMobileIndex === false && isMiddleScreen"
+          v-if="!showMobileIndex"
           type="button"
           class="btn btn-circle btn-ghost btn-sm shrink-0"
           :aria-label="$t('back')"
@@ -18,40 +18,45 @@
           <ChevronLeftIcon class="h-5 w-5" />
         </button>
 
-        <div
-          v-if="isMiddleScreen"
-          class="min-w-0 flex-1"
-        >
-          <div class="truncate text-base font-semibold">
-            {{
-              showMobileIndex || !activeCategory
-                ? $t('settings')
-                : $t(SETTINGS_MENU_LABELS[activeCategory.key])
-            }}
-          </div>
+        <div class="flex min-w-0 flex-1 items-center gap-2">
+          <span
+            v-if="showMobileIndex || !activeCategory"
+            class="min-w-0 shrink truncate text-base font-semibold"
+          >
+            {{ $t('settings') }}
+          </span>
+          <SelectInput
+            v-else
+            v-model="mobileCategoryKey"
+            class="select-sm max-w-48 min-w-0 shrink font-semibold"
+            :aria-label="$t('settingsCategory')"
+            :options="categorySelectOptions"
+          />
+          <template v-if="activeBackend">
+            <span class="text-base-content/30 shrink-0">|</span>
+            <span class="text-base-content/55 flex min-w-0 shrink items-center gap-1.5 text-xs">
+              <BackendStatusDot
+                :status="connectionStatus"
+                :show-latency="false"
+              />
+              <span class="min-w-0 truncate">{{ connectedBackendLabel }}</span>
+            </span>
+          </template>
         </div>
 
-        <SelectInput
-          v-else
-          v-model="narrowCategoryKey"
-          class="select-sm max-w-56 min-w-40"
-          :aria-label="$t('settingsCategory')"
-          :options="categorySelectOptions"
-        />
-
         <SettingsSearch
-          v-if="!isMiddleScreen || showMobileIndex || mobileSearchOpen"
+          v-if="showMobileIndex || mobileSearchOpen"
           :class="[
             'min-w-0 flex-1',
-            isMiddleScreen && showMobileIndex && 'order-last w-full flex-none',
-            isMiddleScreen && !showMobileIndex && 'absolute top-full right-2 left-2 mt-1',
+            showMobileIndex && 'order-last w-full flex-none',
+            !showMobileIndex && 'absolute! top-full right-2 left-2 mt-1',
           ]"
           @select="openSetting"
           @customize="customizationOpen = true"
         />
 
         <button
-          v-if="isMiddleScreen && !showMobileIndex"
+          v-if="!showMobileIndex"
           type="button"
           class="btn btn-circle btn-ghost btn-sm shrink-0"
           :class="mobileSearchOpen && 'btn-active'"
@@ -89,7 +94,6 @@
     >
       <div class="mb-4 px-1 pt-2">
         <h1 class="text-xl font-semibold tracking-tight">{{ $t('settings') }}</h1>
-        <p class="text-base-content/55 mt-1 text-sm">{{ $t('settingsPageDescription') }}</p>
       </div>
 
       <div class="settings-grid">
@@ -139,10 +143,20 @@
     >
       <aside
         v-if="showSideNavigation"
-        class="sticky top-6 flex h-[calc(100dvh-3rem)] min-h-0 flex-col"
+        class="bg-base-200 sticky top-6 flex h-[calc(100dvh-3rem)] min-h-0 flex-col rounded-xl p-2"
       >
         <div class="mb-4 px-2">
           <h1 class="text-xl font-semibold tracking-tight">{{ $t('settings') }}</h1>
+          <div
+            v-if="activeBackend"
+            class="text-base-content/55 mt-1 flex min-w-0 items-center gap-1.5 text-sm"
+          >
+            <BackendStatusDot
+              :status="connectionStatus"
+              :show-latency="false"
+            />
+            <span class="min-w-0 truncate">{{ connectedBackendLabel }}</span>
+          </div>
         </div>
 
         <SettingsSearch
@@ -200,10 +214,10 @@
         </div>
       </aside>
 
-      <main class="min-w-0">
+      <main class="bg-base-200 min-w-0 rounded-2xl p-4">
         <header
           v-if="activeCategory"
-          class="mb-5 px-1"
+          class="mb-5"
         >
           <div class="flex items-center gap-3">
             <span
@@ -248,8 +262,10 @@
 </template>
 
 <script setup lang="ts">
-import SelectInput from '@/components/common/SelectInput.vue'
+import { backendProbe } from '@/assembly/version'
+import BackendStatusDot from '@/components/common/BackendStatusDot.vue'
 import CtrlsBar from '@/components/common/CtrlsBar.vue'
+import SelectInput from '@/components/common/SelectInput.vue'
 import BackendSettings from '@/components/settings/backend/BackendSettings.vue'
 import ConnectionsSettings from '@/components/settings/connections/ConnectionsSettings.vue'
 import ZashboardSettings from '@/components/settings/general/ZashboardSettings.vue'
@@ -257,12 +273,14 @@ import OverviewSettings from '@/components/settings/overview/OverviewSettings.vu
 import ProxiesSettings from '@/components/settings/proxies/ProxiesSettings.vue'
 import SettingsCustomizationDialog from '@/components/settings/SettingsCustomizationDialog.vue'
 import SettingsSearch from '@/components/settings/SettingsSearch.vue'
+import type { ReachabilityStatus } from '@/composables/backendReachability'
 import { usePaddingForViews } from '@/composables/paddingViews'
 import { settingsPaneTransition } from '@/composables/pageTransition'
 import { useSettingsSection, visibleSectionKeys } from '@/composables/settingsSection'
 import { SETTINGS_CATEGORIES, SETTINGS_MENU_LABELS } from '@/config/settingsItems'
 import { SETTINGS_MENU_KEY } from '@/constant'
-import { isMiddleScreen, isPWA } from '@/helper/utils'
+import { getLabelFromBackend, isMiddleScreen, isPWA } from '@/helper/utils'
+import { activeBackend, activeUuid } from '@/store/setup'
 import {
   AdjustmentsHorizontalIcon,
   ArrowPathIcon,
@@ -295,6 +313,17 @@ const router = useRouter()
 const scrollContainerRef = ref<HTMLDivElement>()
 const { width } = useElementSize(scrollContainerRef)
 const { padding } = usePaddingForViews({ offsetTop: 0, offsetBottom: 8 })
+
+const connectedBackendLabel = computed(() =>
+  activeBackend.value ? getLabelFromBackend(activeBackend.value) : '',
+)
+const connectionStatus = computed<ReachabilityStatus>(() => {
+  const probe = backendProbe.value
+  if (probe?.uuid !== activeUuid.value) return 'idle'
+  if (probe.status === 'connected') return 'online'
+  if (probe.status === 'failed') return 'offline'
+  return 'checking'
+})
 
 const customizationOpen = ref(false)
 const mobileSearchOpen = ref(false)
@@ -333,18 +362,18 @@ const menuItems = computed(() => {
 })
 
 const activeCategory = computed(() => {
-  const key = routeSection.value ?? (!isMiddleScreen.value ? menuItems.value[0]?.key : undefined)
+  const key = routeSection.value ?? (showSideNavigation.value ? menuItems.value[0]?.key : undefined)
   return menuItems.value.find((item) => item.key === key)
 })
 
-const showMobileIndex = computed(() => isMiddleScreen.value && !routeSection.value)
+const showMobileIndex = computed(() => !showSideNavigation.value && !routeSection.value)
 const categorySelectOptions = computed(() =>
   menuItems.value.map((item) => ({
     value: item.key,
     label: t(SETTINGS_MENU_LABELS[item.key]),
   })),
 )
-const narrowCategoryKey = computed({
+const mobileCategoryKey = computed({
   get: () => activeCategory.value?.key ?? menuItems.value[0]?.key ?? SETTINGS_MENU_KEY.general,
   set: (key: SETTINGS_MENU_KEY) => selectSection(key),
 })
@@ -422,9 +451,9 @@ watch(routeSection, () => {
 })
 
 watch(
-  () => [isMiddleScreen.value, routeSection.value, route.query.scrollTo, menuItems.value],
+  () => [showSideNavigation.value, routeSection.value, route.query.scrollTo, menuItems.value],
   async () => {
-    if (isMiddleScreen.value || routeSection.value || route.query.scrollTo) return
+    if (!showSideNavigation.value || routeSection.value || route.query.scrollTo) return
     const firstCategory = menuItems.value[0]
     if (!firstCategory) return
     await router.replace({

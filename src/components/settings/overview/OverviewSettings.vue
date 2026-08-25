@@ -84,8 +84,6 @@ import { computed } from 'vue'
 import OverviewCard from './OverviewCard.vue'
 
 const k = OVERVIEW_ITEM_KEYS
-const isVisibleChartsCard = useIsSettingVisible(k.chartsCard)
-const isVisibleNetworkCard = useIsSettingVisible(k.networkCard)
 const isVisibleSplitOverview = useIsSettingVisible(k.splitOverviewPage)
 const isVisibleIPCheck = useIsSettingVisible(k.autoIPCheckWhenStart)
 const isVisibleConnectionCheck = useIsSettingVisible(k.autoConnectionCheckWhenStart)
@@ -93,9 +91,7 @@ const isVisibleSidebarStatistics = useIsSettingVisible(k.showStatisticsWhenSideb
 const isVisibleSidebarCharts = useIsSettingVisible(k.numberOfChartsInSidebar)
 
 const hasVisibleCardsLayout = computed(
-  () =>
-    isVisibleSplitOverview.value ||
-    (!splitOverviewPage.value && (isVisibleChartsCard.value || isVisibleNetworkCard.value)),
+  () => isVisibleSplitOverview.value || !splitOverviewPage.value,
 )
 const hasVisibleStartupChecks = computed(
   () => isVisibleIPCheck.value || isVisibleConnectionCheck.value,

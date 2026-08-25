@@ -10,7 +10,15 @@
     @mouseup="handleMouseUp"
     @mouseleave="handleMouseUp"
   >
-    <div :style="{ height: `${totalSize}px` }">
+    <!--
+      玻璃挂在这一层：行是 transform 定位的，tbody 只有已渲染的那几十行那么高，
+      只有这个包裹层的盒子等于虚拟总高（见 appearance.css）。
+    -->
+    <div
+      class="table-glass"
+      :class="isManualTable ? 'min-w-max' : 'min-w-min'"
+      :style="{ height: `${totalSize}px` }"
+    >
       <table
         :class="['table', sizeOfTable, isManualTable && 'table-fixed']"
         :style="
@@ -128,7 +136,7 @@
             }"
             class="hover:bg-primary/85! hover:text-primary-content!"
             :class="[
-              virtualRow.index % 2 === 0 ? 'bg-base-150' : 'bg-base-100',
+              virtualRow.index % 2 === 0 && 'table-row-stripe',
               !isDragging ? 'cursor-pointer' : 'cursor-grabbing',
               connectionTabShow === CONNECTION_TAB_TYPE.ALL &&
               isClosedConnection(rows[virtualRow.index].original)
@@ -550,27 +558,6 @@ const columns: ColumnDef<Connection>[] = [
     accessorFn: (original) =>
       getTableDisplayValue(original, CONNECTIONS_TABLE_ACCESSOR_KEY.InboundUser),
     cell: highlightedCell(CONNECTIONS_TABLE_ACCESSOR_KEY.InboundUser),
-  },
-  {
-    header: () => t(CONNECTIONS_TABLE_ACCESSOR_KEY.Protocol),
-    id: CONNECTIONS_TABLE_ACCESSOR_KEY.Protocol,
-    accessorFn: (original) =>
-      getTableDisplayValue(original, CONNECTIONS_TABLE_ACCESSOR_KEY.Protocol),
-    cell: highlightedCell(CONNECTIONS_TABLE_ACCESSOR_KEY.Protocol),
-  },
-  {
-    header: () => t(CONNECTIONS_TABLE_ACCESSOR_KEY.OutboundType),
-    id: CONNECTIONS_TABLE_ACCESSOR_KEY.OutboundType,
-    accessorFn: (original) =>
-      getTableDisplayValue(original, CONNECTIONS_TABLE_ACCESSOR_KEY.OutboundType),
-    cell: highlightedCell(CONNECTIONS_TABLE_ACCESSOR_KEY.OutboundType),
-  },
-  {
-    header: () => t(CONNECTIONS_TABLE_ACCESSOR_KEY.FromOutbound),
-    id: CONNECTIONS_TABLE_ACCESSOR_KEY.FromOutbound,
-    accessorFn: (original) =>
-      getTableDisplayValue(original, CONNECTIONS_TABLE_ACCESSOR_KEY.FromOutbound),
-    cell: highlightedCell(CONNECTIONS_TABLE_ACCESSOR_KEY.FromOutbound),
   },
 ]
 

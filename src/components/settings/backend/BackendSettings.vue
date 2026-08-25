@@ -68,19 +68,14 @@
     <template v-if="hasVisibleNetworkSettings">
       <div class="settings-section-label">{{ $t('settingsSectionNetworkListening') }}</div>
       <div class="settings-grid">
-        <SettingItem :setting-key="k.ports">
-          <div class="setting-item-label">
-            {{ $t('ports') }}
-            <span class="setting-item-summary">{{ $t('configurePorts') }}</span>
+        <SettingItem
+          :setting-key="k.ports"
+          class="py-3"
+        >
+          <div class="flex w-full flex-col gap-3">
+            <div class="setting-item-label">{{ $t('ports') }}</div>
+            <BackendPortsGrid />
           </div>
-          <button
-            type="button"
-            class="btn btn-sm min-w-11"
-            :aria-label="$t('configurePorts')"
-            @click="portsDialogOpen = true"
-          >
-            <ChevronRightIcon class="h-4 w-4" />
-          </button>
         </SettingItem>
         <SettingItem
           :setting-key="k.tunMode"
@@ -139,37 +134,14 @@
     <template v-if="showDnsQuery">
       <div class="settings-section-label">{{ $t('settingsSectionDiagnostics') }}</div>
       <div class="settings-grid">
-        <SettingItem :setting-key="k.DNSQuery">
-          <div class="setting-item-label">
-            {{ $t('DNSQuery') }}
-            <span class="setting-item-summary">{{ $t('dnsQueryDescription') }}</span>
-          </div>
-          <button
-            type="button"
-            class="btn btn-sm min-w-11"
-            :aria-label="$t('DNSQuery')"
-            @click="dnsDialogOpen = true"
-          >
-            <MagnifyingGlassIcon class="h-4 w-4" />
-          </button>
+        <SettingItem
+          :setting-key="k.DNSQuery"
+          class="py-3"
+        >
+          <DnsQuery />
         </SettingItem>
       </div>
     </template>
-
-    <DialogWrapper
-      v-model="portsDialogOpen"
-      :title="$t('ports')"
-      box-class="w-full max-w-2xl"
-    >
-      <BackendPortsGrid />
-    </DialogWrapper>
-    <DialogWrapper
-      v-model="dnsDialogOpen"
-      :title="$t('DNSQuery')"
-      box-class="w-full max-w-2xl"
-    >
-      <DnsQuery />
-    </DialogWrapper>
   </div>
 </template>
 
@@ -178,7 +150,6 @@ import { can } from '@/assembly/backend'
 import { configs, updateConfigs } from '@/assembly/config'
 import { coreBrand, isCoreUpdateAvailable } from '@/assembly/version'
 import BackendVersion from '@/components/common/BackendVersion.vue'
-import DialogWrapper from '@/components/common/DialogWrapper.vue'
 import BackendPortsGrid from '@/components/settings/backend/BackendPortsGrid.vue'
 import BackendSwitch from '@/components/settings/backend/BackendSwitch.vue'
 import DnsQuery from '@/components/settings/backend/DnsQuery.vue'
@@ -189,12 +160,9 @@ import { BACKEND_ITEM_KEYS } from '@/config/settingsItems'
 import { notifyRequestError } from '@/helper/requestError'
 import { autoUpgradeCore, checkUpgradeCore } from '@/store/settings'
 import { activeBackend } from '@/store/setup'
-import { ChevronRightIcon, MagnifyingGlassIcon } from '@heroicons/vue/24/outline'
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
 
 const k = BACKEND_ITEM_KEYS
-const portsDialogOpen = ref(false)
-const dnsDialogOpen = ref(false)
 
 const isVisibleBackendSwitch = useIsSettingVisible(k.backend)
 const isVisiblePorts = useIsSettingVisible(k.ports)
@@ -210,7 +178,7 @@ const canShowTunMode = computed(
 const hasVisibleActions = computed(() =>
   backendActions.value.some((action) => isSettingVisible(action.key)),
 )
-const showDnsQuery = computed(() => isVisibleDnsQuery.value && can('dnsQuery'))
+const showDnsQuery = isVisibleDnsQuery
 const hasVisibleNetworkSettings = computed(
   () =>
     can('configPatch') &&
