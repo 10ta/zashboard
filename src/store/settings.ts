@@ -188,6 +188,8 @@ export const customBackgroundURL = useStorage(
   'config/custom-background-image',
   'https://passer.f22a.net/get-image/bg.jpg',
 )
+
+export const customCSS = useStorage('config/custom-css', '')
 export const dashboardTransparent = useStorage('config/dashboard-transparent', 75)
 export const autoUpgradeDashboard = useStorage('config/auto-upgrade', false)
 export const checkUpgradeCore = useStorage('config/check-upgrade-core', false)
@@ -299,6 +301,7 @@ if (missingCards.length > 0) {
 
 export const earthIPInfoAPI = useStorage<IP_INFO_API>('config/earth-ip-info-api', IP_INFO_API.IPIP)
 export const earthVisualMode = useStorage<'flat' | 'space'>('config/earth-visual-mode', 'flat')
+export const earthProjection = useStorage<'3d' | '2d'>('config/earth-projection', '3d')
 export const topologyApplyConnectionFilter = useStorage(
   'config/topology-apply-connection-filter',
   true,
