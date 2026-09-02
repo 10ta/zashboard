@@ -1,16 +1,13 @@
 name: Build and Release
 
-# 方案：push tag（如 v1.0.0）时触发构建 + 发布 release
-# 如果想改成"push 到 main 就发布"，把 tags 那段换成 branches: [main]
 on:
   push:
     tags:
       - 'v*'
-  # 允许在 Actions 页面手动点击运行，方便调试
   workflow_dispatch:
 
 permissions:
-  contents: write # 创建 release 需要写权限
+  contents: write
 
 jobs:
   build-and-release:
@@ -41,7 +38,6 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: xd.zip
-          # 如果 tag 不存在会自动创建 release；也可以按需加 body/生成 changelog
           generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
