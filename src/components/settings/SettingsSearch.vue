@@ -57,7 +57,7 @@
           @click="select(result.category.key, result.anchorKey)"
         >
           <component
-            :is="iconMap[result.category.key]"
+            :is="result.category.icon"
             class="h-4 w-4 shrink-0 opacity-55"
           />
           <span class="min-w-0 flex-1">
@@ -92,23 +92,18 @@
 </template>
 
 <script setup lang="ts">
-import { isSettingHidden, isSettingRendered } from '@/composables/settings'
+import { isSettingHidden, isSettingRendered } from '@/helper/settings'
 import {
   SETTINGS_CATEGORIES,
   SETTINGS_MENU_LABELS,
   type SettingsCategory,
   type SettingsCategoryItem,
-} from '@/config/settingsItems'
+} from '@/config/settings-items'
 import { SETTINGS_MENU_KEY } from '@/constant'
 import {
-  ArrowsRightLeftIcon,
   ChevronRightIcon,
-  CubeTransparentIcon,
   EyeSlashIcon,
-  GlobeAltIcon,
-  HomeIcon,
   MagnifyingGlassIcon,
-  ServerIcon,
   XMarkIcon,
 } from '@heroicons/vue/24/outline'
 import { computed, nextTick, ref, useId, watch } from 'vue'
@@ -131,14 +126,6 @@ const query = ref('')
 const focused = ref(false)
 const activeIndex = ref(-1)
 const listboxId = `settings-search-${useId().replace(/[^\w-]/g, '')}`
-
-const iconMap = {
-  [SETTINGS_MENU_KEY.general]: HomeIcon,
-  [SETTINGS_MENU_KEY.overview]: CubeTransparentIcon,
-  [SETTINGS_MENU_KEY.backend]: ServerIcon,
-  [SETTINGS_MENU_KEY.proxies]: GlobeAltIcon,
-  [SETTINGS_MENU_KEY.connections]: ArrowsRightLeftIcon,
-}
 
 const matches = computed<SearchResult[]>(() => {
   const needle = query.value.trim().toLocaleLowerCase()

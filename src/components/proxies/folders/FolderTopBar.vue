@@ -48,7 +48,7 @@
 </template>
 
 <script setup lang="ts">
-import { ctrlsBottom } from '@/composables/paddingViews'
+import { ctrlsBottom } from '@/helper/padding-views'
 import { proxyGroupList } from '@/assembly/proxies'
 import {
   activeFolderId,
@@ -57,11 +57,11 @@ import {
   folders,
   VIRTUAL_ALL,
   VIRTUAL_UNCAT,
-} from '@/store/proxyFolders'
+} from '@/store/proxy-folders'
 import { Cog6ToothIcon } from '@heroicons/vue/24/outline'
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import FolderItem from './FolderItem.vue'
-import { displayFolderName } from './folderName'
+import { displayFolderName } from './folder-name'
 import { isMiddleScreen } from '@/helper/utils.ts'
 
 const foldersSorted = computed(() => [...folders.value].sort((a, b) => a.order - b.order))
@@ -76,8 +76,6 @@ const createObserver = () => {
   if (!topBarRef.value) return
   observer = new IntersectionObserver(([entry]) => (isStuck.value = entry.intersectionRatio < 1), {
     threshold: [1],
-    // Offset the detection boundary by the height of the (fixed/sticky) ctrls bar
-    // so the top bar registers as "stuck" once it pins right below the ctrls.
     rootMargin: `-${Math.max(ctrlsBottom.value, 0)}px 0px 0px 0px`,
   })
   observer.observe(topBarRef.value)
@@ -85,7 +83,6 @@ const createObserver = () => {
 
 onMounted(createObserver)
 
-// Recreate the observer when the ctrls bar height changes (resize / orientation).
 watch(ctrlsBottom, createObserver)
 
 onBeforeUnmount(() => observer?.disconnect())
