@@ -6,12 +6,17 @@ import { RouterView } from 'vue-router'
 import BackendConnectionError from './components/common/BackendConnectionError.vue'
 import BackendSwitchToast from './components/common/BackendSwitchToast.vue'
 import BackendManager from './components/settings/backend/BackendManager.vue'
+import DaeConfigModal from './components/settings/backend/DaeConfigModal.vue'
 import UpdateConfigModal from './components/settings/backend/UpdateConfigModal.vue'
 import UpgradeCoreModal from './components/settings/backend/UpgradeCoreModal.vue'
 import { useAppearanceVars } from './composables/use-appearance-vars'
 import { useOverscrollLock } from './composables/use-overscroll-lock'
 import { useThemeColor } from './composables/use-theme-color'
-import { showUpdateConfigModal, showUpgradeCoreModal } from '@/helper/backend-actions'
+import {
+  showDaeConfigModal,
+  showUpdateConfigModal,
+  showUpgradeCoreModal,
+} from '@/helper/backend-actions'
 import ConfirmDialogHost from './components/common/ConfirmDialogHost.vue'
 import { useKeyboard } from './composables/use-keyboard'
 import { EMOJIS, FONTS } from './constant'
@@ -63,7 +68,7 @@ useOverscrollLock()
 watch(
   theme,
   () => {
-    document.body.setAttribute('data-theme', theme.value)
+    document.documentElement.setAttribute('data-theme', theme.value)
     setThemeColor()
   },
   {
@@ -127,12 +132,17 @@ useKeyboard()
     ]"
     :style="[backgroundImage, { height: 'var(--app-height, 100dvh)' }]"
   >
+    <div
+      aria-hidden="true"
+      class="status-bar-tint"
+    />
     <RouterView />
     <BackendSwitchToast />
     <BackendConnectionError />
     <BackendManager />
     <UpgradeCoreModal v-model="showUpgradeCoreModal" />
     <UpdateConfigModal v-model="showUpdateConfigModal" />
+    <DaeConfigModal v-model="showDaeConfigModal" />
     <ConfirmDialogHost />
     <div
       ref="toast"
@@ -142,6 +152,25 @@ useKeyboard()
 </template>
 
 <style>
+.status-bar-tint {
+  display: none;
+}
+
+@supports (-webkit-touch-callout: none) {
+  .status-bar-tint {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 2147483647;
+    display: block;
+    height: 12px;
+    background-color: var(--status-bar-tint, var(--color-base-100));
+    opacity: 0.12;
+    pointer-events: none;
+  }
+}
+
 .app-toast-region {
   position: fixed;
   top: calc(0.75rem + env(safe-area-inset-top, 0px));
