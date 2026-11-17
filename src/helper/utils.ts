@@ -33,9 +33,10 @@ export const fromNow = (timestamp: string | number) => {
 export const prettyUptimeHelper = (seconds: number) => {
   if (!Number.isFinite(seconds) || seconds < 0) return '-'
 
-  const uptime = dayjs.duration(seconds, 'seconds')
+  const days = Math.floor(seconds / 86400)
+  const time = dayjs.duration(seconds % 86400, 'seconds').format('HH:mm:ss')
 
-  return uptime.days() > 0 ? uptime.format('D[d] HH:mm:ss') : uptime.format('HH:mm:ss')
+  return days > 0 ? `${days}d ${time}` : time
 }
 
 export const getDashboardSettingsFromStorage = () => {
@@ -78,19 +79,25 @@ export const resetSettings = () => {
   window.location.reload()
 }
 
+export const getHostFromBackend = (end: { host: string; port: string }) => {
+  const host = end.host.includes(':') && !end.host.startsWith('[') ? `[${end.host}]` : end.host
+
+  return `${host}:${end.port}`
+}
+
 export const getUrlFromBackend = (end: {
   protocol: string
   host: string
   port: string
   secondaryPath?: string
 }) => {
-  return `${end.protocol}://${end.host}:${end.port}${end.secondaryPath || ''}`
+  return `${end.protocol}://${getHostFromBackend(end)}${end.secondaryPath || ''}`
 }
 
 export const getBackendProbeUrl = (end: Omit<Backend, 'uuid'>) => getUrlFromBackend(end)
 
 export const getLabelFromBackend = (end: Omit<Backend, 'uuid'>) => {
-  return end.label || `${end.host}:${end.port}`
+  return end.label || getHostFromBackend(end)
 }
 
 export const getMinCardWidth = (size: PROXY_CARD_SIZE) => {
@@ -115,26 +122,48 @@ const getProtocolFromQuery = (query: URLSearchParams) => {
   return window.location.protocol.replace(':', '')
 }
 
-export const getBackendFromUrl = () => {
-  const query = new URLSearchParams(
-    window.location.search || location.hash.match(/\?.*$/)?.[0]?.replace('?', ''),
+const getUrlQuery = () => {
+  const query = new URLSearchParams(window.location.search)
+
+  new URLSearchParams(location.hash.match(/\?.*$/)?.[0]).forEach((value, key) =>
+    query.set(key, value),
   )
 
-  if (query.has('hostname')) {
-    const type = query.get('type') === 'dae' ? 'dae' : 'clash'
+  return query
+}
 
-    return {
-      type: type as BackendType,
-      protocol: getProtocolFromQuery(query),
-      secondaryPath: query.get('secondaryPath') || '',
-      host: query.get('hostname') as string,
-      port: query.get('port') as string,
-      password: query.get('secret') || '',
-      label: query.get('label') || '',
-      disableUpgradeCore:
-        query.get('disableUpgradeCore') === '1' || query.get('disableUpgradeCore') === 'core',
-      disableTunMode: query.get('disableTunMode') === '1' || query.get('disableTunMode') === 'tun',
-    }
+const getBackendFromQuery = (
+  query: URLSearchParams,
+  host: string,
+  port: string,
+): Omit<Backend, 'uuid'> => ({
+  type: (query.get('type') === 'dae' ? 'dae' : 'clash') as BackendType,
+  protocol: getProtocolFromQuery(query),
+  secondaryPath: query.get('secondaryPath') || '',
+  host,
+  port,
+  password: query.get('secret') || '',
+  label: query.get('label') || '',
+  disableUpgradeCore:
+    query.get('disableUpgradeCore') === '1' || query.get('disableUpgradeCore') === 'core',
+  disableTunMode: query.get('disableTunMode') === '1' || query.get('disableTunMode') === 'tun',
+})
+
+export const getBackendFromUrl = () => {
+  const query = getUrlQuery()
+
+  if (!query.has('hostname')) return null
+
+  return getBackendFromQuery(query, query.get('hostname') as string, query.get('port') as string)
+}
+
+export const getOriginBackend = () => {
+  const { protocol, hostname, port } = window.location
+
+  if (protocol !== 'http:' && protocol !== 'https:') return null
+
+  return {
+    ...getBackendFromQuery(getUrlQuery(), hostname, port || (protocol === 'https:' ? '443' : '80')),
+    protocol: protocol.slice(0, -1),
   }
-  return null
 }
